@@ -16,7 +16,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: SafeArea(
           child: Column(
             children: [
@@ -98,20 +98,39 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                           SizedBox(height: size.height*0.03),
                           Text("Centre d'intérêt", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.02),
-                          Row(
-                            children: [
-                              for(int i=0; i<widget.utilisateurs.interet.length; i++)
-                                Container(
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: widget.utilisateurs.interet.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisExtent: MediaQuery.of(context).size.height * 0.05,
+                            crossAxisCount: 3, crossAxisSpacing: 1, mainAxisSpacing: 5), itemBuilder: (context, index) {
+                            return Container(
                                   margin: EdgeInsets.only(right: 5),
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                  child: Text("${widget.utilisateurs.interet[i]}", style: TextStyle(fontSize: size.width*0.04, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),),
+                                  child: Text("${widget.utilisateurs.interet[index]}", textAlign: TextAlign.center, style: TextStyle(fontSize: size.width*0.04, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Theme.of(context).primaryColor, width: 1, style: BorderStyle.solid),
                                       borderRadius: BorderRadius.circular(4)
                                   ),
-                                ),
-                            ],
+                                );
+                            },
                           ),
+                          // Row(
+                          //   children: [
+                          //     for(int i=0; i<widget.utilisateurs.interet.length; i++)
+                          //       Container(
+                          //         margin: EdgeInsets.only(right: 5),
+                          //         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          //         child: Text("${widget.utilisateurs.interet[i]}", style: TextStyle(fontSize: size.width*0.04, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),),
+                          //         decoration: BoxDecoration(
+                          //           border: Border.all(color: Theme.of(context).primaryColor, width: 1, style: BorderStyle.solid),
+                          //             borderRadius: BorderRadius.circular(4)
+                          //         ),
+                          //       ),
+                          //   ],
+                          // ),
                           SizedBox(height: size.height*0.03),
                           Text("Gallerie", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.02),

@@ -22,7 +22,6 @@ class _TabScreenState extends State<TabScreen> {
     ChatScreen(),
     ProfileScreen(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

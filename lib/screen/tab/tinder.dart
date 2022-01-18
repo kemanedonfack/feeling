@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:feeling/routes/route_name.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -32,16 +33,11 @@ class _TinderState extends State<Tinder> {
 
     List<Utilisateurs> listutilisateurs = [
      Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["images/userImage1.jpeg"], interet: ["Sport", "Jeux Vidéo"], numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
-     Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["images/userImage2.jpeg"], interet: ["Sport", "Jeux Vidéo"],  numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
-     Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["images/userImage3.jpeg"], interet: ["Sport", "Jeux Vidéo"],  numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
-     Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["images/userImage4.jpeg"], interet: ["Sport", "Jeux Vidéo"],  numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
   ];
-
 
   @override
   void initState() {
-    // getUtilisateurs();
-    // getImage(5);
+    getUtilisateurs(); 
   
     for (int i = 0; i < listutilisateurs.length; i++) {
       _swipeItems.add(SwipeItem(
@@ -127,7 +123,7 @@ class _TinderState extends State<Tinder> {
                               ),
                             ],
                             image: DecorationImage(
-                                image: AssetImage(listutilisateurs[index].photo[0]),
+                                image: NetworkImage(listutilisateurs[index].photo[getImage(listutilisateurs[index].photo.length)]),
                                   fit: BoxFit.cover
                               ),
                           ),
@@ -158,7 +154,7 @@ class _TinderState extends State<Tinder> {
                           //   ],
                           // ),
                           Container(
-                          width: size.width*0.9,
+                          width: size.width,
                           height: size.height*0.7,
                             decoration: BoxDecoration(
                               color: Colors.yellow,
@@ -235,7 +231,7 @@ class _TinderState extends State<Tinder> {
                                       Flexible(
                                         child: InkWell(
                                           onTap: (){
-                                            // Navigator.pushNamed(context, profildetailsRoute, arguments: listutilisateurs[index]);
+                                            Navigator.pushNamed(context, profildetailsRoute, arguments: listutilisateurs[index]);
                                           },
                                           child: SizedBox(
                                             width: size.width * 0.2,
@@ -260,6 +256,7 @@ class _TinderState extends State<Tinder> {
                         content: Text("Stack Finished"),
                         duration: Duration(milliseconds: 500),
                       ));
+                      getUtilisateurs();
                     },
                     itemChanged: (SwipeItem item, int index) {
                       print("item: item, index: $index");
@@ -298,7 +295,7 @@ class _TinderState extends State<Tinder> {
                         ),
                         InkWell(
                           onTap: (){
-                            // Navigator.pushNamed(context, matchRoute);
+                            Navigator.pushNamed(context, matchRoute);
                           },
                           child: Container(
                             width: 50,
@@ -553,8 +550,42 @@ class _TinderState extends State<Tinder> {
     await controller.getAllUsers().then((value){
       setState(() {
         listutilisateurs =  value;
+
         print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
+        _swipeItems.removeLast();
+        for (int i = 0; i < listutilisateurs.length; i++) {
+          _swipeItems.add(SwipeItem(
+              content: Utilisateurs(idutilisateurs: listutilisateurs[i].idutilisateurs, age: listutilisateurs[i].age, 
+                interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom, numero: listutilisateurs[i].numero, 
+                pays: listutilisateurs[i].pays, photo: listutilisateurs[i].photo, profession: listutilisateurs[i].profession,
+                propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville),
+              likeAction: () {
+                _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                  content: Text("Liked ${listutilisateurs[i].nom}"),
+                  duration: Duration(milliseconds: 500),
+                ));
+              },
+              nopeAction: () {
+                _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                  content: Text("Nope ${listutilisateurs[i].nom}"),
+                  duration: Duration(milliseconds: 500),
+                ));
+              },
+              superlikeAction: () {
+                _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                  content: Text("Superliked ${listutilisateurs[i].nom}"),
+                  duration: Duration(milliseconds: 500),
+                ));
+              },
+              // onSlideUpdate: (SlideRegion region) async {
+              //   print("Region $region");
+              // }
+            )
+          );
+        }
         
+        _matchEngine = MatchEngine(swipeItems: _swipeItems);
+
         // taille du carousel
         // itemLength = listutilisateurs.length;
       });
