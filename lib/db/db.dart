@@ -1,4 +1,5 @@
 import 'package:feeling/models/utilisateurs.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -47,7 +48,9 @@ class DatabaseConnection{
 
     final db = await init(); //open database
     for(int i=0; i<interet.length; i++){   
-      print("tours $i");  
+      if (kDebugMode) {
+        print("tours $i");
+      }  
       await db.rawInsert('INSERT INTO interets (nom) VALUES (?)',
         [ interet[i] ]);
     }
@@ -57,7 +60,9 @@ class DatabaseConnection{
 
     final db = await init(); //open database
     for(int i=0; i<photo.length; i++){   
-      print("tours $i");  
+      if (kDebugMode) {
+        print("tours $i");
+      }  
       await db.rawInsert('INSERT INTO photos (chemin) VALUES (?)',
         [ photo[i] ]);
     }

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -6,7 +6,7 @@ import 'package:feeling/routes/route_name.dart';
 class InscriptionScreen extends StatefulWidget {
 
   final Utilisateurs utilisateurs;
-  InscriptionScreen(this.utilisateurs);  
+  const InscriptionScreen(this.utilisateurs, {Key? key}) : super(key: key);  
 
   @override
   _InscriptionScreenState createState() => _InscriptionScreenState();
@@ -18,7 +18,6 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String sex="";
-  File? _image;
 
   TextEditingController nomcontroller = TextEditingController();
   TextEditingController agecontroller = TextEditingController();
@@ -72,7 +71,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: EdgeInsets.all(20),
+                    contentPadding: const EdgeInsets.all(20),
                     filled: true,
                     fillColor: Colors.grey.withOpacity(0.3),
                   ),
@@ -95,7 +94,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.all(20),
+                      contentPadding: const EdgeInsets.all(20),
                       filled: true,
                       fillColor: Colors.grey.withOpacity(0.3),
                     ),
@@ -117,7 +116,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: EdgeInsets.all(20),
+                    contentPadding: const EdgeInsets.all(20),
                     filled: true,
                     fillColor: Colors.grey.withOpacity(0.3),
                   ),
@@ -140,7 +139,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.all(20),
+                      contentPadding: const EdgeInsets.all(20),
                       filled: true,
                       fillColor: Colors.grey.withOpacity(0.3),
                     ),
@@ -154,7 +153,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       child: DropdownButton(
                         isExpanded: true,
                         hint: Text(ville!) ,
-                        underline: SizedBox(),
+                        underline: const SizedBox(),
                         items: villes.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -211,7 +210,9 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
       Navigator.pushNamed(context, uploadimageRoute, arguments: widget.utilisateurs);
     }else{
 
-      print("Veuillez remplir les champs");
+      if (kDebugMode) {
+        print("Veuillez remplir les champs");
+      }
     }
 
   }

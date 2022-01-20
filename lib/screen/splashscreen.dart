@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
-import 'package:feeling/screen/choose_language.dart';
 
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -16,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   initState(){
     startTime();
+    super.initState();
   }
 
   @override

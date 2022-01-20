@@ -9,7 +9,7 @@ import 'package:feeling/routes/route_name.dart';
 class PhotoEscort extends StatefulWidget {
 
   final Utilisateurs utilisateurs;
-  PhotoEscort(this.utilisateurs);
+  const PhotoEscort(this.utilisateurs, {Key? key}) : super(key: key);
 
 
   @override
@@ -29,8 +29,6 @@ class _PhotoEscortState extends State<PhotoEscort> {
   @override
   Widget build(BuildContext context) {
     
-  var size = MediaQuery.of(context).size;
-
       return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -91,6 +89,7 @@ class _PhotoEscortState extends State<PhotoEscort> {
   
   Widget imagePath(){
 
+    // ignore: unnecessary_null_comparison
     if(_image == null){
       return Container(
         margin: const EdgeInsets.only(right: 5),
@@ -186,9 +185,9 @@ class _PhotoEscortState extends State<PhotoEscort> {
                     ),
                     height: 50,
                     width: 50,
-                    child: Icon(Icons.camera_alt, color: Colors.white,),
+                    child: const Icon(Icons.camera_alt, color: Colors.white,),
                   ),
-                  title: Text("Caméra"),
+                  title: const Text("Caméra"),
                 ),
                 ListTile(
                   onTap: (){
@@ -201,9 +200,9 @@ class _PhotoEscortState extends State<PhotoEscort> {
                     ),
                     height: 50,
                     width: 50,
-                    child: Icon(Icons.image, color: Colors.white,),
+                    child: const Icon(Icons.image, color: Colors.white,),
                   ),
-                  title: Text("Galerie"),
+                  title: const Text("Galerie"),
                 ),
               ],           
            ),

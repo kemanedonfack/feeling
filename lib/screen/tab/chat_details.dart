@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:feeling/screen/tab/composant/chat_bubble.dart';
 import 'package:feeling/screen/tab/composant/chat_detail_page_appbar.dart';
 import 'package:feeling/screen/tab/models/chat_message.dart';
@@ -11,6 +13,8 @@ enum MessageType{
 
 
 class ChatDetailScreen extends StatefulWidget{
+  const ChatDetailScreen({Key? key}) : super(key: key);
+
 
   @override
   _ChatDetailScreenState createState() => _ChatDetailScreenState();
@@ -88,7 +92,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatDetailPageAppBar(),
+      appBar: const ChatDetailPageAppBar(),
       body: Stack(
         children: <Widget>[
           ListView.builder(

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -5,7 +6,7 @@ import 'package:feeling/routes/route_name.dart';
 class EscortInscriptionScreen extends StatefulWidget {
 
   final Utilisateurs utilisateurs;
-  EscortInscriptionScreen(this.utilisateurs);  
+  const EscortInscriptionScreen(this.utilisateurs, {Key? key}) : super(key: key);  
 
   @override
   _EscortInscriptionScreenState createState() => _EscortInscriptionScreenState();
@@ -266,7 +267,9 @@ class _EscortInscriptionScreenState extends State<EscortInscriptionScreen> {
     // widget.utilisateurs.corpulence = corpulence;
     // widget.utilisateurs.disponibilite = disponibilite;
 
-    print("disponibilité $disponibilite mes services $services ma corpulence $corpulence");
+    if (kDebugMode) {
+      print("disponibilité $disponibilite mes services $services ma corpulence $corpulence");
+    }
     
     Navigator.pushNamed(context, photoescortRoute, arguments: widget.utilisateurs);
   }

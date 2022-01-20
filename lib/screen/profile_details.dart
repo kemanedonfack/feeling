@@ -1,10 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 
 class ProfileDetailScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
-  ProfileDetailScreen(this.utilisateurs);
+  const ProfileDetailScreen(this.utilisateurs, {Key? key}) : super(key: key);
 
   @override
   _ProfileDetailScreenState createState() => _ProfileDetailScreenState();
@@ -16,18 +18,23 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Column(
             children: [
               Stack(
                 children: [
                   Container(
+                    key: UniqueKey(),
                     width: size.width,
                     height: size.height*0.6,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(widget.utilisateurs.photo[0]),
+                        image: CachedNetworkImageProvider(
+                          widget.utilisateurs.photo[0],
+                          cacheManager: Utile.customCacheManager,
+                        ),
+                        // image: NetworkImage(widget.utilisateurs.photo[0]),
                         fit: BoxFit.cover
                       ),
                     ),
@@ -51,7 +58,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("${widget.utilisateurs.nom}, ${widget.utilisateurs.age}", style: TextStyle(fontSize: size.width*0.06, fontWeight: FontWeight.bold),),
-                                  Text("${widget.utilisateurs.profession}", style: TextStyle(fontSize: size.width*0.04, color:Colors.grey, fontWeight: FontWeight.w500),),
+                                  Text(widget.utilisateurs.profession, style: TextStyle(fontSize: size.width*0.04, color:Colors.grey, fontWeight: FontWeight.w500),),
                                 ],
                               ),
                               Container(
@@ -93,7 +100,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                           SizedBox(height: size.height*0.025),
                           Text("A propos", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.015),
-                          Text("${widget.utilisateurs.propos}", textAlign: TextAlign.justify),
+                          Text(widget.utilisateurs.propos, textAlign: TextAlign.justify),
                           
                           SizedBox(height: size.height*0.03),
                           Text("Centre d'intérêt", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
@@ -107,7 +114,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                               mainAxisExtent: MediaQuery.of(context).size.height * 0.05,
                             crossAxisCount: 3, crossAxisSpacing: 1, mainAxisSpacing: 5), itemBuilder: (context, index) {
                             return Container(
-                                  margin: EdgeInsets.only(right: 5),
+                                  margin: const EdgeInsets.only(right: 5),
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                   child: Text("${widget.utilisateurs.interet[index]}", textAlign: TextAlign.center, style: TextStyle(fontSize: size.width*0.04, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),),
                                   decoration: BoxDecoration(
@@ -149,6 +156,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
       ),
     );
   }
+  
 }
 
 

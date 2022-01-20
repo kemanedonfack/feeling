@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:feeling/utile/connection.dart';
+import 'package:feeling/utile/utile.dart';
 import 'package:feeling/db/db.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 class UploadImageScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
-  UploadImageScreen(this.utilisateurs);
+  const UploadImageScreen(this.utilisateurs, {Key? key}) : super(key: key);
 
   @override
   _UploadImageScreenState createState() => _UploadImageScreenState();
@@ -35,12 +36,11 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -68,7 +68,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height*0.01),
                 InkWell(
                   onTap: (){
-                    print("oui");
+                    if (kDebugMode) {
+                      print("oui");
+                    }
                     setState(() {
                       selectedFile = [];
                     });
@@ -110,13 +112,13 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
                       onPressed: () async {  
-                        if(selectedFile.length == 0){
+                        if(selectedFile.isEmpty){
                             aucunePhoto();
                         }else{
                           setState(() {
                             loading = true;
                           });
-                          if(await Connection.tryConnection() == true){
+                          if(await Utile.tryConnection() == true){
                             uploadFunction(selectedFile);
                           }else{
                             setState(() {
@@ -151,7 +153,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
     var size = MediaQuery.of(context).size;
 
-    if(selectedFile.length == 0){
+    if(selectedFile.isEmpty){
       return  Container(
         margin: const EdgeInsets.only(right: 5),
         height: (size.height*0.23),
@@ -180,7 +182,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       );
     }else{
        return GridView.builder(
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
          scrollDirection: Axis.vertical,
          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
            mainAxisExtent: MediaQuery.of(context).size.height * 0.28,
@@ -217,17 +219,42 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     
   }
 
+  Future<File> compress(File imagePath) async{
+
+    final newPath = p.join((await getTemporaryDirectory()).path, '${DateTime.now()}.${p.extension(imagePath.path)}');
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      imagePath.absolute.path,
+      newPath,
+      quality: 20,
+    );
+    // var path = await FlutterNativeImage.compressImage(imagePath.absolute.path, quality: 100, percentage: 10);
+
+    return result!;
+  }
+
   Future<void> selectImage() async {
 
-    if(selectedFile != null){
-      selectedFile.clear();
-    }
+    selectedFile.clear();
 
     try{
 
       final List<XFile>? imgs = await picker.pickMultiImage();
       if(imgs!.isNotEmpty){
         selectedFile.addAll(imgs);
+
+        File image = File(imgs[0].path);
+        final tailleAvant = image.lengthSync();
+        if (kDebugMode) {
+          print("taille initiale $tailleAvant KB");
+        }
+
+        File compressImage = await compress(image);
+
+        final tailleAapres = compressImage.lengthSync();
+        if (kDebugMode) {
+          print("taille finale $tailleAapres KB");
+        }
       }
       
       if(imgs.length>3){
@@ -235,7 +262,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       }
 
     }catch(e){
-      print("erreur "+e.toString());
+      if (kDebugMode) {
+        print("erreur "+e.toString());
+      }
     }
 
     setState(() {
@@ -253,13 +282,17 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       var localImagesUrl = await sauvegarderImage(File(images[i].path));
       localImageUrls.add(localImagesUrl.toString());
 
-      print("chemin ${localImagesUrl.toString()}");
+      if (kDebugMode) {
+        print("chemin ${localImagesUrl.toString()}");
+      }
     }
 
     await DatabaseConnection().ajouterImages(localImageUrls);
 
     var result = await DatabaseConnection().afficher("photos");
-    print("resultat $result");
+    if (kDebugMode) {
+      print("resultat $result");
+    }
 
     for(int i=0; i<images.length; i++){
       var imagesUrl = await upload(images[i]);
@@ -277,7 +310,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   Future<String> upload(XFile image) async {
 
     Reference reference = storage.ref().child("avatars").child(image.name);
-    UploadTask uploadTask =  reference.putFile(File(image.path));
+    File image1 = await compress(File(image.path));
+    UploadTask uploadTask =  reference.putFile(File(image1.path));
     await uploadTask.whenComplete((){
       // Navigator.pushNamed(context, centreinteretRoute, arguments: widget.utilisateurs);
     });
@@ -285,14 +319,14 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     return await reference.getDownloadURL();
   }
 
-  Future<Null> erreurImage(){
+  Future<void> erreurImage(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("Vous devez choisi 3 photos"),
+            title: const Text("Erreur"),
+            content: const Text("Vous devez choisi 3 photos"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
@@ -303,7 +337,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                   }
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );
@@ -311,20 +345,20 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     );
   }
 
-  Future<Null> aucunePhoto(){
+  Future<void> aucunePhoto(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("Veuiillez choisiz 3 photos "),
+            title: const Text("Erreur"),
+            content: const Text("Veuiillez choisiz 3 photos "),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );
@@ -332,20 +366,20 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     );
   }
 
-  Future<Null> connection(){
+  Future<void> connection(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("Veuillez vous connectez à internet"),
+            title: const Text("Erreur"),
+            content: const Text("Veuillez vous connectez à internet"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );
@@ -359,8 +393,10 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       final appDir = appDocDirectory.path;  
       var fileName = p.basename(image.path);  
       // fileName ="uploads/avatar/$fileName";
-      print("nom du fichier $fileName");
-      final savedImage = await image.copy('${appDir}/$fileName');
+      if (kDebugMode) {
+        print("nom du fichier $fileName");
+      }
+      final savedImage = await image.copy('$appDir/$fileName');
 
      return savedImage.path;  
   }

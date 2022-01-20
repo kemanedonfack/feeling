@@ -1,13 +1,20 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/routes/route_name.dart';
+import 'package:feeling/utile/utile.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
-import 'package:swipe_cards/draggable_card.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 class Tinder extends StatefulWidget {
+  const Tinder({Key? key}) : super(key: key);
+
 
 
   @override
@@ -15,24 +22,24 @@ class Tinder extends StatefulWidget {
 }
 
 class _TinderState extends State<Tinder> {
-  List<SwipeItem> _swipeItems = <SwipeItem>[];
+  final List<SwipeItem> _swipeItems = <SwipeItem>[];
   late MatchEngine _matchEngine;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   
     // List<Utilisateurs> listutilisateurs = [];
     int itemLength = 0;
     double minage=18;
     double maxage=35;
-    RangeValues valuesage = RangeValues(18, 35);
-    RangeLabels labelsage =RangeLabels('18', "50");
+    RangeValues valuesage = const RangeValues(18, 35);
+    RangeLabels labelsage = const RangeLabels('18', "50");
     
     double mintaille=120;
     double maxtaille=170;
-    RangeValues valuestaille = RangeValues(120, 170);
-    RangeLabels labelstaille =RangeLabels('120', "200");
+    RangeValues valuestaille = const RangeValues(120, 170);
+    RangeLabels labelstaille = const RangeLabels('120', "200");
 
     List<Utilisateurs> listutilisateurs = [
-     Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["images/userImage1.jpeg"], interet: ["Sport", "Jeux Vidéo"], numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
+     Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["https://images.unsplash.com/photo-1530778217282-850ca636e24a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80"], interet: ["Sport", "Jeux Vidéo"], numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
   ];
 
   @override
@@ -48,19 +55,19 @@ class _TinderState extends State<Tinder> {
           likeAction: () {
             _scaffoldKey.currentState?.showSnackBar(SnackBar(
               content: Text("Liked ${listutilisateurs[i].nom}"),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ));
           },
           nopeAction: () {
             _scaffoldKey.currentState?.showSnackBar(SnackBar(
               content: Text("Nope ${listutilisateurs[i].nom}"),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ));
           },
           superlikeAction: () {
             _scaffoldKey.currentState?.showSnackBar(SnackBar(
               content: Text("Superliked ${listutilisateurs[i].nom}"),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ));
           },
           // onSlideUpdate: (SlideRegion region) async {
@@ -101,10 +108,10 @@ class _TinderState extends State<Tinder> {
         ],
       ),
         body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height * 0.65,
                   child: SwipeCards(
                     matchEngine: _matchEngine,
@@ -112,26 +119,35 @@ class _TinderState extends State<Tinder> {
                       return Stack(
                         children: [
                           Container(
-                          decoration: BoxDecoration(
-                            // color: _swipeItems[index].content.color,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                blurRadius: 5,
-                                spreadRadius: 2
-                              ),
-                            ],
-                            image: DecorationImage(
-                                image: NetworkImage(listutilisateurs[index].photo[getImage(listutilisateurs[index].photo.length)]),
+                            key: UniqueKey(),
+                            decoration: BoxDecoration(
+                              // color: _swipeItems[index].content.color,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  blurRadius: 5,
+                                  spreadRadius: 2
+                                ),
+                              ],
+                              image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                  _swipeItems[index].content.photo[0],
+                                  cacheManager: Utile.customCacheManager,
+                                ),
+                                // image: NetworkImage(listutilisateurs[index].photo[0]),
                                   fit: BoxFit.cover
                               ),
-                          ),
-                          alignment: Alignment.center,
-                          // child: Text(
-                          //   "_swipeItems[index].content.text",
-                          //   style: TextStyle(fontSize: 100),
-                          // ),
+                            ),
+                            // child: CachedNetworkImage(
+                            //   key: UniqueKey(),
+                            //   fit: BoxFit.cover,
+                            //   cacheManager: customCacheManager,
+                            //   imageUrl: listutilisateurs[index].photo[0],
+                            //   placeholder: (context, url){
+                            //     return const Center(child: CircularProgressIndicator());
+                            //   },
+                            // ),
                           ),
                           // Row(
                           //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -154,8 +170,8 @@ class _TinderState extends State<Tinder> {
                           //   ],
                           // ),
                           Container(
-                          width: size.width,
-                          height: size.height*0.7,
+                            width: size.width,
+                            height: size.height*0.7,
                             decoration: BoxDecoration(
                               color: Colors.yellow,
                               gradient: LinearGradient(
@@ -166,7 +182,7 @@ class _TinderState extends State<Tinder> {
                                 end: Alignment.topCenter,
                                 begin: Alignment.bottomCenter
                               ),
-                            ),    
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,14 +191,14 @@ class _TinderState extends State<Tinder> {
                                   padding: const EdgeInsets.all(15),
                                   child: Row(
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: size.width * 0.72,
                                         child: Column(
                                           children: [
                                             Row(
                                               children: [
-                                                Text("${listutilisateurs[index].nom}, ",style: TextStyle(color: Colors.white, fontSize: size.width*0.06, fontWeight: FontWeight.bold),),
-                                                Text("${listutilisateurs[index].age}", style: TextStyle(color: Colors.white, fontSize: size.width*0.06),),
+                                                Text("${_swipeItems[index].content.nom}, ",style: TextStyle(color: Colors.white, fontSize: size.width*0.06, fontWeight: FontWeight.bold),),
+                                                Text("${_swipeItems[index].content.age}", style: TextStyle(color: Colors.white, fontSize: size.width*0.06),),
                                               ],
                                             ),
                                             const SizedBox(
@@ -206,7 +222,7 @@ class _TinderState extends State<Tinder> {
                                             ),
                                             Row(
                                               children: [        
-                                                for(int i=0; i<listutilisateurs[index].interet.length && i<3 ; i++)
+                                                for(int i=0; i<_swipeItems[index].content.interet.length && i<3 ; i++)
                                                   Flexible(
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(right: 8),
@@ -218,7 +234,7 @@ class _TinderState extends State<Tinder> {
                                                         ),
                                                         child: Padding(
                                                           padding: const EdgeInsets.only(top: 3, bottom: 3, left: 10, right: 10),
-                                                          child: Text(listutilisateurs[index].interet[i],style: TextStyle(color: Colors.white, fontSize: size.width*0.04 )),
+                                                          child: Text(_swipeItems[index].content.interet[i],style: TextStyle(color: Colors.white, fontSize: size.width*0.04 )),
                                                         ),
                                                       ),
                                                     ),
@@ -259,7 +275,9 @@ class _TinderState extends State<Tinder> {
                       getUtilisateurs();
                     },
                     itemChanged: (SwipeItem item, int index) {
-                      print("item: item, index: $index");
+                      if (kDebugMode) {
+                        print("item: item, index: $index");
+                      }
                     },
                     upSwipeAllowed: true,
                     fillSpace: true,
@@ -358,7 +376,7 @@ class _TinderState extends State<Tinder> {
               height: size.height*0.75,
             color: const Color(0xff737373),
             child: Container(
-              padding: EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
@@ -388,7 +406,7 @@ class _TinderState extends State<Tinder> {
                             child: Icon(Icons.close, color: Theme.of(context).primaryColor)
                           ),
                           Text("Filtres", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.06),),
-                          Text(" "),
+                          const Text(" "),
                         ],
                       ),
                     ),
@@ -412,7 +430,7 @@ class _TinderState extends State<Tinder> {
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               color: Theme.of(context).primaryColor,
                               width: size.width*0.44,
-                              child: Center(child: Text("Garçon", style: TextStyle(color: Colors.white),)),
+                              child: const Center(child: Text("Garçon", style: TextStyle(color: Colors.white),)),
                             ),
                           ),
                           ClipRRect(
@@ -423,7 +441,7 @@ class _TinderState extends State<Tinder> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               width: size.width*0.44,
-                              child: Center(child: Text("Fille", style: TextStyle(color: Colors.black),)),
+                              child: const Center(child: Text("Fille", style: TextStyle(color: Colors.black),)),
                             ),
                           ),
                         ],
@@ -435,7 +453,7 @@ class _TinderState extends State<Tinder> {
                     TextFormField(
                       // controller: nomController,
                       decoration: InputDecoration(
-                        label: Text("Douala, Cameroun"),
+                        label: const Text("Douala, Cameroun"),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                         ),
@@ -464,7 +482,9 @@ class _TinderState extends State<Tinder> {
                       max: 50,
                       values: valuesage,
                       onChanged: (value){
-                        print("START: ${value.start}, End: ${value.end}");
+                        if (kDebugMode) {
+                          print("START: ${value.start}, End: ${value.end}");
+                        }
                         setState(() {
                             valuesage =value;
                             minage = value.start;
@@ -551,8 +571,10 @@ class _TinderState extends State<Tinder> {
       setState(() {
         listutilisateurs =  value;
 
-        print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
-        _swipeItems.removeLast();
+        if (kDebugMode) {
+          print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
+        }
+          _swipeItems.clear();
         for (int i = 0; i < listutilisateurs.length; i++) {
           _swipeItems.add(SwipeItem(
               content: Utilisateurs(idutilisateurs: listutilisateurs[i].idutilisateurs, age: listutilisateurs[i].age, 
@@ -562,19 +584,19 @@ class _TinderState extends State<Tinder> {
               likeAction: () {
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Liked ${listutilisateurs[i].nom}"),
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                 ));
               },
               nopeAction: () {
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Nope ${listutilisateurs[i].nom}"),
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                 ));
               },
               superlikeAction: () {
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Superliked ${listutilisateurs[i].nom}"),
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                 ));
               },
               // onSlideUpdate: (SlideRegion region) async {
@@ -598,6 +620,16 @@ class _TinderState extends State<Tinder> {
     int re = rand.nextInt(taille);
 
     return re;
+  }
+
+  void clearCache(){
+    DefaultCacheManager().emptyCache();
+
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
+    setState(() {
+      
+    });
   }
 
 }

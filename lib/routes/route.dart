@@ -27,31 +27,31 @@ class AppRouter {
   static Route<dynamic> allRoutes(RouteSettings settings) {
     switch(settings.name){
       case splashRoute:
-        return MaterialPageRoute(builder: (_) => SplashScreen() );
+        return MaterialPageRoute(builder: (_) => const SplashScreen() );
       case chooseLanguageRoute:
-        return MaterialPageRoute(builder: (_) => ChooseLanguageScreen() );
+        return MaterialPageRoute(builder: (_) => const ChooseLanguageScreen() );
       case monSexRoute:
         return MaterialPageRoute(builder: (_) => MonSexScreen(settings.arguments as Utilisateurs) );
       case preferenceSexRoute:
-        return MaterialPageRoute(builder: (_) => PreferenceSexScreen() );
+        return MaterialPageRoute(builder: (_) => const PreferenceSexScreen() );
       case inscriptionRoute:
         return MaterialPageRoute(builder: (_) => InscriptionScreen(settings.arguments as Utilisateurs) );
       case verificationRoute:
         return MaterialPageRoute(builder: (_) => VerificationScreen(settings.arguments as Utilisateurs) );
       case tabRoute:
-        return MaterialPageRoute(builder: (_) => TabScreen() );
+        return MaterialPageRoute(builder: (_) => const TabScreen() );
       case settingsRoute:
-        return MaterialPageRoute(builder: (_) => SettingScreen() );
+        return MaterialPageRoute(builder: (_) => const SettingScreen() );
       case profildetailsRoute:
         return MaterialPageRoute(builder: (_) => ProfileDetailScreen(settings.arguments as Utilisateurs) );
       case editprofilRoute:
-        return MaterialPageRoute(builder: (_) => ModifierProfilScreen() );
+        return MaterialPageRoute(builder: (_) => const ModifierProfilScreen() );
       case escortinscriptionRoute:
         return MaterialPageRoute(builder: (_) => EscortInscriptionScreen(settings.arguments as Utilisateurs) );
       case photoescortRoute:
         return MaterialPageRoute(builder: (_) => PhotoEscort(settings.arguments as Utilisateurs) );
       case phoneidenficationRoute:
-        return MaterialPageRoute(builder: (_) => PhoneIdentificationScreen() );
+        return MaterialPageRoute(builder: (_) => const PhoneIdentificationScreen() );
       case uploadimageRoute:
         return MaterialPageRoute(builder: (_) => UploadImageScreen(settings.arguments as Utilisateurs) );
       case aproposRoute:
@@ -59,14 +59,14 @@ class AppRouter {
       case centreinteretRoute:
         return MaterialPageRoute(builder: (_) => InteretScreen(settings.arguments as Utilisateurs) );
       case modifierinformationRoute:
-        return MaterialPageRoute(builder: (_) => ModifierInformation() );
+        return MaterialPageRoute(builder: (_) => const ModifierInformation() );
       case welcomeRoute:
-        return MaterialPageRoute(builder: (_) => WelcomeScreen() );
+        return MaterialPageRoute(builder: (_) => const WelcomeScreen() );
       case matchRoute:
-        return MaterialPageRoute(builder: (_) => MatchScreen() );
+        return MaterialPageRoute(builder: (_) => const MatchScreen() );
     }
 
-    return MaterialPageRoute(builder: (_) => NotFoundScreen() );
+    return MaterialPageRoute(builder: (_) => const NotFoundScreen() );
 
   }
 

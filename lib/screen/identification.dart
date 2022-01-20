@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 
 
 class PhoneIdentificationScreen extends StatefulWidget {
+  const PhoneIdentificationScreen({Key? key}) : super(key: key);
+
 
   @override
   _PhoneIdentificationScreenState createState() => _PhoneIdentificationScreenState();
@@ -47,13 +48,13 @@ class _PhoneIdentificationScreenState extends State<PhoneIdentificationScreen> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.all(20),
+                      contentPadding: const EdgeInsets.all(20),
                       filled: true,
                       fillColor: Colors.grey.withOpacity(0.3),
                     ),
                     validator: (value){
                       if(value!.isNotEmpty){
-                        RegExp regex = new RegExp(r"^6[957][0-9]{7}$");
+                        RegExp regex = RegExp(r"^6[957][0-9]{7}$");
                         if(!regex.hasMatch(value)){
                           return "votre numéro est invalide";
                         }else{

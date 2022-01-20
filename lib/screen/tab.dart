@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:feeling/screen/tab/tinder.dart';
 import 'tab/profile.dart';
 import 'tab/chat.dart';
-import 'tab/home.dart';
 import 'tab/location.dart';
 
 class TabScreen extends StatefulWidget {
+  const TabScreen({Key? key}) : super(key: key);
+
 
   @override
   _TabScreenState createState() => _TabScreenState();
@@ -17,10 +18,10 @@ class _TabScreenState extends State<TabScreen> {
   int _currentIndex=0;
 
   final tabs=  [
-    Tinder(),
-    LocalisationScreen(),
-    ChatScreen(),
-    ProfileScreen(),
+    const Tinder(),
+    const LocalisationScreen(),
+    const ChatScreen(),
+    const ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class MatchScreen extends StatefulWidget {
+  const MatchScreen({Key? key}) : super(key: key);
+
 
   @override
   _MatchScreenState createState() => _MatchScreenState();
@@ -22,7 +23,7 @@ class _MatchScreenState extends State<MatchScreen> {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   height: size.height*0.5,
                   child: Stack(
                     children: [

@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
-import 'package:feeling/models/interets.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
-import 'package:feeling/utile/connection.dart';
+import 'package:feeling/utile/utile.dart';
 
 class AProposScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
-  AProposScreen(this.utilisateurs);
+  const AProposScreen(this.utilisateurs, {Key? key}) : super(key: key);
 
   @override
   _AProposScreenState createState() => _AProposScreenState();
@@ -33,7 +33,7 @@ class _AProposScreenState extends State<AProposScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Form(
@@ -74,7 +74,7 @@ class _AProposScreenState extends State<AProposScreen> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.all(20),
+                      contentPadding: const EdgeInsets.all(20),
                       filled: true,
                       fillColor: Colors.grey.withOpacity(0.3),
                     ),
@@ -98,8 +98,8 @@ class _AProposScreenState extends State<AProposScreen> {
                           onPressed: () {  
                             propos();
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: CircularProgressIndicator(color: Colors.white),
                         ),
                       ),
@@ -169,7 +169,9 @@ class _AProposScreenState extends State<AProposScreen> {
   }
 
   void propos() async {
-    print("Données utilisateurs ${widget.utilisateurs.interet}");
+    if (kDebugMode) {
+      print("Données utilisateurs ${widget.utilisateurs.interet}");
+    }
 
     if(_formKey.currentState!.validate()){
 
@@ -179,7 +181,7 @@ class _AProposScreenState extends State<AProposScreen> {
         
       widget.utilisateurs.propos = proposcontroller.text;
 
-      if(await Connection.tryConnection() == true){
+      if(await Utile.tryConnection() == true){
         await controller.addUsers(widget.utilisateurs).then((value) async {
           if(value == "success"){
 
@@ -203,20 +205,20 @@ class _AProposScreenState extends State<AProposScreen> {
     }
   }
 
-  Future<Null> connection(){
+  Future<void> connection(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("Veuillez vous connectez à internet"),
+            title: const Text("Erreur"),
+            content: const Text("Veuillez vous connectez à internet"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );

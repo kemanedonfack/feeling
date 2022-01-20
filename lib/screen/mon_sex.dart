@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -159,7 +160,9 @@ class _MonSexScreenState extends State<MonSexScreen> {
     widget.utilisateurs.sexe = sex;
     if(sex.contains("Femme") || sex.contains("Homme") ){
         
-      print(" mon sexe ${sex}");
+      if (kDebugMode) {
+        print(" mon sexe $sex");
+      }
       Navigator.pushNamed(context, inscriptionRoute, arguments: widget.utilisateurs); 
     
     }else{
@@ -179,20 +182,20 @@ class _MonSexScreenState extends State<MonSexScreen> {
 
   }
 
-    Future<Null> erreurSex(){
+    Future<void> erreurSex(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("Choisir ton sexe"),
+            title: const Text("Erreur"),
+            content: const Text("Choisir ton sexe"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );

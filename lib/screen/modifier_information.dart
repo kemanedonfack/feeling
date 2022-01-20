@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ModifierInformation extends StatefulWidget {
+  const ModifierInformation({Key? key}) : super(key: key);
+
 
   @override
   _ModifierInformationState createState() => _ModifierInformationState();
@@ -55,7 +57,7 @@ class _ModifierInformationState extends State<ModifierInformation> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: EdgeInsets.all(20),
+                    contentPadding: const EdgeInsets.all(20),
                     filled: true,
                     fillColor: Colors.grey.withOpacity(0.3),
                   ),
@@ -78,7 +80,7 @@ class _ModifierInformationState extends State<ModifierInformation> {
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.all(20),
+                      contentPadding: const EdgeInsets.all(20),
                       filled: true,
                       fillColor: Colors.grey.withOpacity(0.3),
                     ),
@@ -100,7 +102,7 @@ class _ModifierInformationState extends State<ModifierInformation> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: EdgeInsets.all(20),
+                    contentPadding: const EdgeInsets.all(20),
                     filled: true,
                     fillColor: Colors.grey.withOpacity(0.3),
                   ),
@@ -120,8 +122,8 @@ class _ModifierInformationState extends State<ModifierInformation> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: DropdownButton(
                         isExpanded: true,
-                        hint: ville == null ? Text("Choississez la ville") : Text(ville!) ,
-                        underline: SizedBox(),
+                        hint: ville == null ? const Text("Choississez la ville") : Text(ville!) ,
+                        underline: const SizedBox(),
                         items: villes.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,

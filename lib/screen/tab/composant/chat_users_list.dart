@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:feeling/screen/tab/chat_details.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +10,7 @@ class ChatUsersList extends StatefulWidget{
   String image;
   String time;
   bool isMessageRead;
-  ChatUsersList({required this.text, required this.secondaryText, required this.image, required this.time, required this.isMessageRead});
+  ChatUsersList({Key? key, required this.text, required this.secondaryText, required this.image, required this.time, required this.isMessageRead}) : super(key: key);
   @override
   _ChatUsersListState createState() => _ChatUsersListState();
 }
@@ -19,7 +21,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
     return GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context){
-          return ChatDetailScreen();
+          return const ChatDetailScreen();
         }));
       },
       child: Container(
@@ -57,11 +59,11 @@ class _ChatUsersListState extends State<ChatUsersList> {
                   padding: const EdgeInsets.fromLTRB(0,8,0,0),
                   child: CircleAvatar(
                     radius: 9,
-                    child: Text('1',style: TextStyle(fontSize: 12),),
+                    child: const Text('1',style: TextStyle(fontSize: 12),),
                     backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
                   )
-                ) : Text(""),
+                ) : const Text(""),
               ],
             ),
           ],

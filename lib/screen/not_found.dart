@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NotFoundScreen extends StatefulWidget {
+  const NotFoundScreen({Key? key}) : super(key: key);
+
 
   @override
   _NotFoundScreenState createState() => _NotFoundScreenState();

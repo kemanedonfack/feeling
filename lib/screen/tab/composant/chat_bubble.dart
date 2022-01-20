@@ -1,10 +1,13 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:feeling/screen/tab/chat_details.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/screen/tab/models/chat_message.dart';
 
 class ChatBubble extends StatefulWidget{
+  
   ChatMessage chatMessage;
-  ChatBubble({required this.chatMessage});
+  ChatBubble({Key? key, required this.chatMessage}) : super(key: key);
   @override
   _ChatBubbleState createState() => _ChatBubbleState();
 }
@@ -13,7 +16,7 @@ class _ChatBubbleState extends State<ChatBubble> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
+      padding: const EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
       child: Align(
         alignment: (widget.chatMessage.type == MessageType.Receiver?Alignment.topLeft:Alignment.topRight),
         child: Container(
@@ -21,7 +24,7 @@ class _ChatBubbleState extends State<ChatBubble> {
             borderRadius: BorderRadius.circular(30),
             color: (widget.chatMessage.type  == MessageType.Receiver?Colors.white:Colors.grey.shade200),
           ),
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Text(widget.chatMessage.message),
         ),
       ),

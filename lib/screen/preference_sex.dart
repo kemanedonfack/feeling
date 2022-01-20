@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PreferenceSexScreen extends StatefulWidget {
+  const PreferenceSexScreen({Key? key}) : super(key: key);
+
 
   @override
   _PreferenceSexScreenState createState() => _PreferenceSexScreenState();

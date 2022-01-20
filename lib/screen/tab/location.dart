@@ -1,6 +1,10 @@
+// ignore_for_file: dead_code
+
 import 'package:flutter/material.dart';
 
 class LocalisationScreen extends StatefulWidget {
+  const LocalisationScreen({Key? key}) : super(key: key);
+
 
   @override
   _LocalisationScreenState createState() => _LocalisationScreenState();

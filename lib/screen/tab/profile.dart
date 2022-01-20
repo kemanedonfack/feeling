@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();

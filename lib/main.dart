@@ -12,12 +12,14 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp]
   ).then((_) {
-      runApp(MyApp());
+      runApp(const MyApp());
   });
   
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
  
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,11 @@ class MyApp extends StatelessWidget {
       ),
       // home: Tinder(),
       onGenerateRoute: AppRouter.allRoutes,
-      initialRoute: tabRoute,
+      initialRoute: splashRoute,
       debugShowCheckedModeBanner: false,
     );
   }
    
 }
+
 

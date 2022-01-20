@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:feeling/routes/route_name.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -16,13 +16,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Image.asset("images/bg3.jpg", fit: BoxFit.cover,)
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
             color: Colors.black.withOpacity(0.85),
             width: double.infinity,
             height: double.infinity,
@@ -31,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: [
                 Column(
                   children: [
-                    Container(
+                    SizedBox(
                       width: size.width*0.5,
                       height: size.height*0.15,
                       child: Image.asset("images/logo2.png")
@@ -44,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 6),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 2),
                         borderRadius:BorderRadius.circular(9),
@@ -60,7 +60,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 6),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 2),
                         borderRadius:BorderRadius.circular(9),

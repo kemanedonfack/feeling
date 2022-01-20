@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/models/utilisateurs.dart';
+import 'package:flutter/foundation.dart';
 
 
 class UtilisateurController{
@@ -9,11 +10,15 @@ class UtilisateurController{
     Future<List<Utilisateurs>> getAllUsers() async {
 
       List<Utilisateurs> listutilisateurs = [];
-      print("dans le controller");
+      if (kDebugMode) {
+        print("dans le controller");
+      }
      
       await users.get().then((querySnapshot){
         for (var element in querySnapshot.docs) {
-          print(element.data());
+          if (kDebugMode) {
+            print(element.data());
+          }
             listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
          }
       });
@@ -24,7 +29,9 @@ class UtilisateurController{
     Future<String> addUsers(Utilisateurs utilisateurs) async {
 
       try{
-        print("pret");
+        if (kDebugMode) {
+          print("pret");
+        }
 
           await users.doc().set({
             "nom" : utilisateurs.nom,
@@ -41,7 +48,9 @@ class UtilisateurController{
           });
           return "success";
       }catch(e){
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         return "error";
       }
 

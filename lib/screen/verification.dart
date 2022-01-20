@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -6,7 +7,7 @@ import 'package:pinput/pin_put/pin_put.dart';
 class VerificationScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
-  VerificationScreen(this.utilisateurs);  
+  const VerificationScreen(this.utilisateurs, {Key? key}) : super(key: key);  
 
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
@@ -147,7 +148,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
   
   verification(){
-    print("code $code"); 
+    if (kDebugMode) {
+      print("code $code");
+    } 
 
     if(pinotpcontroller.text.length==6){
 
@@ -159,20 +162,20 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   }
 
-  Future<Null> erreurOtp(){
+  Future<void> erreurOtp(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
+            title: const Text("Erreur"),
             content: Text("Veuillez entrer le code à 6 chiffres envoyé pas sms au ${widget.utilisateurs.numero}"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );

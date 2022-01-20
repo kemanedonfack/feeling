@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/interets.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -6,7 +7,7 @@ import 'package:feeling/routes/route_name.dart';
 class InteretScreen extends StatefulWidget {
     
   final Utilisateurs utilisateurs;
-  InteretScreen(this.utilisateurs);
+  const InteretScreen(this.utilisateurs, {Key? key}) : super(key: key);
 
   @override
   _InteretScreenState createState() => _InteretScreenState();
@@ -37,7 +38,7 @@ class _InteretScreenState extends State<InteretScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Column(
@@ -69,7 +70,7 @@ class _InteretScreenState extends State<InteretScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: GridView.builder(
-                    physics: ScrollPhysics(),
+                    physics: const ScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: listinteret.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -81,7 +82,7 @@ class _InteretScreenState extends State<InteretScreen> {
                           ajouter(listinteret[index].nom);
                         },
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             color: mesinteret.contains(listinteret[index].nom) ? Theme.of(context).primaryColor : Colors.white,
                             borderRadius: BorderRadius.circular(10),
@@ -91,7 +92,7 @@ class _InteretScreenState extends State<InteretScreen> {
                             children: [
                               Icon(listinteret[index].icone, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Theme.of(context).primaryColor),
                               SizedBox(width: MediaQuery.of(context).size.width*0.025),
-                              Flexible(child: Text("${listinteret[index].nom}", maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
+                              Flexible(child: Text(listinteret[index].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
                             ],
                           ),
                         ),
@@ -160,10 +161,12 @@ class _InteretScreenState extends State<InteretScreen> {
 
   void continuer(){
     for(int i=0; i<mesinteret.length; i++){
-      print("${mesinteret[i]}");
+      if (kDebugMode) {
+        print(mesinteret[i]);
+      }
     }
 
-    if(mesinteret.length>=1){
+    if(mesinteret.isNotEmpty){
       widget.utilisateurs.interet = mesinteret;
       Navigator.pushNamed(context, aproposRoute, arguments: widget.utilisateurs); 
     }else{
@@ -171,20 +174,20 @@ class _InteretScreenState extends State<InteretScreen> {
     }
   }
 
-    Future<Null> erreurInteret(){
+    Future<void> erreurInteret(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("Veuillez choisir au moins un centre intérêt"),
+            title: const Text("Erreur"),
+            content: const Text("Veuillez choisir au moins un centre intérêt"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               )
             ],
           );

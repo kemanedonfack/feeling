@@ -3,6 +3,8 @@ import 'composant/chat_users_list.dart';
 import 'models/chat_users.dart';
 
 class ChatScreen extends StatefulWidget {
+  const ChatScreen({Key? key}) : super(key: key);
+
 
   @override
   _ChatScreenState createState() => _ChatScreenState();

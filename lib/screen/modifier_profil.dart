@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
 
 class ModifierProfilScreen extends StatefulWidget {
+  const ModifierProfilScreen({Key? key}) : super(key: key);
 
   @override
   _ModifierProfilScreenState createState() => _ModifierProfilScreenState();
