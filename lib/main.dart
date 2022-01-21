@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: Tinder(),
       onGenerateRoute: AppRouter.allRoutes,
-      initialRoute: splashRoute,
+      initialRoute: tabRoute,
       debugShowCheckedModeBanner: false,
     );
   }

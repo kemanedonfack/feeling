@@ -7,6 +7,31 @@ class UtilisateurController{
   
   CollectionReference users  = FirebaseFirestore.instance.collection('users');
 
+    Future<List<Utilisateurs>> getFiltersUsers(String sexe, double minage, double maxage, String ville) async {
+
+      List<Utilisateurs> listutilisateurs = [];
+      if (kDebugMode) {
+        print("dans le controller");
+      }
+
+      await users
+        .where('age', isLessThanOrEqualTo: maxage)
+        .where('age', isGreaterThanOrEqualTo: minage)
+        // .where('age', isEqualTo: minage)
+        .where('ville', isEqualTo: ville)
+        .where('sexe', isEqualTo: sexe)
+        .get().then((querySnapshot){
+          for (var element in querySnapshot.docs) {
+            if (kDebugMode) {
+              print(element.data());
+            }
+              listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
+          }
+        });
+
+      return listutilisateurs;
+    }
+
     Future<List<Utilisateurs>> getAllUsers() async {
 
       List<Utilisateurs> listutilisateurs = [];

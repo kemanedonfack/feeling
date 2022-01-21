@@ -184,8 +184,6 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       ),
                     ),
                   ),
-                    
-                
                 ],
               ),
             ),

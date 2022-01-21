@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 class Tinder extends StatefulWidget {
@@ -27,20 +26,29 @@ class _TinderState extends State<Tinder> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   
     // List<Utilisateurs> listutilisateurs = [];
-    int itemLength = 0;
-    double minage=18;
-    double maxage=35;
-    RangeValues valuesage = const RangeValues(18, 35);
-    RangeLabels labelsage = const RangeLabels('18', "50");
+    // int itemLength = 0;
     
-    double mintaille=120;
-    double maxtaille=170;
-    RangeValues valuestaille = const RangeValues(120, 170);
-    RangeLabels labelstaille = const RangeLabels('120', "200");
+    // double mintaille=120;
+    // double maxtaille=170;
+    // RangeValues valuestaille = const RangeValues(120, 170);
+    // RangeLabels labelstaille = const RangeLabels('120', "200");
 
     List<Utilisateurs> listutilisateurs = [
      Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["https://images.unsplash.com/photo-1530778217282-850ca636e24a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80"], interet: ["Sport", "Jeux Vidéo"], numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
   ];
+
+  
+  UtilisateurController utilisateurcontroller = UtilisateurController();
+
+  // variable pour le filtre de recherche
+  String sexeRechercher = "Femme";
+  List<String> villes = ["Douala", "Yaoundé", "Bamenda", "Buéa", "Ngaoundére", "Garoua", "Maroua"];
+  String? ville="Douala";
+    
+  double minage=18;
+  double maxage=35;
+  RangeValues valuesage = const RangeValues(18, 35);
+  RangeLabels labelsage = const RangeLabels('18', "50");
 
   @override
   void initState() {
@@ -421,27 +429,42 @@ class _TinderState extends State<Tinder> {
                       ),
                       child: Row(
                         children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              topLeft: Radius.circular(10),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              color: Theme.of(context).primaryColor,
-                              width: size.width*0.44,
-                              child: const Center(child: Text("Garçon", style: TextStyle(color: Colors.white),)),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                selectSexe("Homme");
+                              });
+                            },
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                topLeft: Radius.circular(10),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                color: sexeRechercher.contains("Homme") ? Theme.of(context).primaryColor : Colors.white,
+                                width: size.width*0.44,
+                                child: Center(child: Text("Homme", style: TextStyle(color: sexeRechercher.contains("Homme") ? Colors.white : Colors.black ),)),
+                              ),
                             ),
                           ),
-                          ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              width: size.width*0.44,
-                              child: const Center(child: Text("Fille", style: TextStyle(color: Colors.black),)),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                selectSexe("Femme");
+                              });
+                            },
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              child: Container(
+                                color: sexeRechercher.contains("Femme") ? Theme.of(context).primaryColor : Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                width: size.width*0.44,
+                                child: Center(child: Text("Femme", style: TextStyle(color: sexeRechercher.contains("Femme") ? Colors.white : Colors.black ),)),
+                              ),
                             ),
                           ),
                         ],
@@ -450,22 +473,29 @@ class _TinderState extends State<Tinder> {
                     SizedBox(height: size.width*0.05),
                     Text("Localisation", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
                     SizedBox(height: size.width*0.06,),
-                    TextFormField(
-                      // controller: nomController,
-                      decoration: InputDecoration(
-                        label: const Text("Douala, Cameroun"),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                      ),
-                      validator: (value){
-                        if(value!.isEmpty){
-                            return "Veuillez entrer ";
-                          }else{
-                            return null;
-                          }
+                    Material(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.grey.withOpacity(0.3),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        hint: Text(ville!) ,
+                        underline: const SizedBox(),
+                        items: villes.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState((){
+                            ville = value as String?; 
+                          });
                         },
-                    ),                    
+                      ),
+                    )
+                  ),                    
                     SizedBox(height: size.width*0.06,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -543,7 +573,7 @@ class _TinderState extends State<Tinder> {
                     color: Theme.of(context).primaryColor ,
                     child: MaterialButton(
                       minWidth: size.width,
-                      onPressed: () {   },
+                      onPressed: () {  filtre(); Navigator.pop(context); },
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text("Appliquer",
@@ -566,8 +596,7 @@ class _TinderState extends State<Tinder> {
   }
 
   void getUtilisateurs() async {
-    UtilisateurController controller = UtilisateurController();
-    await controller.getAllUsers().then((value){
+    await utilisateurcontroller.getAllUsers().then((value){
       setState(() {
         listutilisateurs =  value;
 
@@ -622,14 +651,79 @@ class _TinderState extends State<Tinder> {
     return re;
   }
 
-  void clearCache(){
-    DefaultCacheManager().emptyCache();
+  // void clearCache(){
+  //   DefaultCacheManager().emptyCache();
 
-    imageCache!.clear();
-    imageCache!.clearLiveImages();
-    setState(() {
+  //   imageCache!.clear();
+  //   imageCache!.clearLiveImages();
+  //   setState(() {
       
+  //   });
+  // }
+
+  void selectSexe(String sexe) {
+    if(!sexeRechercher.contains(sexe)){
+      setState(() {
+        sexeRechercher=sexe;
+      });
+    }else{
+      setState(() {
+        sexeRechercher=sexe;
+      });
+    }
+  }
+
+  void filtre() async {
+
+    await utilisateurcontroller.getFiltersUsers(sexeRechercher, minage, maxage, ville as String).then((value){
+      setState(() {
+        listutilisateurs =  value;
+
+        if(listutilisateurs.isNotEmpty){
+          if (kDebugMode) {
+            print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
+          }
+          _swipeItems.clear();
+          for (int i = 0; i < listutilisateurs.length; i++) {
+            _swipeItems.add(SwipeItem(
+                content: Utilisateurs(idutilisateurs: listutilisateurs[i].idutilisateurs, age: listutilisateurs[i].age, 
+                  interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom, numero: listutilisateurs[i].numero, 
+                  pays: listutilisateurs[i].pays, photo: listutilisateurs[i].photo, profession: listutilisateurs[i].profession,
+                  propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville),
+                likeAction: () {
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Liked ${listutilisateurs[i].nom}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                nopeAction: () {
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Nope ${listutilisateurs[i].nom}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                superlikeAction: () {
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Superliked ${listutilisateurs[i].nom}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                // onSlideUpdate: (SlideRegion region) async {
+                //   print("Region $region");
+                // }
+              )
+            );
+          }
+        _matchEngine = MatchEngine(swipeItems: _swipeItems);
+        }else{
+          getUtilisateurs();
+        }
+
+        // taille du carousel
+        // itemLength = listutilisateurs.length;
+      });
     });
+
   }
 
 }
