@@ -63,7 +63,7 @@ class AppRouter {
       case welcomeRoute:
         return MaterialPageRoute(builder: (_) => const WelcomeScreen() );
       case matchRoute:
-        return MaterialPageRoute(builder: (_) => const MatchScreen() );
+        return MaterialPageRoute(builder: (_) => MatchScreen(settings.arguments as Utilisateurs) );
     }
 
     return MaterialPageRoute(builder: (_) => const NotFoundScreen() );

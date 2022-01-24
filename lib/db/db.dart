@@ -39,9 +39,48 @@ class DatabaseConnection{
   Future<void> ajouterUtilisateurs(Utilisateurs utilisateurs) async{
 
     final db = await init(); //open database
-    await db.rawInsert('INSERT INTO users (nom, age, ville, pays, profession, sexe, numero, propos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos]);
+    await db.rawInsert('INSERT INTO users (idusers, nom, age, ville, pays, profession, sexe, numero, propos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [utilisateurs.idutilisateurs, utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos]);
     
+  }
+
+  Future<List<Utilisateurs>> getUtilisateurs() async {
+    final db = await init();
+
+    final List<Map<String, dynamic>> maps = await db.query('users');
+    if (kDebugMode) {
+      print("resultat $maps");
+    }
+
+     final List<Map<String, dynamic>> interets = await db.rawQuery('select nom from interets');
+     List<dynamic> listinterets = [];
+
+    for(int i =0; i<interets.length; i++){
+      listinterets.add(interets[i]['nom']);
+    }
+
+     final List<Map<String, dynamic>> photos = await db.rawQuery('select chemin from photos');
+     List<dynamic> listphotos = [];
+
+    for(int i =0; i<photos.length; i++){
+      listphotos.add(photos[i]['chemin']);
+    }
+    
+    return List.generate(maps.length, (i) {
+      return Utilisateurs(
+        idutilisateurs: maps[i]['idusers'],
+        nom: maps[i]['nom'],
+        interet: listinterets,
+        numero: maps[i]['numero'],
+        pays: maps[i]['pays'],
+        ville: maps[i]['ville'],
+        sexe: maps[i]['sexe'],
+        profession: maps[i]['profession'],
+        propos: maps[i]['propos'],
+        photo: listphotos,
+        age: maps[i]['age'],
+      );
+    });
   }
 
   Future<void> ajouterInteret(List<dynamic> interet) async{
@@ -73,6 +112,8 @@ class DatabaseConnection{
     return await db.query(table);
 
   }
+
+
 
 }
 

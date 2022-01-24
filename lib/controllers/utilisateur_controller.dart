@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
+import 'package:location/location.dart';
 
 
 class UtilisateurController{
@@ -51,14 +52,16 @@ class UtilisateurController{
       return listutilisateurs;
     }
 
-    Future<String> addUsers(Utilisateurs utilisateurs) async {
+    Future<String> addUsers(Utilisateurs utilisateurs, LocationData locationData) async {
 
       try{
         if (kDebugMode) {
           print("pret");
         }
-
-          await users.doc().set({
+          
+          var DocumentId = users.doc().id;
+          
+          await users.doc(DocumentId).set({
             "nom" : utilisateurs.nom,
             "age" : utilisateurs.age,
             "ville" : utilisateurs.ville,
@@ -69,9 +72,9 @@ class UtilisateurController{
             "photo" : utilisateurs.photo,
             "interet" : utilisateurs.interet,
             "propos" : utilisateurs.propos,
-
+            "localisation": GeoPoint(locationData.latitude as double, locationData.longitude as double)
           });
-          return "success";
+          return DocumentId;
       }catch(e){
         if (kDebugMode) {
           print(e);

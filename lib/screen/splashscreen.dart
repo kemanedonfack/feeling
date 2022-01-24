@@ -1,5 +1,6 @@
-import 'dart:async';
-
+import 'package:feeling/db/db.dart';
+import 'package:feeling/models/utilisateurs.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
 
@@ -34,8 +35,20 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTime() async {
-    var duration = const Duration(seconds: 5);
-    return  Timer(duration, (() => Navigator.pushReplacementNamed(context, welcomeRoute) ));
+    List<Utilisateurs> listutilisateurs = [];
+    DatabaseConnection connection = DatabaseConnection();
+    listutilisateurs = await connection.getUtilisateurs();
+
+    if(listutilisateurs.isEmpty){
+      Navigator.pushReplacementNamed(context, welcomeRoute);
+    }else{
+      if (kDebugMode) {
+      print("splash users ${listutilisateurs[0].idutilisateurs}");
+    }
+      Navigator.pushReplacementNamed(context, tabRoute);
+    }
+    // var duration = const Duration(seconds: 5);
+    // return  Timer(duration, (() =>  ));
   }
   
 }

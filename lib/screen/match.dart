@@ -1,14 +1,30 @@
+import 'dart:io';
+
+import 'package:feeling/db/db.dart';
+import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/material.dart';
 
 class MatchScreen extends StatefulWidget {
-  const MatchScreen({Key? key}) : super(key: key);
-
+  final Utilisateurs utilisateurs;
+  // final Utilisateurs utilisateurslocal;
+  const MatchScreen(this.utilisateurs, {Key? key}) : super(key: key);
+  // const MatchScreen({Key? key}) : super(key: key);
 
   @override
   _MatchScreenState createState() => _MatchScreenState();
 }
 
 class _MatchScreenState extends State<MatchScreen> {
+
+  DatabaseConnection connection = DatabaseConnection();
+  Utilisateurs utilisateurslocal = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', interet: ["interet"], age: 20, numero: 'numero', pays: 'pays', photo: ["images/userImage5.jpeg"], profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos');
+
+  @override
+  void initState() {
+    getUtilisateurs();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -35,7 +51,7 @@ class _MatchScreenState extends State<MatchScreen> {
                               width: size.width*0.35,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.asset("images/userImage4.jpeg", fit: BoxFit.cover)
+                                child: Image.network(widget.utilisateurs.photo[0], fit: BoxFit.cover)
                               ),
                               transform: Matrix4.rotationZ(0.3),
                             ),
@@ -57,7 +73,7 @@ class _MatchScreenState extends State<MatchScreen> {
                               width: size.width*0.35,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.asset("images/userImage5.jpeg", fit: BoxFit.cover)
+                                child: Image.file(File(utilisateurslocal.photo[0]),  fit: BoxFit.cover)
                               ),
                               transform: Matrix4.rotationZ(-0.2),
                             ),
@@ -77,10 +93,8 @@ class _MatchScreenState extends State<MatchScreen> {
                   ),
                 ),
                 SizedBox(height: size.height*0.05),
-                Text("C'est un match, Kemane", style: TextStyle(fontSize: size.width*0.08, fontWeight: FontWeight.bold),),
+                Text("C'est un match, ${utilisateurslocal.nom}", style: TextStyle(fontSize: size.width*0.08, fontWeight: FontWeight.bold),),
                 SizedBox(height: size.height*0.02),
-                Text("Vous avez la musique centre d'interêt commun avec carlos", textAlign: TextAlign.center, style: TextStyle(fontSize: size.width*0.04, ),),
-                SizedBox(height: size.height*0.05),
                 Material(
                   borderRadius: BorderRadius.circular(10.0),
                   color: Theme.of(context).primaryColor ,
@@ -89,7 +103,7 @@ class _MatchScreenState extends State<MatchScreen> {
                     onPressed: () {  },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Commencer la conversation",
+                      child: Text("Envoyé une demande",
                         style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -117,5 +131,15 @@ class _MatchScreenState extends State<MatchScreen> {
       ),
     );
   }
+
+  void getUtilisateurs() async {
+
+    await connection.getUtilisateurs().then((value){
+      setState(() {
+        utilisateurslocal = value[0];
+      });
+    });
+  }
+
 }
 

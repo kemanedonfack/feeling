@@ -100,7 +100,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                           SizedBox(height: size.height*0.025),
                           Text("A propos", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.015),
-                          Text(widget.utilisateurs.propos, textAlign: TextAlign.justify),
+                          Text(widget.utilisateurs.propos, textAlign: TextAlign.justify, style: TextStyle(fontSize: size.width*0.04),),
                           
                           SizedBox(height: size.height*0.03),
                           Text("Centre d'intérêt", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
@@ -141,6 +141,36 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                           SizedBox(height: size.height*0.03),
                           Text("Gallerie", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.02),
+                          GridView.builder(
+                              physics: const ScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                mainAxisExtent: MediaQuery.of(context).size.height * 0.28,
+                                crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                              shrinkWrap: true,
+                              itemCount: widget.utilisateurs.photo.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: const EdgeInsets.only(right: 5),
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                        widget.utilisateurs.photo[index],
+                                        cacheManager: Utile.customCacheManager,
+                                      ),
+                                      fit: BoxFit.cover
+                                    ),
+                                    // image: CachedNetworkImageProvider(
+                                    //   widget.utilisateurs.photo[0],
+                                    //   cacheManager: Utile.customCacheManager,
+                                    // ),
+                                    color: Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid),
+                                  ),
+                                );
+                              }
+                          )
                         ],
                       ),
                     ),

@@ -6,6 +6,7 @@ import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/utile.dart';
+import 'package:location/location.dart';
 
 class AProposScreen extends StatefulWidget {
   
@@ -24,7 +25,13 @@ class _AProposScreenState extends State<AProposScreen> {
   final firebase  = FirebaseFirestore.instance;
   bool loading = false;
   UtilisateurController controller = UtilisateurController();
+  late LocationData _locationData;
 
+  @override
+  void initState() {
+    localisation();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,9 +189,12 @@ class _AProposScreenState extends State<AProposScreen> {
       widget.utilisateurs.propos = proposcontroller.text;
 
       if(await Utile.tryConnection() == true){
-        await controller.addUsers(widget.utilisateurs).then((value) async {
-          if(value == "success"){
-
+        await controller.addUsers(widget.utilisateurs, _locationData).then((value) async {
+          if(value != "error"){
+            if (kDebugMode) {
+              print("id insersion $value");
+            }
+            widget.utilisateurs.idutilisateurs = value;
             await DatabaseConnection().ajouterInteret(widget.utilisateurs.interet);
             await DatabaseConnection().ajouterUtilisateurs(widget.utilisateurs);
 
@@ -225,6 +235,30 @@ class _AProposScreenState extends State<AProposScreen> {
         }
     );
   }
- 
+  
+  Future<void> localisation() async {
+    Location location = Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+  }
 
 }
