@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:feeling/utile/utile.dart';
 import 'package:feeling/db/db.dart';
 import 'package:flutter/foundation.dart';
@@ -79,12 +80,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                     children: [
                       Text("Choisissez 3 photos.", style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
                       ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Modifier les photos", style: TextStyle(color: Theme.of(context).primaryColor, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold)),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -112,7 +107,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                     child: MaterialButton(
                       minWidth: MediaQuery.of(context).size.width,
                       onPressed: () async {  
-                        if(selectedFile.isEmpty){
+                        if(selectedFile.isEmpty || selectedFile.length>3){
                             aucunePhoto();
                         }else{
                           setState(() {
@@ -152,49 +147,39 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   Widget photoUser(){
 
     var size = MediaQuery.of(context).size;
-
-    if(selectedFile.isEmpty){
-      return  Container(
-        margin: const EdgeInsets.only(right: 5),
-        height: (size.height*0.23),
-        width: (size.width*0.3),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid),
-        ),
-        child: InkWell(
-          onTap: (){
-            selectImage();
-          },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CircleAvatar(
-                radius: 12,
-                child: Icon(Icons.add_a_photo, size: 18, color: Theme.of(context).primaryColor),
-                backgroundColor: Colors.white,
+    
+    return GridView.builder(
+      physics: const ScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        mainAxisExtent: MediaQuery.of(context).size.height * 0.28,
+        crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+        shrinkWrap: true,
+        itemCount: selectedFile.length+1,
+        itemBuilder: (context, index) {
+          if(index == 0){
+            return Container(
+              margin: const EdgeInsets.only(right: 5),
+              height: (size.height*0.23),
+              width: (size.width*0.3),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid),
               ),
-            ],
-          ),
-        ),
-      );
-    }else{
-       return GridView.builder(
-        physics: const ScrollPhysics(),
-         scrollDirection: Axis.vertical,
-         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-           mainAxisExtent: MediaQuery.of(context).size.height * 0.28,
-                          crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-         shrinkWrap: true,
-         itemCount: selectedFile.length,
-         itemBuilder: (context, index) {
-           return Container(
+              child: InkWell(
+                onTap: (){
+                  selectImage();
+                },
+                child: Icon(Icons.add_a_photo, size: size.width*0.1, color: Theme.of(context).primaryColor),
+              ),
+            );
+           }else{
+            return Container(
               margin: const EdgeInsets.only(right: 5),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: FileImage(File(selectedFile[index].path)),
+                  image: FileImage(File(selectedFile[index-1].path)),
                   fit: BoxFit.cover
                 ),
                 color: Colors.grey.shade300,
@@ -205,37 +190,74 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CircleAvatar(
-                    radius: 12,
-                    child: Icon(Icons.close, size: 18, color: Theme.of(context).primaryColor),
-                    backgroundColor: Colors.white,
+                  InkWell(
+                    onTap: (){
+                      print("clic ");
+                      setState(() {
+                        selectedFile.removeAt(index-1);
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: CircleAvatar(
+                        radius: 12,
+                        child: Icon(Icons.close, size: 20, color: Theme.of(context).primaryColor),
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
                   ),
                 ],
-              ),
-            );
-         }
-      );
-    }
-    
+            ),
+          );
+        }
+      }
+    );
   }
 
   Future<File> compress(File imagePath) async{
 
-    final newPath = p.join((await getTemporaryDirectory()).path, '${DateTime.now()}.${p.extension(imagePath.path)}');
+    int taille = imagePath.lengthSync();
 
-    final result = await FlutterImageCompress.compressAndGetFile(
-      imagePath.absolute.path,
-      newPath,
-      quality: 20,
-    );
-    // var path = await FlutterNativeImage.compressImage(imagePath.absolute.path, quality: 100, percentage: 10);
+    if(taille < 150000){
+      return imagePath;
+    }
+    else if(taille > 150000 && taille < 500000) {
 
-    return result!;
+      final newPath = p.join((await getTemporaryDirectory()).path, '${DateTime.now()}.${p.extension(imagePath.path)}');
+      final result = await FlutterImageCompress.compressAndGetFile(
+        imagePath.absolute.path,
+        newPath,
+        quality: 40,
+      );
+      return result!;
+    }
+
+    else if(taille > 500000 && taille < 800000) {
+
+      final newPath = p.join((await getTemporaryDirectory()).path, '${DateTime.now()}.${p.extension(imagePath.path)}');
+      final result = await FlutterImageCompress.compressAndGetFile(
+        imagePath.absolute.path,
+        newPath,
+        quality: 30,
+      );
+      return result!;
+    }
+
+    else if(taille > 800000) {
+
+      final newPath = p.join((await getTemporaryDirectory()).path, '${DateTime.now()}.${p.extension(imagePath.path)}');
+      final result = await FlutterImageCompress.compressAndGetFile(
+        imagePath.absolute.path,
+        newPath,
+        quality: 20,
+      );
+      return result!;
+    }
+
+    return imagePath;
   }
 
   Future<void> selectImage() async {
-
-    selectedFile.clear();
 
     try{
 
