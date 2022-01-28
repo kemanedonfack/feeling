@@ -85,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  country_state_city_pro:
+    dependency: "direct main"
+    description:
+      name: country_state_city_pro
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   cross_file:
     dependency: transitive
     description:
@@ -188,6 +195,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
+  flutter_carousel_slider:
+    dependency: "direct main"
+    description:
+      name: flutter_carousel_slider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.8"
   flutter_image_compress:
     dependency: "direct main"
     description:
@@ -282,6 +296,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  localstore:
+    dependency: "direct main"
+    description:
+      name: localstore
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   location:
     dependency: "direct main"
     description:

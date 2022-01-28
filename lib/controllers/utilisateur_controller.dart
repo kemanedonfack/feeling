@@ -14,7 +14,7 @@ class UtilisateurController{
       if (kDebugMode) {
         print("dans le controller");
       }
-
+ 
       await users
         .where('age', isLessThanOrEqualTo: maxage)
         .where('age', isGreaterThanOrEqualTo: minage)
@@ -33,14 +33,14 @@ class UtilisateurController{
       return listutilisateurs;
     }
 
-    Future<List<Utilisateurs>> getAllUsers() async {
+    Future<List<Utilisateurs>> getAllUsers(String sexe) async {
 
       List<Utilisateurs> listutilisateurs = [];
       if (kDebugMode) {
         print("dans le controller");
       }
      
-      await users.get().then((querySnapshot){
+      await users.where("sexe", isNotEqualTo: sexe).get().then((querySnapshot){
         for (var element in querySnapshot.docs) {
           if (kDebugMode) {
             print(element.data());
@@ -59,9 +59,9 @@ class UtilisateurController{
           print("pret");
         }
           
-          var DocumentId = users.doc().id;
+          var documentId = users.doc().id;
           
-          await users.doc(DocumentId).set({
+          await users.doc(documentId).set({
             "nom" : utilisateurs.nom,
             "age" : utilisateurs.age,
             "ville" : utilisateurs.ville,
@@ -72,9 +72,10 @@ class UtilisateurController{
             "photo" : utilisateurs.photo,
             "interet" : utilisateurs.interet,
             "propos" : utilisateurs.propos,
-            "localisation": GeoPoint(locationData.latitude as double, locationData.longitude as double)
+            "localisation": GeoPoint(locationData.latitude as double, locationData.longitude as double),
+            "date_creation": FieldValue.serverTimestamp()
           });
-          return DocumentId;
+          return documentId;
       }catch(e){
         if (kDebugMode) {
           print(e);

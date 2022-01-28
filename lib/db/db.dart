@@ -1,3 +1,4 @@
+import 'package:feeling/models/like.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -30,11 +31,22 @@ class DatabaseConnection{
           await db.execute("""
             CREATE TABLE interets (idinteret INTEGER PRIMARY KEY, nom TEXT NOT NULL)"""
           );
+
+          await db.execute("""
+            CREATE TABLE likes (idlike INTEGER PRIMARY KEY, idSender TEXT NOT NULL, idReceiver TEXT NOT NULL)"""
+          );
           
         }
     );
   }
 
+  Future<void> ajouterLikes(Likes likes) async{
+
+    final db = await init(); //open database
+    await db.rawInsert('INSERT INTO likes (idSender, idReceiver) VALUES (?, ?)',
+      [likes.idSender, likes.idReceiver]);
+    
+  }
 
   Future<void> ajouterUtilisateurs(Utilisateurs utilisateurs) async{
 

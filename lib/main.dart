@@ -5,6 +5,9 @@ import 'package:feeling/routes/route.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/couleur.dart';
 
+import 'country.dart';
+import 'utile/ripple_animation.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +22,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
  
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'San Francisco',
         primarySwatch: primary,
       ),
-      // home: Tinder(),
+      // home: HomePage(),
       onGenerateRoute: AppRouter.allRoutes,
       initialRoute: splashRoute,
       debugShowCheckedModeBanner: false,

@@ -1,3 +1,4 @@
+import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -24,6 +25,9 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
   TextEditingController villecontroller = TextEditingController();
   TextEditingController payscontroller = TextEditingController();
   TextEditingController professioncontroller = TextEditingController();
+  TextEditingController country=TextEditingController();
+  TextEditingController state=TextEditingController();
+  TextEditingController city=TextEditingController();
   
   List<String> villes = ["Douala", "Yaoundé", "Bamenda", "Buéa", "Ngaoundére", "Garoua", "Maroua"];
   String? ville="Douala";
@@ -145,28 +149,20 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.03),
-                  Material(
-                    borderRadius: BorderRadius.circular(10.0),
+                  Container(
                     color: Colors.grey.withOpacity(0.3),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: DropdownButton(
-                        isExpanded: true,
-                        hint: Text(ville!) ,
-                        underline: const SizedBox(),
-                        items: villes.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState((){
-                            ville = value as String?; 
-                          });
-                        },
+                    child: CountryStateCityPicker(
+                      country: country,
+                      state: state,
+                      city: city,    
+                      textFieldInputBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                       ),
-                    )
+                      // textFieldInputBorder: UnderlineInputBorder(
+                      //   borderSide: const BorderSide(color: Colors.black, width: 3, style: BorderStyle.solid),
+                      //   borderRadius: BorderRadius.circular(20)
+                      // ),
+                    ),
                   ),
             
                   SizedBox(height: MediaQuery.of(context).size.height*0.03),
@@ -201,7 +197,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
       widget.utilisateurs.age = int.parse(agecontroller.text);
       widget.utilisateurs.nom = nomcontroller.text;
       widget.utilisateurs.pays = payscontroller.text;
-      widget.utilisateurs.ville = ville!;
+      widget.utilisateurs.ville = city.text;
       widget.utilisateurs.profession = professioncontroller.text;
       widget.utilisateurs.pays = pays;
 
