@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-class Utile{
- 
-  static Future<bool> tryConnection() async {
+
+  Future<bool> tryConnection() async {
     try {
       final response = await InternetAddress.lookup('console.firebase.google.com');
           
@@ -18,14 +17,18 @@ class Utile{
     }
   }
 
-  static final customCacheManager = CacheManager(
+  final customCacheManager = CacheManager(
     Config(
       'customCacheKey',
       stalePeriod: const Duration(days: 7),
     )
   );
 
-}
+  extension StringExtension on String {
+    String capitalize() {
+      return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+    }
+  }
 
 
 

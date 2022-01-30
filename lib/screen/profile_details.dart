@@ -32,7 +32,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                       image: DecorationImage(
                         image: CachedNetworkImageProvider(
                           widget.utilisateurs.photo[0],
-                          cacheManager: Utile.customCacheManager,
+                          cacheManager: customCacheManager,
                         ),
                         // image: NetworkImage(widget.utilisateurs.photo[0]),
                         fit: BoxFit.cover
@@ -156,7 +156,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                     image: DecorationImage(
                                       image: CachedNetworkImageProvider(
                                         widget.utilisateurs.photo[index],
-                                        cacheManager: Utile.customCacheManager,
+                                        cacheManager: customCacheManager,
                                       ),
                                       fit: BoxFit.cover
                                     ),

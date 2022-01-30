@@ -188,7 +188,7 @@ class _AProposScreenState extends State<AProposScreen> {
         
       widget.utilisateurs.propos = proposcontroller.text;
 
-      if(await Utile.tryConnection() == true){
+      if(await tryConnection() == true){
         await controller.addUsers(widget.utilisateurs, _locationData).then((value) async {
           if(value != "error"){
             if (kDebugMode) {

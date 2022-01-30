@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/like_controller.dart';
 import 'package:feeling/db/db.dart';
@@ -162,14 +160,14 @@ class _TinderState extends State<Tinder> {
                                 controller: _sliderController,
                                 slideTransform: StackTransform(),
                                 initialPage: 0,
-                                enableAutoSlider: true,
+                                // enableAutoSlider: true,
                                 autoSliderDelay: const Duration(seconds: 7),
                                 // slideIndicator: SlideIndicato,
                                 itemCount: _swipeItems[index].content.photo.length,
                                 slideBuilder: (i) {
                                   return CachedNetworkImage(
                                     key: UniqueKey(),
-                                    cacheManager: Utile.customCacheManager,
+                                    cacheManager: customCacheManager,
                                     fit: BoxFit.cover,
                                     imageUrl: _swipeItems[index].content.photo[i],
                                     placeholder: (context, url){
@@ -780,7 +778,7 @@ class _TinderState extends State<Tinder> {
       for (int i = 0; i < listutilisateurs.length; i++) {
         _swipeItems.add(SwipeItem(
           content: Utilisateurs(idutilisateurs: listutilisateurs[i].idutilisateurs, age: listutilisateurs[i].age, 
-            interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom, numero: listutilisateurs[i].numero, 
+            interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom.capitalize(), numero: listutilisateurs[i].numero, 
             pays: listutilisateurs[i].pays, photo: listutilisateurs[i].photo, profession: listutilisateurs[i].profession,
             propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville),
             
@@ -834,6 +832,8 @@ class _TinderState extends State<Tinder> {
          return  Center(
            child: Container(
              decoration: BoxDecoration(
+               borderRadius: BorderRadius.circular(20),
+               color: Colors.white,
                boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.3),
@@ -843,101 +843,82 @@ class _TinderState extends State<Tinder> {
               ],
              ),
               width: size.width*0.9,
-              height: size.height*0.8,
-             child: Stack(      
-               alignment: Alignment.center,    
-               children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Container(
-                      color: Colors.white,
-                      width: size.width*0.8,
-                      height: size.height*0.8,
-                      // child: Image.network(utilisateurs.photo[0], fit: BoxFit.cover )
-                    )
-                  ),
-                  Column(
-                    children: [
-                      Text("Félicitations", style: TextStyle(fontSize: size.width*0.12, color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                      RichText(
-                        text: TextSpan(
-                          text: "C'est un ",
-                          style: TextStyle(fontSize: size.width*0.08, color: Colors.black, fontWeight: FontWeight.bold),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: "macth!",
-                                style: TextStyle(fontWeight: FontWeight.bold,  fontSize: size.width*0.08, color: Colors.white, backgroundColor: Theme.of(context).primaryColor)),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height*0.02,
-                      ),
-                      
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(utilisateurs.photo[0]),
-                        maxRadius: 100,
-                      ),
-                      SizedBox(
-                        height: size.height*0.02,
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: "${utilisateurs.nom}, ",
-                          style: TextStyle(fontSize: size.width*0.04, color: Colors.black, fontWeight: FontWeight.bold),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: utilisateurs.age.toString(),
-                                style: TextStyle(fontWeight: FontWeight.w500,  fontSize: size.width*0.04, color: Colors.black,),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height*0.04,
-                      ),
-                      Material(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Theme.of(context).primaryColor ,
-                        child: MaterialButton(
-                          minWidth: MediaQuery.of(context).size.width*0.6,
-                          onPressed: () {  },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Envoyé un message",
-                              style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height*0.02,
-                      ),
-                      Material(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Theme.of(context).primaryColor ,
-                        child: MaterialButton(
-                          minWidth: MediaQuery.of(context).size.width*0.6,
-                          onPressed: () {  },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Plus tard",
-                              style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Text("Kemane vous amie bien", style: TextStyle(fontSize: size.width*0.05, color: Colors.white), textAlign: TextAlign.center,),
-                    ],
-                  ),
-                  // Column(
-                  //   //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     const Text("C'est un Match"),
-                  //     Text(" ${utilisateurs.nom} à aussi liké votre profil"),
-                  //   ],
-                  // ),
-
+              height: size.height*0.85,
+             child: Column(
+               children: [
+                 SizedBox(
+                   height: size.height*0.02,
+                 ),
+                 Text("Félicitations", style: TextStyle(fontSize: size.width*0.1, color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                 RichText(
+                   text: TextSpan(
+                     text: "C'est un ",
+                     style: TextStyle(fontSize: size.width*0.07, color: Colors.black, fontWeight: FontWeight.bold),
+                     children: <TextSpan>[
+                       TextSpan(
+                           text: "macth!",
+                           style: TextStyle(fontWeight: FontWeight.bold,  fontSize: size.width*0.07, color: Colors.white, backgroundColor: Theme.of(context).primaryColor)),
+                     ],
+                   ),
+                 ),
+                 SizedBox(
+                   height: size.height*0.02,
+                 ),
+                 
+                 CircleAvatar(
+                   backgroundImage: NetworkImage(utilisateurs.photo[0]),
+                   maxRadius: 100,
+                 ),
+                 SizedBox(
+                   height: size.height*0.02,
+                 ),
+                 RichText(
+                   text: TextSpan(
+                     text: "${utilisateurs.nom.capitalize()}, ",
+                     style: TextStyle(fontSize: size.width*0.06, color: Colors.black, fontWeight: FontWeight.bold),
+                     children: <TextSpan>[
+                       TextSpan(
+                           text: utilisateurs.age.toString(),
+                           style: TextStyle(fontWeight: FontWeight.w500,  fontSize: size.width*0.06, color: Colors.black,),
+                       )
+                     ],
+                   ),
+                 ),
+                 SizedBox(
+                   height: size.height*0.04,
+                 ),
+                 Material(
+                   borderRadius: BorderRadius.circular(10.0),
+                   color: Theme.of(context).primaryColor ,
+                   child: MaterialButton(
+                     minWidth: MediaQuery.of(context).size.width*0.8,
+                     onPressed: () {  },
+                     child: Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: Text("Envoyé un message",
+                         style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
+                       ),
+                     ),
+                   ),
+                 ),
+                 SizedBox(
+                   height: size.height*0.02,
+                 ),
+                 Material(
+                   borderRadius: BorderRadius.circular(10.0),
+                   color: Theme.of(context).primaryColor ,
+                   child: MaterialButton(
+                     minWidth: MediaQuery.of(context).size.width*0.8,
+                     onPressed: () { Navigator.of(context).pop(); },
+                     child: Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: Text("Plus tard",
+                         style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
+                       ),
+                     ),
+                   ),
+                 ),
+                 // Text("Kemane vous amie bien", style: TextStyle(fontSize: size.width*0.05, color: Colors.white), textAlign: TextAlign.center,),
                ],
              ),
            ),

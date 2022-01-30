@@ -1,4 +1,6 @@
 
+import 'package:feeling/db/db.dart';
+
 class Utilisateurs{
   String idutilisateurs;
   String nom;
@@ -13,22 +15,6 @@ class Utilisateurs{
   String propos;
   Utilisateurs({required this.nom, required this.idutilisateurs, required this.interet, required this.age, required this.numero, 
   required this.pays, required this.photo, required this.profession, required this.sexe, required this.ville, required this.propos});
-
-  // Map<String, dynamic> toHashMap() {
-  //   return {
-  //     'idutilisateurs': idutilisateurs,
-  //     'nom': nom,
-  //     'age': age,
-  //     'ville': ville,
-  //     'pays': pays,
-  //     'profession': profession,
-  //     'sexe': sexe,
-  //     'numero': numero,
-  //     'photo': photo,
-  //     'interet': interet,
-  //     'propos': propos,
-  //   };
-  // }
 
   factory Utilisateurs.fromMap(Map<String, dynamic> data, dynamic id){
     return Utilisateurs(
@@ -46,48 +32,18 @@ class Utilisateurs{
     );
   }
 
-  // List<Utilisateurs> utilisateursListFromSnapshot(QuerySnapshot<Map<String, dynamic>> snapshot) {
-  //   return snapshot.docs.map((doc) {
-  //     return utilisateursFromSnapshot(doc);
-  //   }).toList();
-  // }
+  static Future<String> getUserId() async {
+    
+    String id="";
+    DatabaseConnection connection = DatabaseConnection();
+    
+    await connection.getUtilisateurs().then((value){
+      id = value[0].idutilisateurs;
+    });
 
-  // Utilisateurs utilisateursFromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-  //   var data = snapshot.data();
-  //   if (data == null) throw Exception("utilisateurs not found");
-  //   return Utilisateurs.fromMap(data);
-  // }
+    return await id;
+  }
 
-  // Utilisateurs.fromJson(Map<String, Object> json)
-  //   : this(
-  //       idutilisateurs: json['idutilisateurs'],
-  //       nom: json['nom'],
-  //       age: json['age'],
-  //       ville: json['ville'],
-  //       pays: json['pays'],
-  //       profession: json['profession'],
-  //       sexe: json['sexe'],
-  //       numero: json['numero'],
-  //       photo: json['photo'],
-  //       interet: json['interet'],
-  //       propos: json['propos'],
-  //   );
-
-  // Map<String, Object> toJson() {
-  //   return {
-  //     'idutilisateurs': idutilisateurs,
-  //     'nom': nom,
-  //     'age': age,
-  //     'ville': ville,
-  //     'pays': pays,
-  //     'profession': profession,
-  //     'sexe': sexe,
-  //     'numero': numero,
-  //     'photo': photo,
-  //     'interet': interet,
-  //     'propos': propos,
-  //   };
-  // }
 
 }
 

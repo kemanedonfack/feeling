@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feeling/constant/constant.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:location/location.dart';
@@ -6,7 +7,7 @@ import 'package:location/location.dart';
 
 class UtilisateurController{
   
-  CollectionReference users  = FirebaseFirestore.instance.collection('users');
+  CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
 
     Future<List<Utilisateurs>> getFiltersUsers(String sexe, double minage, double maxage, String ville) async {
 
@@ -18,7 +19,6 @@ class UtilisateurController{
       await users
         .where('age', isLessThanOrEqualTo: maxage)
         .where('age', isGreaterThanOrEqualTo: minage)
-        // .where('age', isEqualTo: minage)
         .where('ville', isEqualTo: ville)
         .where('sexe', isEqualTo: sexe)
         .get().then((querySnapshot){

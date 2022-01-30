@@ -113,7 +113,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                           setState(() {
                             loading = true;
                           });
-                          if(await Utile.tryConnection() == true){
+                          if(await tryConnection() == true){
                             uploadFunction(selectedFile);
                           }else{
                             setState(() {

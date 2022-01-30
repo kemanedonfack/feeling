@@ -16,6 +16,7 @@ class InteretScreen extends StatefulWidget {
 class _InteretScreenState extends State<InteretScreen> {
 
   List<String> mesinteret = [];
+  List tags = ['one','two']; 
 
   List<Interet> listinteret = [
     Interet(nom: "Shopping", icone: Icons.shopping_bag_outlined),
@@ -28,8 +29,17 @@ class _InteretScreenState extends State<InteretScreen> {
     Interet(nom: "Jeux vidéo", icone: Icons.sports_esports_rounded),
     Interet(nom: "Art", icone: Icons.format_paint),
     Interet(nom: "Cuisine", icone: Icons.food_bank),
-    Interet(nom: "Football", icone: Icons.sports_baseball),
+    Interet(nom: "Football", icone: Icons.sports_soccer),
     Interet(nom: "Lecture", icone: Icons.chrome_reader_mode),
+    Interet(nom: "Facebook", icone: Icons.facebook),
+    Interet(nom: "Voyage", icone: Icons.travel_explore),
+    Interet(nom: "Business", icone: Icons.business),
+    Interet(nom: "Agriculture", icone: Icons.agriculture),
+    Interet(nom: "bénévolat", icone: Icons.volunteer_activism),
+    Interet(nom: "Tenis", icone: Icons.sports_tennis),
+    Interet(nom: "Lutte", icone: Icons.sports_kabaddi),
+    Interet(nom: "Boxes", icone: Icons.sports_mma),
+    Interet(nom: "volleyball", icone: Icons.sports_volleyball),
   ];
 
   @override
@@ -64,42 +74,69 @@ class _InteretScreenState extends State<InteretScreen> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.01),
                 Text("sélectionnez quelques-uns de vos centres d'intérêt et faites savoir à tout le monde ce qui vous passionne.", style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
-                ),
+                ), 
                 SizedBox(height: MediaQuery.of(context).size.height*0.03),
-        
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: GridView.builder(
-                    physics: const ScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: listinteret.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisExtent: MediaQuery.of(context).size.height * 0.06,
-                          crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
-                    itemBuilder: (context, index) {
-                      return InkWell(
+                
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    for(int i=0; i<listinteret.length; i++)
+                      InkWell(
                         onTap: (){
-                          ajouter(listinteret[index].nom);
+                          ajouter(listinteret[i].nom);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: mesinteret.contains(listinteret[index].nom) ? Theme.of(context).primaryColor : Colors.white,
+                            color: mesinteret.contains(listinteret[i].nom) ? Theme.of(context).primaryColor : Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid)
                           ),
-                          child: Row(
+                          child: Wrap(
                             children: [
-                              Icon(listinteret[index].icone, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Theme.of(context).primaryColor),
+                              Icon(listinteret[i].icone, color: mesinteret.contains(listinteret[i].nom) ? Colors.white : Theme.of(context).primaryColor),
                               SizedBox(width: MediaQuery.of(context).size.width*0.025),
-                              Flexible(child: Text(listinteret[index].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
+                              Text(listinteret[i].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[i].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04)),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      )
+                  ],
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                //   child: GridView.builder(
+                //     physics: const ScrollPhysics(),
+                //     shrinkWrap: true,
+                //     itemCount: listinteret.length,
+                //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //           mainAxisExtent: MediaQuery.of(context).size.height * 0.06,
+                //           crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
+                //     itemBuilder: (context, index) {
+                //       return InkWell(
+                //         onTap: (){
+                //           ajouter(listinteret[index].nom);
+                //         },
+                //         child: Container(
+                //           padding: const EdgeInsets.all(4),
+                //           decoration: BoxDecoration(
+                //             color: mesinteret.contains(listinteret[index].nom) ? Theme.of(context).primaryColor : Colors.white,
+                //             borderRadius: BorderRadius.circular(10),
+                //             border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid)
+                //           ),
+                //           child: Row(
+                //             children: [
+                //               Icon(listinteret[index].icone, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Theme.of(context).primaryColor),
+                //               SizedBox(width: MediaQuery.of(context).size.width*0.025),
+                //               Flexible(child: Text(listinteret[index].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.03),
                 Material(
                   borderRadius: BorderRadius.circular(10.0),
