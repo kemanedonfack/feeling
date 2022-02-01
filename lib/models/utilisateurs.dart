@@ -41,7 +41,19 @@ class Utilisateurs{
       id = value[0].idutilisateurs;
     });
 
-    return await id;
+    return id;
+  }
+
+  static Future<Utilisateurs> getCurrentUser() async {
+    
+    Utilisateurs? utilisateurs;
+    DatabaseConnection connection = DatabaseConnection();
+    
+    await connection.getUtilisateurs().then((value){
+      utilisateurs = value[0];
+    });
+
+    return utilisateurs as Utilisateurs;
   }
 
 

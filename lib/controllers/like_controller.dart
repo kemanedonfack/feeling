@@ -12,6 +12,38 @@ class LikeController{
   CollectionReference relations  = FirebaseFirestore.instance.collection(C_RELATIONS);
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
 
+  Future<List<Utilisateurs>> getMeMatchs() async {
+
+    List<String> listId = [];
+    List<Utilisateurs> listutilisateurs = [];
+    String idusers = await Utilisateurs.getUserId();
+    await relations.doc(idusers).collection(C_MATCHS).orderBy('date', descending: true).get()
+    .then((querySnapshot) async {
+
+        if(querySnapshot.docs.isNotEmpty){
+          
+          for (var element in querySnapshot.docs) {
+            if (kDebugMode) {
+              print("matchs ${element.data()} id ${element.id}");
+              listId.add(element.id);
+            }
+          }
+          
+          await users.where(FieldPath.documentId, whereIn: listId).get().then((querySnapshot){
+            for (var element in querySnapshot.docs) {
+              if (kDebugMode) {
+                print(element.data());
+              }
+              listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
+            }
+
+          });
+        }
+      });
+
+    return listutilisateurs;
+  }
+
   Future<List<Utilisateurs>> getLikedMeUsers() async {
 
     List<String> listId = [];
@@ -20,23 +52,26 @@ class LikeController{
     await relations.doc(idusers).collection(C_LIKES).orderBy('date', descending: true).get()
     .then((querySnapshot) async {
 
-        for (var element in querySnapshot.docs) {
-          if (kDebugMode) {
-            print("donnée ${element.data()} id ${element.id}");
-            listId.add(element.id);
-          }
-        }
-        
-        await users.where(FieldPath.documentId, whereIn: listId).get().then((querySnapshot){
+        if(querySnapshot.docs.isNotEmpty){
 
           for (var element in querySnapshot.docs) {
             if (kDebugMode) {
-              print(element.data());
+              print("donnée ${element.data()} id ${element.id}");
+              listId.add(element.id);
             }
-            listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
           }
+          
+          await users.where(FieldPath.documentId, whereIn: listId).get().then((querySnapshot){
+            print("ididi ${querySnapshot.docs.length}");
+            for (var element in querySnapshot.docs) {
+              if (kDebugMode) {
+                print(element.data());
+              }
+              listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
+            }
 
-        });
+          });
+        }
       });
 
     return listutilisateurs;
@@ -74,11 +109,13 @@ class LikeController{
 
               // on créer un match
               await relations.doc(like.idSender).collection(C_MATCHS).doc(like.idReceiver).set({
-                "date": FieldValue.serverTimestamp()
+                "date": FieldValue.serverTimestamp(),
+                "active": false
               });
 
               await relations.doc(like.idReceiver).collection(C_MATCHS).doc(like.idSender).set({
-                "date": FieldValue.serverTimestamp()
+                "date": FieldValue.serverTimestamp(),
+                "active": false
               });
 
               if(kDebugMode) {

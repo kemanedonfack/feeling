@@ -1,5 +1,7 @@
 // ignore_for_file: dead_code
 
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/like_controller.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
@@ -88,6 +90,14 @@ class _LikeScreenState extends State<LikeScreen> {
                                     ),
                                     // image: NetworkImage(listutilisateurs[index].photo[0]),
                                       fit: BoxFit.cover
+                                  ),
+                                ),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                                  child: Container(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    alignment: Alignment.center,
+                                    // decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
                                   ),
                                 ),
                               ),

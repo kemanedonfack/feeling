@@ -98,6 +98,13 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                             ],
                           ),
                           SizedBox(height: size.height*0.025),
+                          Row(
+                            children: [
+                              (widget.utilisateurs.sexe == "Femme") ? Icon(Icons.female) : const Icon(Icons.male),
+                              Text(widget.utilisateurs.sexe, style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          SizedBox(height: size.height*0.025),
                           Text("A propos", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.015),
                           Text(widget.utilisateurs.propos, textAlign: TextAlign.justify, style: TextStyle(fontSize: size.width*0.04),),

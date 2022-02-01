@@ -32,9 +32,7 @@ class _TinderState extends State<Tinder> {
   late MatchEngine _matchEngine;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-    List<Utilisateurs> listutilisateurslocal = [
-           Utilisateurs(idutilisateurs:"1", nom: "Jane Russel", age: 20, photo: ["https://images.unsplash.com/photo-1530778217282-850ca636e24a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80"], interet: ["Sport", "Jeux Vidéo"], numero: '', pays: '', profession: '', propos: '', sexe: '', ville: '',),
-    ];
+    late Utilisateurs currentUser;
     DatabaseConnection connection = DatabaseConnection();
     // List<Utilisateurs> listutilisateurs = [];
     // int itemLength = 0;
@@ -44,7 +42,7 @@ class _TinderState extends State<Tinder> {
     // RangeValues valuestaille = const RangeValues(120, 170);
     // RangeLabels labelstaille = const RangeLabels('120', "200");
 
-    List<Utilisateurs> listutilisateurs = [ ];
+  List<Utilisateurs> listutilisateurs = [ ];
 
   
   UtilisateurController utilisateurcontroller = UtilisateurController();
@@ -173,6 +171,7 @@ class _TinderState extends State<Tinder> {
                                     placeholder: (context, url){
                                       return const Center(child: CircularProgressIndicator());
                                     },                                    
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
                                   );
                                 }, 
                               ) ,
@@ -268,7 +267,7 @@ class _TinderState extends State<Tinder> {
                                                         padding: const EdgeInsets.only(right: 8, top: 4),
                                                         child: Container(
                                                           decoration: BoxDecoration(
-                                                            border: listutilisateurslocal[0].interet.contains(_swipeItems[index].content.interet[i]) ? Border.all(color: Colors.white, width: 2) : null,
+                                                            border: currentUser.interet.contains(_swipeItems[index].content.interet[i]) ? Border.all(color: Colors.white, width: 2) : null,
                                                             borderRadius:BorderRadius.circular(30),
                                                             color: Colors.white.withOpacity(0.2)
                                                           ),
@@ -286,7 +285,7 @@ class _TinderState extends State<Tinder> {
                                             ],
                                           ),
                                         ),
-                                        Container(
+                                        SizedBox(
                                            width: size.width*0.05,
                                           child: InkWell(
                                             onTap: (){
@@ -711,16 +710,9 @@ class _TinderState extends State<Tinder> {
   
   void getUtilisateurs() async {
     
-    await connection.getUtilisateurs().then((value){
-      setState(() {
-        listutilisateurslocal = value;
-          if (kDebugMode) {
-            print("nom utilisateur courant ${listutilisateurslocal[0].sexe}");
-          }
-      });
-    });
+    currentUser = await Utilisateurs.getCurrentUser();
 
-    await utilisateurcontroller.getAllUsers(listutilisateurslocal[0].sexe).then((value) async {
+    await utilisateurcontroller.getAllUsers(currentUser.sexe).then((value) async {
       setState(() {
         listutilisateurs =  value;
 
@@ -930,7 +922,7 @@ class _TinderState extends State<Tinder> {
   void onlike(Utilisateurs utilisateur) {
 
     // sauvegarde du like en ligne
-    Likes like = Likes(idSender: listutilisateurslocal[0].idutilisateurs, idReceiver: utilisateur.idutilisateurs);
+    Likes like = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
       likecontroller.findMacth(like).then((value){
       // sauvegarde du like en local
       connection.ajouterLikes(like);    
