@@ -5,8 +5,6 @@ import 'package:feeling/routes/route.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/couleur.dart';
 
-import 'country.dart';
-import 'utile/ripple_animation.dart';
 
 
 Future<void> main() async {

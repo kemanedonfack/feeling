@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:feeling/utile/utile.dart';
 import 'package:feeling/db/db.dart';
 import 'package:flutter/foundation.dart';
@@ -44,7 +43,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
         physics: const ScrollPhysics(),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -64,7 +63,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.02),
-                Text("Importer Photos", style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.05)
+                Text("Importez vos Photos", style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.05)
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.01),
                 InkWell(
@@ -192,7 +191,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                 children: [
                   InkWell(
                     onTap: (){
-                      print("clic ");
                       setState(() {
                         selectedFile.removeAt(index-1);
                       });

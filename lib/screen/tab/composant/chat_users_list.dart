@@ -1,74 +1,123 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:feeling/screen/tab/chat_details.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feeling/controllers/utilisateur_controller.dart';
+import 'package:feeling/models/conversations.dart';
+import 'package:feeling/models/utilisateurs.dart';
+import 'package:feeling/routes/route_name.dart';
+import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 
 class ChatUsersList extends StatefulWidget{
-  
-  String text;
-  String secondaryText;
-  String image;
-  String time;
-  bool isMessageRead;
-  ChatUsersList({Key? key, required this.text, required this.secondaryText, required this.image, required this.time, required this.isMessageRead}) : super(key: key);
+
+  Conversation conversation;
+
+  ChatUsersList({Key? key, required this.conversation}) : super(key: key);
   @override
   _ChatUsersListState createState() => _ChatUsersListState();
 }
 
 class _ChatUsersListState extends State<ChatUsersList> {
+
+  UtilisateurController utilisateurcontroller = UtilisateurController();
+
+  @override
+  void initState() {
+    getUsersId();
+    super.initState();
+  }
+
+  bool read=false;
+  String userId="";
+
+    
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return const ChatDetailScreen();
-        }));
-      },
-      child: Container(
-        padding: const EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
-        child: Row(
-          children: <Widget>[
-            Expanded(
+    return FutureBuilder<Utilisateurs>(
+      future: utilisateurcontroller.getUserById(widget.conversation.userIds),
+      builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
+        if(snapshot.hasData){
+          Utilisateurs? utilisateurs = snapshot.data ;
+          return GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, chatDetailsRoute, arguments: utilisateurs as Utilisateurs);
+            },
+            child: Container(
+              padding: const EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
               child: Row(
-                children:  <Widget>[
-                  CircleAvatar(
-                    backgroundImage: AssetImage(widget.image),
-                    maxRadius: 30,
-                  ),
-                  const SizedBox(width: 16,),
+                children: <Widget>[
                   Expanded(
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(widget.text),
-                          const SizedBox(height: 6,),
-                          Text(widget.secondaryText,style: TextStyle(fontSize: 14,color: Colors.grey.shade500),),
-                        ],
-                      ),
+                    child: Row(
+                      children:  <Widget>[
+                        CircleAvatar(
+                          backgroundImage: CachedNetworkImageProvider(
+                            utilisateurs!.photo[0],
+                            cacheManager: customCacheManager,
+                          ),
+                          maxRadius: 30,
+                        ),
+                        const SizedBox(width: 16,),
+                        Expanded(
+                          child: Container(
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(utilisateurs.nom),
+                                const SizedBox(height: 6,),
+                                Text(widget.conversation.lastMessage['content'],style: TextStyle(fontSize: 14,color: Colors.grey.shade500),),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                  Column(
+                    children: [
+                      
+                      Text(readTimestamp(int.parse(widget.conversation.lastMessage['date'])), style: TextStyle(fontSize: 12, color: read ? Colors.grey.shade500 : Colors.pink ),),
+                      messageIsRead() 
+                    ],
                   ),
                 ],
               ),
             ),
-            Column(
-              children: [
-                Text(widget.time,style: TextStyle(fontSize: 12,color: widget.isMessageRead?Colors.pink:Colors.grey.shade500),),
-                widget.isMessageRead ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0,8,0,0),
-                  child: CircleAvatar(
-                    radius: 9,
-                    child: const Text('1',style: TextStyle(fontSize: 12),),
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                  )
-                ) : const Text(""),
-              ],
-            ),
-          ],
-        ),
-      ),
+          );
+        }else{
+          return const Text("");
+        }
+      }
     );
   }
+
+  getUsersId() async {
+    await Utilisateurs.getUserId().then((value){
+      setState(() {
+        userId = value;
+      });
+    });
+  }
+
+  Widget messageIsRead() {
+
+    if(userId.isNotEmpty && widget.conversation.lastMessage['idReceiver'] == userId){
+      if(widget.conversation.lastMessage['read'] == true){
+        return const Text("");
+      }else{
+        return Padding(
+        padding: const EdgeInsets.fromLTRB(0,8,0,0),
+        child: CircleAvatar(
+          radius: 9,
+          child: const Text('1',style: TextStyle(fontSize: 12),),
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: Colors.white,
+          )
+        );
+      }
+    }else{
+      return const Text("");
+    }
+  }  
+
 }

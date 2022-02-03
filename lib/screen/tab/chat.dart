@@ -1,8 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feeling/constant/constant.dart';
 import 'package:feeling/controllers/like_controller.dart';
+import 'package:feeling/controllers/message_controller.dart';
+import 'package:feeling/controllers/utilisateur_controller.dart';
+import 'package:feeling/models/conversations.dart';
 import 'package:feeling/models/utilisateurs.dart';
+import 'package:feeling/routes/route_name.dart';
+import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 import 'composant/chat_users_list.dart';
-import 'models/chat_users.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -14,32 +21,26 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
 
-  List<ChatUsers> chatUsers = [
-    ChatUsers(text: "Jane Russel", secondaryText: "Awesome Setup", image: "images/userImage1.jpeg", time: "Now"),
-    ChatUsers(text: "Glady's Murphy", secondaryText: "That's Great", image: "images/userImage2.jpeg", time: "Yesterday"),
-    ChatUsers(text: "Jorge Henry", secondaryText: "Hey where are you?", image: "images/userImage3.jpeg", time: "31 Mar"),
-    ChatUsers(text: "Philip Fox", secondaryText: "Busy! Call me in 20 mins", image: "images/userImage4.jpeg", time: "28 Mar"),
-    ChatUsers(text: "Debra Hawkins", secondaryText: "Thankyou, It's awesome", image: "images/userImage5.jpeg", time: "23 Mar"),
-    ChatUsers(text: "Jacob Pena", secondaryText: "will update you in evening", image: "images/userImage6.jpeg", time: "17 Mar"),
-    ChatUsers(text: "Andrey Jones", secondaryText: "Can you please share the file?", image: "images/userImage7.jpeg", time: "24 Feb"),
-    ChatUsers(text: "John Wick", secondaryText: "How are you?", image: "images/userImage8.jpeg", time: "18 Feb"),
-    ChatUsers(text: "Jane Russel", secondaryText: "Awesome Setup", image: "images/userImage1.jpeg", time: "Now"),
-    ChatUsers(text: "Glady's Murphy", secondaryText: "That's Great", image: "images/userImage2.jpeg", time: "Yesterday"),
-    ChatUsers(text: "Jorge Henry", secondaryText: "Hey where are you?", image: "images/userImage3.jpeg", time: "31 Mar"),
-    ChatUsers(text: "Philip Fox", secondaryText: "Busy! Call me in 20 mins", image: "images/userImage4.jpeg", time: "28 Mar"),
-    ChatUsers(text: "Debra Hawkins", secondaryText: "Thankyou, It's awesome", image: "images/userImage5.jpeg", time: "23 Mar"),
-    ChatUsers(text: "Jacob Pena", secondaryText: "will update you in evening", image: "images/userImage6.jpeg", time: "17 Mar"),
-    ChatUsers(text: "Andrey Jones", secondaryText: "Can you please share the file?", image: "images/userImage7.jpeg", time: "24 Feb"),
-    ChatUsers(text: "John Wick", secondaryText: "How are you?", image: "images/userImage8.jpeg", time: "18 Feb"),
-  ];
+  
 
   LikeController likecontroller = LikeController();
-  List<Utilisateurs> listmatchs = [];
+  String idCurrentUser="";
+  MessageController messagecontroller = MessageController();  
+  UtilisateurController utilisateurcontroller = UtilisateurController();
 
   @override
   initState(){
-    getMatchs();
+    getIdCurrentUser();
     super.initState();
+  }
+
+  void getIdCurrentUser() async {
+
+    await Utilisateurs.getUserId().then((value){
+      setState(() {
+        idCurrentUser = value;       
+      });
+    });
   }
 
   @override
@@ -81,63 +82,98 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Text("Matchs",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
               ),
             ),
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for(int i=0; i<listmatchs.length; i++)
-                    Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(listmatchs[i].photo[0]),
-                            maxRadius: 30,
-                          ),
-                        ),
-                      ],
-                    )
-                ]
-              )
-            ),
+            if(idCurrentUser.isNotEmpty)
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idCurrentUser).collection(C_MATCHS).orderBy('date', descending: true).snapshots(),
+                builder: (context, snapshot) {
+                  // print("donne $idCurrentUser de match ${snapshot.data!.docs[0].id}");
+                  if(snapshot.hasData){
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for(int i=0; i<snapshot.data!.docs.length; i++)
+                            FutureBuilder<Utilisateurs>(
+                              future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
+                              builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
+                                if(snapshot.hasData){
+                                  Utilisateurs? utilisateurs = snapshot.data ;
+                                  return InkWell(
+                                    onTap: (){
+                                      Navigator.pushNamed(context, chatDetailsRoute, arguments: utilisateurs);
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                                      child: CircleAvatar(
+                                        backgroundImage: CachedNetworkImageProvider(
+                                          utilisateurs!.photo[0],
+                                          cacheManager: customCacheManager,
+                                        ),
+                                        maxRadius: 30,
+                                      ),
+                                    ),
+                                  );
+                                }else{
+                                  return const Text("");
+                                }
+                                
+                              }
+                            )
+                        ]
+                      )
+                    );
+                  }else{
+                    return const Text("");
+                  }
+                }
+              ),
             const SafeArea (
               child: Padding(
                 padding: EdgeInsets.only(left: 16,right: 16, bottom: 10),
                 child: Text("Conversations",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
               ),
             ),
-            ListView.builder(
-              itemCount: chatUsers.length,
-              shrinkWrap: true,
-              padding: const EdgeInsets.only(top: 16),
-              physics: const ScrollPhysics(),
-              itemBuilder: (context, index){
-                return ChatUsersList(
-                  text: chatUsers[index].text,
-                  secondaryText: chatUsers[index].secondaryText,
-                  image: chatUsers[index].image,
-                  time: chatUsers[index].time,
-                  isMessageRead: (index == 0 || index == 3)?true:false,
-                );
-              },
-            ),
+            if(idCurrentUser.isNotEmpty)
+              StreamBuilder<List<Conversation>>(
+                stream: messagecontroller.getConversation(idCurrentUser, 20),
+
+                builder: (BuildContext context, AsyncSnapshot<List<Conversation>> snapshot) {
+                 
+                  
+                  if(snapshot.hasData){
+                    List<Conversation> listconversation = snapshot.data ?? List.from([]);
+                    return ListView.builder(
+                      itemCount: listconversation.length,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(top: 16),
+                      physics: const ScrollPhysics(),
+                      itemBuilder: (context, index){
+                        return ChatUsersList(conversation: listconversation[index],);
+                      },
+                    );
+                  }else{
+                    return const Text("");
+                  }
+                }
+              ),
           ],
         ),
       ),
     );
   }
 
-  void getMatchs() async {
+  // void getMatchs() async {
+
+  //   idCurrentUser = await Utilisateurs.getUserId();
     
-    await likecontroller.getMeMatchs().then((value){
-      setState(() {
-        listmatchs = value;
-      });
-    });
-    print("mes matchs $listmatchs");
+  //   await likecontroller.getMeMatchs().then((value){
+  //     setState(() {
+  //       listmatchs = value;
+  //     });
+  //   });
+  //   print("mes matchs $listmatchs");
 
-  }
-
+  // }
 
 }

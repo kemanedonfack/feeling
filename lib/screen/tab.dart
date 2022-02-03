@@ -45,12 +45,12 @@ class _TabScreenState extends State<TabScreen> {
         type: BottomNavigationBarType.fixed,
         items: [
           const BottomNavigationBarItem(
-            icon: const Icon(Icons.style),
+            icon: Icon(Icons.style),
             label: "",
             backgroundColor: Colors.blue
           ),
           const BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.heart_fill),
+            icon: Icon(CupertinoIcons.heart_fill),
             label: "",
             backgroundColor: Colors.red
           ),
@@ -64,10 +64,10 @@ class _TabScreenState extends State<TabScreen> {
                     stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idusers).collection(C_MATCHS).where('active', isEqualTo: false).snapshots(),
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
-                        return Text('');
+                        return const Text('');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("");
+                        return const Text("");
                       }
                       if(snapshot.data!.docs.isNotEmpty){
                         return Positioned(
@@ -85,7 +85,7 @@ class _TabScreenState extends State<TabScreen> {
                           )
                         );
                       }else{
-                        return Text("");
+                        return const Text("");
                       }                  
                       
                     }

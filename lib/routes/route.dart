@@ -1,3 +1,4 @@
+import 'package:feeling/screen/tab/chat_details.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -64,6 +65,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const WelcomeScreen() );
       case matchRoute:
         return MaterialPageRoute(builder: (_) => MatchScreen(settings.arguments as Utilisateurs) );
+      case chatDetailsRoute:
+        return MaterialPageRoute(builder: (_) => ChatDetailScreen(settings.arguments as Utilisateurs) );
     }
 
     return MaterialPageRoute(builder: (_) => const NotFoundScreen() );

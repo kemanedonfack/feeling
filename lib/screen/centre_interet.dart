@@ -105,7 +105,7 @@ class _InteretScreenState extends State<InteretScreen> {
                 //   ],
                 // ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: GridView.builder(
                     physics: const ScrollPhysics(),
                     shrinkWrap: true,

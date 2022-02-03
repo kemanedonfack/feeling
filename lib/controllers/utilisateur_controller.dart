@@ -8,7 +8,22 @@ import 'package:location/location.dart';
 class UtilisateurController{
   
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
-  
+
+    Future<Utilisateurs>getUserById(List<dynamic> idusers) async {
+      
+      String idcurrentuser = await Utilisateurs.getUserId();
+      
+      idusers.removeWhere((element) => element == idcurrentuser);
+      
+      late Utilisateurs utilisateurs;
+
+      await users.doc(idusers[0]).get().then((value){
+        utilisateurs = Utilisateurs.fromMap(value.data() as Map<String, dynamic>, value.id);
+      });
+
+      return utilisateurs;
+    }
+
     Future<List<Utilisateurs>> getFiltersUsers(String sexe, double minage, double maxage, String ville) async {
 
       List<Utilisateurs> listutilisateurs = [];
@@ -100,5 +115,16 @@ class UtilisateurController{
 
       return listutilisateurs;
     }
+
+  Future<Utilisateurs>getUserById2(String id) async {
+      
+    late Utilisateurs utilisateurs;
+
+    await users.doc(id).get().then((value){
+      utilisateurs = Utilisateurs.fromMap(value.data() as Map<String, dynamic>, value.id);
+    });
+
+    return utilisateurs;
+  }
 }
 

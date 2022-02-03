@@ -1,7 +1,8 @@
-import 'package:country_state_city_pro/country_state_city_pro.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -15,15 +16,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Country->State->City'),
+        title: const Text('Country->State->City'),
       ),
       body: Padding(
-          padding: EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
           child: Wrap(
             direction: Axis.horizontal,
             children: [
               for (var items in list)
-                  Text("$items ", style: TextStyle(fontSize: 50),)
+                  Text("$items ", style: const TextStyle(fontSize: 50),)
             ],
           )
       ),

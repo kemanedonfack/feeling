@@ -12,6 +12,27 @@ class LikeController{
   CollectionReference relations  = FirebaseFirestore.instance.collection(C_RELATIONS);
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
 
+  Future<void> updateMatch(String matchedUserId ) async {
+
+    await relations.doc(await Utilisateurs.getUserId()).collection(C_MATCHS).doc(matchedUserId).set({
+      'active': true
+    });
+    
+    await relations.doc(matchedUserId).collection(C_MATCHS).doc(await Utilisateurs.getUserId()).set({
+      'active': true
+    });
+
+  }
+  
+  Future<void> deleteMatch(String matchedUserId) async {
+    
+    await relations.doc(await Utilisateurs.getUserId()).collection(C_MATCHS).doc(matchedUserId).delete();
+    
+    await relations.doc(matchedUserId).collection(C_MATCHS).doc(await Utilisateurs.getUserId()).delete();
+  }
+
+  
+  
   Future<List<Utilisateurs>> getMeMatchs() async {
 
     List<String> listId = [];
@@ -62,7 +83,7 @@ class LikeController{
           }
           
           await users.where(FieldPath.documentId, whereIn: listId).get().then((querySnapshot){
-            print("ididi ${querySnapshot.docs.length}");
+            
             for (var element in querySnapshot.docs) {
               if (kDebugMode) {
                 print(element.data());

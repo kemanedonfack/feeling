@@ -110,26 +110,26 @@ class _TinderState extends State<Tinder> {
                       itemBuilder: (BuildContext context, int index) {
                         return Stack(
                           children: [
-                            true ? Positioned(
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: true ? Colors.green : Colors.red, width: 2),
-                                ),
-                                child: Text( true ? 'LIKE' : 'NON',
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: MediaQuery.of(context).size.width*0.06,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                transform: true ? Matrix4.rotationZ(-0.2) : Matrix4.rotationZ(0.2),
-                              ),
-                              top: 25,
-                              left: 10,
-                            ): Container(
+                            // true ? Positioned(
+                            //   child: Container(
+                            //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                            //     decoration: BoxDecoration(
+                            //       border: Border.all(color: true ? Colors.green : Colors.red, width: 2),
+                            //     ),
+                            //     child: Text( true ? 'LIKE' : 'NON',
+                            //       style: TextStyle(
+                            //         color: Colors.green,
+                            //         fontSize: MediaQuery.of(context).size.width*0.06,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //     ),
+                            //     transform: true ? Matrix4.rotationZ(-0.2) : Matrix4.rotationZ(0.2),
+                            //   ),
+                            //   top: 25,
+                            //   left: 10,
+                            // ): Container(
                 
-                            ),
+                            // ),
                             Container(
                               // height: size.height*0.,
                               key: UniqueKey(),
