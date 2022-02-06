@@ -47,6 +47,7 @@ dependencies:
   country_state_city_pro: ^0.0.3
   flutter_carousel_slider: ^1.0.8
   intl: ^0.17.0
+  badges: ^2.0.2
 
 
   # The following adds the Cupertino Icons font to your application.

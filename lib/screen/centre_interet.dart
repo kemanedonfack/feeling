@@ -205,7 +205,7 @@ class _InteretScreenState extends State<InteretScreen> {
 
     if(mesinteret.isNotEmpty){
       widget.utilisateurs.interet = mesinteret;
-      Navigator.pushNamed(context, aproposRoute, arguments: widget.utilisateurs); 
+      Navigator.pushNamed(context, locationRoute, arguments: widget.utilisateurs); 
     }else{
       erreurInteret();
     }

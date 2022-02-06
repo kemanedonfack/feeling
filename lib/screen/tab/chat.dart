@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             if(idCurrentUser.isNotEmpty)
-              StreamBuilder<QuerySnapshot>(
+              StreamBuilder<QuerySnapshot>( 
                 stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idCurrentUser).collection(C_MATCHS).orderBy('date', descending: true).snapshots(),
                 builder: (context, snapshot) {
                   // print("donne $idCurrentUser de match ${snapshot.data!.docs[0].id}");
@@ -103,15 +103,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                     onTap: (){
                                       Navigator.pushNamed(context, chatDetailsRoute, arguments: utilisateurs);
                                     },
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                                      child: CircleAvatar(
-                                        backgroundImage: CachedNetworkImageProvider(
-                                          utilisateurs!.photo[0],
-                                          cacheManager: customCacheManager,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.only(left: 16),
+                                          child: CircleAvatar(
+                                            backgroundImage: CachedNetworkImageProvider(
+                                              utilisateurs!.photo[0],
+                                              cacheManager: customCacheManager,
+                                            ),
+                                            maxRadius: 30,
+                                          ),
                                         ),
-                                        maxRadius: 30,
-                                      ),
+                                        Text(utilisateurs.nom.capitalize(), style: const TextStyle(fontWeight: FontWeight.bold),)
+                                      ],
                                     ),
                                   );
                                 }else{
@@ -130,23 +135,20 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             const SafeArea (
               child: Padding(
-                padding: EdgeInsets.only(left: 16,right: 16, bottom: 10),
+                padding: EdgeInsets.only(left: 16,right: 16, bottom: 0),
                 child: Text("Conversations",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
               ),
             ),
             if(idCurrentUser.isNotEmpty)
               StreamBuilder<List<Conversation>>(
                 stream: messagecontroller.getConversation(idCurrentUser, 20),
-
                 builder: (BuildContext context, AsyncSnapshot<List<Conversation>> snapshot) {
-                 
-                  
                   if(snapshot.hasData){
                     List<Conversation> listconversation = snapshot.data ?? List.from([]);
                     return ListView.builder(
                       itemCount: listconversation.length,
                       shrinkWrap: true,
-                      padding: const EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.only(top: 5),
                       physics: const ScrollPhysics(),
                       itemBuilder: (context, index){
                         return ChatUsersList(conversation: listconversation[index],);

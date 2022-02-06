@@ -309,10 +309,10 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
     await DatabaseConnection().ajouterImages(localImageUrls);
 
-    var result = await DatabaseConnection().afficher("photos");
-    if (kDebugMode) {
-      print("resultat $result");
-    }
+    // var result = await DatabaseConnection().afficher("photos");
+    // if (kDebugMode) {
+    //   print("resultat $result");
+    // }
 
     for(int i=0; i<images.length; i++){
       var imagesUrl = await upload(images[i]);

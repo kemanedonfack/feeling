@@ -30,6 +30,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   LikeController likeController = LikeController();
   TextEditingController textEditingController = TextEditingController();
   ScrollController listScrollController = ScrollController();
+  String idCurrentUser="";
 
   int _nbElement = 20;
   static const int PAGINATION_INCREMENT = 20;
@@ -139,6 +140,12 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           controller: listScrollController,
                           padding: const EdgeInsets.only(top: 10,bottom: 10),
                           itemBuilder: (context, index){
+                            if(index == listmessage.length-1){
+                              // print("dernier message ${listmessage[0].content} me $idCurrentUser ${listmessage[0].idReceiver}");
+                              if(idCurrentUser == listmessage[0].idReceiver){
+                                messagecontroller.updateReadMessage(chatGroupId, listmessage[0].idmessage);
+                              }
+                            }
                           return ChatBubble(message: listmessage[index], chatGroupId: chatGroupId);
                           },
                         );
@@ -225,6 +232,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   getChatGroupId() async {
 
     await Utilisateurs.getUserId().then((value) {
+        idCurrentUser = value;
       if (value.hashCode <= widget.utilisateurs.idutilisateurs.hashCode) {
         setState(() {
           chatGroupId = value+'-'+widget.utilisateurs.idutilisateurs; 

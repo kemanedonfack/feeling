@@ -63,7 +63,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(utilisateurs.nom),
+                                Text(utilisateurs.nom.capitalize()),
                                 const SizedBox(height: 6,),
                                 Text(widget.conversation.lastMessage['content'],style: TextStyle(fontSize: 14,color: Colors.grey.shade500),),
                               ],

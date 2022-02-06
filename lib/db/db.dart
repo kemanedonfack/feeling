@@ -33,7 +33,11 @@ class DatabaseConnection{
           );
 
           await db.execute("""
-            CREATE TABLE likes (idlike INTEGER PRIMARY KEY, idSender TEXT NOT NULL, idReceiver TEXT NOT NULL)"""
+            CREATE TABLE likes (idlike INTEGER PRIMARY KEY, idReceiver TEXT NOT NULL)"""
+          );
+
+          await db.execute("""
+            CREATE TABLE dislikes (iddislike INTEGER PRIMARY KEY, idReceiver TEXT NOT NULL)"""
           );
           
         }
@@ -43,8 +47,16 @@ class DatabaseConnection{
   Future<void> ajouterLikes(Likes likes) async{
 
     final db = await init(); //open database
-    await db.rawInsert('INSERT INTO likes (idSender, idReceiver) VALUES (?, ?)',
-      [likes.idSender, likes.idReceiver]);
+    await db.rawInsert('INSERT INTO likes (idReceiver) VALUES ( ?)',
+      [likes.idReceiver]);
+    
+  }
+
+  Future<void> ajouterDisLikes(Likes dislikes) async{
+
+    final db = await init(); //open database
+    await db.rawInsert('INSERT INTO dislikes (idReceiver) VALUES (?)',
+      [dislikes.idReceiver]);
     
   }
 
@@ -119,13 +131,12 @@ class DatabaseConnection{
     }
   }
 
-  afficher(table) async {
+  getLikeAndDisLike(table) async {
     final db = await init();
-    return await db.query(table);
-
+    return await db.rawQuery('select idReceiver from $table');
   }
 
 
 
-}
+} 
 

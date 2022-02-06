@@ -49,7 +49,7 @@ class ChatDetailPageAppBar extends StatelessWidget implements PreferredSizeWidge
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(utilisateurs.nom, style: const TextStyle(fontWeight: FontWeight.w600),),
+                    Text(utilisateurs.nom.capitalize(), style: const TextStyle(fontWeight: FontWeight.w600),),
                     const SizedBox(height: 6,),
                     const Text("Online",style: TextStyle(color: Colors.green,fontSize: 12),),
                   ],
@@ -96,7 +96,7 @@ class ChatDetailPageAppBar extends StatelessWidget implements PreferredSizeWidge
         builder: (BuildContext buildContext){
           return AlertDialog(
             title: const Text("Erreur"),
-            content: Text("Vous voulez vraiment supprimer votre conversation avec ${utilisateurs.nom} ?"),
+            content: Text("Vous voulez vraiment supprimer votre conversation avec ${utilisateurs.nom.capitalize()} ?"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
@@ -128,7 +128,7 @@ class ChatDetailPageAppBar extends StatelessWidget implements PreferredSizeWidge
         builder: (BuildContext buildContext){
           return AlertDialog(
             title: const Text("Erreur"),
-            content: Text("Vous voulez vraiment supprimer votre match avec ${utilisateurs.nom} ? "),
+            content: Text("Vous voulez vraiment supprimer votre match avec ${utilisateurs.nom.capitalize()} ? "),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

@@ -109,6 +109,7 @@ class LikeController{
               // si aucun des deux n'a liker le profil de l'autre
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({
+                "read": false,
                 "date": FieldValue.serverTimestamp()
               });
 
@@ -125,6 +126,7 @@ class LikeController{
               // si l'un des deux à liker la photo de l'autre
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({
+                "read": false,
                 "date": FieldValue.serverTimestamp()
               });
 
@@ -155,5 +157,36 @@ class LikeController{
       }
 
     }
+
+  Future<void>saveDisLike(Likes dislike) async {
+    await relations.doc(dislike.idSender).collection(C_DISLIKES).doc(dislike.idReceiver).set({
+      "date": FieldValue.serverTimestamp()
+    });
+  }
+
+  Future<void>saveSuperLike(Likes superlike) async {
+    await relations.doc(superlike.idReceiver).collection(C_SUPERLIKES).doc(superlike.idSender).set({
+      "read": false,
+      "date": FieldValue.serverTimestamp()
+    });
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserLikeMe(String id){
+    return FirebaseFirestore.instance.collection(C_RELATIONS).doc(id).collection(C_LIKES).where('read', isEqualTo: false).orderBy('date', descending: true).snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMeSuperLike(String id){
+    return FirebaseFirestore.instance.collection(C_RELATIONS).doc(id).collection(C_SUPERLIKES).where('read', isEqualTo: false).orderBy('date', descending: true).snapshots();
+  }
+
+  Future<void> updateLike(String likeUserId) async {
+    await relations.doc(await Utilisateurs.getUserId()).collection(C_LIKES).doc(likeUserId).set({
+      'read': true
+    });
+    await relations.doc(likeUserId).collection(C_LIKES).doc(await Utilisateurs.getUserId()).set({
+      'read': true
+    });
+
+  }
 }
 

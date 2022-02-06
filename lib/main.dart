@@ -6,7 +6,6 @@ import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/couleur.dart';
 
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'San Francisco',
         primarySwatch: primary,
       ),
-      // home: HomePage(),
+      // home: LocationScreen(),
       onGenerateRoute: AppRouter.allRoutes,
       initialRoute: splashRoute,
       debugShowCheckedModeBanner: false,

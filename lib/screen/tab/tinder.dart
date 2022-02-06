@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/like_controller.dart';
 import 'package:feeling/db/db.dart';
+import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/like.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/ripple_animation.dart';
@@ -32,15 +33,9 @@ class _TinderState extends State<Tinder> {
   late MatchEngine _matchEngine;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-    late Utilisateurs currentUser;
-    DatabaseConnection connection = DatabaseConnection();
-    // List<Utilisateurs> listutilisateurs = [];
-    // int itemLength = 0;
+  late Utilisateurs currentUser;
+  DatabaseConnection connection = DatabaseConnection();
     
-    // double mintaille=120;
-    // double maxtaille=170;
-    // RangeValues valuestaille = const RangeValues(120, 170);
-    // RangeLabels labelstaille = const RangeLabels('120', "200");
 
   List<Utilisateurs> listutilisateurs = [ ];
 
@@ -49,17 +44,15 @@ class _TinderState extends State<Tinder> {
   LikeController likecontroller = LikeController();
 
   // variable pour le filtre de recherche
-  String sexeRechercher = "Femme";
   List<String> villes = ["Douala", "Yaoundé", "Bamenda", "Buéa", "Ngaoundére", "Garoua", "Maroua"];
   String? ville="Douala";
     
-  double minage=18;
-  double maxage=35;
   RangeValues valuesage = const RangeValues(18, 35);
   RangeLabels labelsage = const RangeLabels('18', "50");
 
   bool isloading = true;
   late CarouselSliderController _sliderController;
+  Filtres filtres = Filtres(minAge: 18, maxAge: 23, sexe: 'sexe', pays: 'pays', ville: 'ville', showDislike: false);
 
   @override
   void initState() {
@@ -351,6 +344,7 @@ class _TinderState extends State<Tinder> {
                                           InkWell(
                                             onTap: (){
                                                _matchEngine.currentItem?.nope();
+                                               ondislike(_swipeItems[index].content);
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(16),
@@ -374,7 +368,8 @@ class _TinderState extends State<Tinder> {
                                           ),
                                           InkWell(
                                             onTap: (){
-                                              //  Navigator.pushNamed(context, matchRoute, arguments: _swipeItems[index].content);
+                                               _matchEngine.currentItem?.superLike();
+                                               onsuperlike(_swipeItems[index].content);
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(16),
@@ -426,6 +421,7 @@ class _TinderState extends State<Tinder> {
                                           InkWell(
                                             onTap: (){
                                               // matchs(context, listutilisateurs[index]);
+                                              // showData();
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(16),
@@ -495,7 +491,7 @@ class _TinderState extends State<Tinder> {
         return StatefulBuilder(
           builder: (BuildContext context, void Function(void Function()) setState ){
             return Container(
-              height: size.height*0.75,
+              height: size.height*0.8,
             color: const Color(0xff737373),
             child: Container(
               padding: const EdgeInsets.only(bottom: 20),
@@ -556,9 +552,9 @@ class _TinderState extends State<Tinder> {
                               ),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 12),
-                                color: sexeRechercher.contains("Homme") ? Theme.of(context).primaryColor : Colors.white,
+                                color: filtres.sexe.contains("Homme") ? Theme.of(context).primaryColor : Colors.white,
                                 width: size.width*0.44,
-                                child: Center(child: Text("Homme", style: TextStyle(color: sexeRechercher.contains("Homme") ? Colors.white : Colors.black ),)),
+                                child: Center(child: Text("Homme", style: TextStyle(color: filtres.sexe.contains("Homme") ? Colors.white : Colors.black ),)),
                               ),
                             ),
                           ),
@@ -574,10 +570,10 @@ class _TinderState extends State<Tinder> {
                                 topRight: Radius.circular(10),
                               ),
                               child: Container(
-                                color: sexeRechercher.contains("Femme") ? Theme.of(context).primaryColor : Colors.white,
+                                color: filtres.sexe.contains("Femme") ? Theme.of(context).primaryColor : Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 width: size.width*0.44,
-                                child: Center(child: Text("Femme", style: TextStyle(color: sexeRechercher.contains("Femme") ? Colors.white : Colors.black ),)),
+                                child: Center(child: Text("Femme", style: TextStyle(color: filtres.sexe.contains("Femme") ? Colors.white : Colors.black ),)),
                               ),
                             ),
                           ),
@@ -609,13 +605,13 @@ class _TinderState extends State<Tinder> {
                         },
                       ),
                     )
-                  ),                    
-                    SizedBox(height: size.width*0.06,),
+                  ),
+                    SizedBox(height: size.width*0.04),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Age", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
-                        Text("$minage - $maxage ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),)
+                        Text("${filtres.minAge} - ${filtres.maxAge} ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),)
                       ],
                     ),
                     RangeSlider(
@@ -631,57 +627,31 @@ class _TinderState extends State<Tinder> {
                         }
                         setState(() {
                             valuesage =value;
-                            minage = value.start;
-                            maxage = value.end;
+                            filtres.minAge = value.start.ceil();
+                            filtres.maxAge= value.end.ceil();
                             labelsage = RangeLabels("${value.start.toInt().toString()}\$", "${value.start.toInt().toString()}\$");
                         });
                       }
                     ),
-                    SizedBox(height: size.width*0.05),
-                    // Text("Corpulence", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
-                    // const SizedBox(height: 10,),
-                    // Container(
-                    //   width: size.width*0.89,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(10),
-                    //     border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid)
-                    //   ),
-                    //   child: Row(
-                    //     children: [
-                    //       ClipRRect(
-                    //         borderRadius: const BorderRadius.only(
-                    //           bottomLeft: Radius.circular(10),
-                    //           topLeft: Radius.circular(10),
-                    //         ),
-                    //         child: Container(
-                    //           padding: const EdgeInsets.symmetric(vertical: 12),
-                    //           color: Theme.of(context).primaryColor,
-                    //           width: size.width*0.28,
-                    //           child: const Center(child: Text("Ronde", style: TextStyle(color: Colors.white),)),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         padding: const EdgeInsets.symmetric(vertical: 12),
-                    //         // color: Theme.of(context).primaryColor,
-                    //         width: size.width*0.3,
-                    //         child: const Center(child: Text("Moyenne", style: TextStyle(color: Colors.black),)),
-                    //       ),
-                    //       ClipRRect(
-                    //         borderRadius: const BorderRadius.only(
-                    //           bottomRight: Radius.circular(10),
-                    //           topRight: Radius.circular(10),
-                    //         ),
-                    //         child: Container(
-                    //           padding: const EdgeInsets.symmetric(vertical: 12),
-                    //           width: size.width*0.3,
-                    //           color: Theme.of(context).primaryColor,
-                    //           child: const Flexible(child: Center(child: Text("Manéquaine", style: TextStyle(color: Colors.white),))),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(height: size.width*0.1),
+                    // SizedBox(height: size.width*0.02),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Revoir les profils rejetés ?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
+                        Switch(
+                          activeColor: Theme.of(context).primaryColor,
+                          value: filtres.showDislike, 
+                          onChanged: (bool value) { 
+                            setState((){
+                              filtres.showDislike = value;
+                            });                        
+                          }, 
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: size.width*0.01),
+                    
+                    
                     Material(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Theme.of(context).primaryColor ,
@@ -709,10 +679,19 @@ class _TinderState extends State<Tinder> {
   }
   
   void getUtilisateurs() async {
-    
+      
     currentUser = await Utilisateurs.getCurrentUser();
+    if(currentUser.sexe == "Homme"){
+      filtres.sexe="Femme";
+    }else{
+      filtres.sexe ="Homme";
+    }
+    filtres.minAge = currentUser.age-5;
+    filtres.maxAge = currentUser.age+5;
+    filtres.pays = currentUser.pays;
+    filtres.ville = currentUser.ville;
 
-    await utilisateurcontroller.getAllUsers(currentUser.sexe).then((value) async {
+    await utilisateurcontroller.getAllUsers(filtres).then((value) async {
       setState(() {
         listutilisateurs =  value;
 
@@ -730,13 +709,13 @@ class _TinderState extends State<Tinder> {
   }
 
   void selectSexe(String sexe) {
-    if(!sexeRechercher.contains(sexe)){
+    if(!filtres.sexe.contains(sexe)){
       setState(() {
-        sexeRechercher=sexe;
+        filtres.sexe=sexe;
       });
     }else{
       setState(() {
-        sexeRechercher=sexe;
+        filtres.sexe=sexe;
       });
     }
   }
@@ -747,20 +726,17 @@ class _TinderState extends State<Tinder> {
       isloading = true;
     });
 
-    await utilisateurcontroller.getFiltersUsers(sexeRechercher, minage, maxage, ville as String).then((value){
+    await utilisateurcontroller.getAllUsers(filtres).then((value) async {
       setState(() {
         listutilisateurs =  value;
 
-        if(listutilisateurs.isNotEmpty){
-          _swipeItems.clear();
-          if (kDebugMode) {
-            print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
-          }
-          _swipeItemsMapsUser();
-        }else{
-          getUtilisateurs();
+        if (kDebugMode) {
+          print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
         }
+          _swipeItems.clear();
+          _swipeItemsMapsUser();
       });
+    
     });
 
   }
@@ -789,6 +765,7 @@ class _TinderState extends State<Tinder> {
               },
 
               nopeAction: () {
+                ondislike(listutilisateurs[i]);
                 Fluttertoast.showToast(
                     msg: "J'aime pas ${listutilisateurs[i].nom}",
                     toastLength: Toast.LENGTH_SHORT,
@@ -800,6 +777,7 @@ class _TinderState extends State<Tinder> {
               },
 
               superlikeAction: () {
+                onsuperlike(listutilisateurs[i]);
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Superliked ${listutilisateurs[i].nom}"),
                   duration: const Duration(milliseconds: 500),
@@ -919,6 +897,19 @@ class _TinderState extends State<Tinder> {
      );
   }
 
+  void onsuperlike(Utilisateurs utilisateur) {
+
+    // sauvegarde du like en ligne
+    Likes superlike = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
+    likecontroller.saveSuperLike(superlike);
+    likecontroller.findMacth(superlike).then((value){
+      // sauvegarde du like en local
+      connection.ajouterLikes(superlike);    
+        if(value) matchs(context, utilisateur);
+          // print("resultats du match $value");
+    });
+  }
+  
   void onlike(Utilisateurs utilisateur) {
 
     // sauvegarde du like en ligne
@@ -930,6 +921,24 @@ class _TinderState extends State<Tinder> {
           // print("resultats du match $value");
       });
   }
+
+  void ondislike(Utilisateurs utilisateur) {
+
+    // sauvegarde du like en ligne
+    Likes dislike = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
+    likecontroller.saveDisLike(dislike).then((value){
+       connection.ajouterDisLikes(dislike);    
+    });
+  }
+
+  // void showData() async {
+
+  //   var result1 = await connection.getLikeAndDisLike('likes');
+
+  //   var result2 = await connection.getLikeAndDisLike('dislikes');
+
+  //   // print("likes $result1 dislikes $result2");
+  // }
 
       
 

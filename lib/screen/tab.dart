@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/constant/constant.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -41,64 +42,70 @@ class _TabScreenState extends State<TabScreen> {
       
       body: tabs[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         items: [
           const BottomNavigationBarItem(
-            icon: Icon(Icons.style),
-            label: "",
-            backgroundColor: Colors.blue
+            icon: Icon(Icons.view_carousel_outlined),
+            label: ''
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.heart_fill),
-            label: "",
-            backgroundColor: Colors.red
-          ),
-          
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(CupertinoIcons.chat_bubble_2_fill),
-                if(idusers.isNotEmpty)
-                  StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idusers).collection(C_MATCHS).where('active', isEqualTo: false).snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return const Text('');
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Text("");
-                      }
-                      if(snapshot.data!.docs.isNotEmpty){
-                        return Positioned(
-                          top: -1,
-                          right: -1.0,
-                          child: Stack(
-                            children: <Widget>[
-                              Icon(
-                                Icons.brightness_1,
-                                size: 12.0,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              // Text(snapshot.data!.docs.length.toString())
-                            ],
-                          )
-                        );
-                      }else{
-                        return const Text("");
-                      }                  
-                      
+          if(idusers.isNotEmpty)
+            BottomNavigationBarItem(
+              icon: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idusers).collection(C_LIKES).where('read', isEqualTo: false).snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData){
+                    if(snapshot.data!.docs.isNotEmpty){
+                      return Badge(
+                        shape: BadgeShape.circle,
+                        position: BadgePosition.topEnd(),
+                        borderRadius: BorderRadius.circular(100),
+                        child: const Icon(CupertinoIcons.suit_heart),
+                        badgeContent: Text("${snapshot.data!.docs.length}", style: const TextStyle(color: Colors.white),),
+                      );
+                    }else{
+                      return  const Icon(CupertinoIcons.suit_heart);
                     }
-                  )
-              ],
+                  }else{
+                    return const Text("");
+                  }
+                  
+                }
+              ),
+            label: ''
             ),
-            label: "",
-            backgroundColor: Colors.green
-          ),
+
+          if(idusers.isNotEmpty)
+            BottomNavigationBarItem(
+              icon: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idusers).collection(C_MATCHS).where('active', isEqualTo: false).snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData){
+                    if(snapshot.data!.docs.isNotEmpty){
+                      return Badge(
+                        shape: BadgeShape.circle,
+                        position: BadgePosition.topEnd(),
+                        borderRadius: BorderRadius.circular(100),
+                        child: const Icon(CupertinoIcons.bubble_left_bubble_right),
+                        badgeContent: Text("${snapshot.data!.docs.length}", style: const TextStyle(color: Colors.white),),
+                      );
+                    }else{
+                      return  const Icon(CupertinoIcons.bubble_left_bubble_right);
+                    }
+                  }else{
+                    return const Text("");
+                  }
+                  
+                }
+              ),
+            label: ''
+            ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
-            backgroundColor: Colors.blue
+            icon: Icon(CupertinoIcons.person),
+            backgroundColor: Colors.blue,
+            label: ''
           ),
         ],
         onTap: (index){
@@ -118,6 +125,7 @@ class _TabScreenState extends State<TabScreen> {
       });
     });
   }
+  
 }
 
 

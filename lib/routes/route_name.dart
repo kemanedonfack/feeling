@@ -20,3 +20,4 @@ const String modifierinformationRoute = 'modifierinformation';
 const String welcomeRoute = 'welcome';
 const String matchRoute = 'match';
 const String chatDetailsRoute = 'chatdetails';
+const String locationRoute = 'location';

@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/constant/constant.dart';
+import 'package:feeling/db/db.dart';
+import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
-import 'package:location/location.dart';
 
 
 class UtilisateurController{
   
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
+  DatabaseConnection connection = DatabaseConnection();
 
     Future<Utilisateurs>getUserById(List<dynamic> idusers) async {
       
@@ -50,28 +52,56 @@ class UtilisateurController{
       return removerCurrentUsers(listutilisateurs);
     }
 
-    Future<List<Utilisateurs>> getAllUsers(String sexe) async {
+    Future<List<Utilisateurs>> getAllUsers(Filtres filtre) async {
 
       List<Utilisateurs> listutilisateurs = [];
-      if (kDebugMode) {
-        print("dans le controller");
-      }
-     
-      await users.where("sexe", isNotEqualTo: sexe)
-        .orderBy('sexe')
-        .orderBy('date_creation', descending: true).get().then((querySnapshot){
+            
+      await users
+        .where('age', isLessThanOrEqualTo: filtre.maxAge)
+        .where('age', isGreaterThanOrEqualTo: filtre.minAge)
+        .where('ville', isEqualTo: filtre.ville)
+        .where("sexe", isEqualTo: filtre.sexe)
+        .where('pays', isEqualTo: filtre.pays)
+        .orderBy('age')
+        .orderBy('date_creation', descending: true)
+        .get().then((querySnapshot){
         for (var element in querySnapshot.docs) {
-          if (kDebugMode) {
-            print(element.data());
-          }
             listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
          }
       });
+
+      if (kDebugMode) {
+        print("list utilisateurs initiale $listutilisateurs");
+      }
+
+      if(filtre.showDislike){
+        var dislikedUsers = await connection.getLikeAndDisLike('dislikes');
+        /// retrait des utilisateurs que j'aime pas 
+        if (dislikedUsers.isNotEmpty) {
+          dislikedUsers.forEach((dislikedUser) {
+            listutilisateurs.removeWhere(
+                (userDoc) => userDoc.idutilisateurs == dislikedUser['idReceiver']);
+          });
+        }
+      }
+      
+
+      // var likedUsers = await connection.getLikeAndDisLike('likes');
+      //   /// retrait des utilisateurs que j'aime  
+      // if (likedUsers.isNotEmpty) {
+      //   likedUsers.forEach((likedUser) {
+      //     listutilisateurs.removeWhere(
+      //         (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
+      //   });
+      // }
+      if (kDebugMode) {
+        print("list utilisateurs apres retrait $listutilisateurs");
+      }
       
      return removerCurrentUsers(listutilisateurs);
     }
 
-    Future<String> addUsers(Utilisateurs utilisateurs, LocationData locationData) async {
+    Future<String> addUsers(Utilisateurs utilisateurs) async {
 
       try{
         if (kDebugMode) {
@@ -91,7 +121,7 @@ class UtilisateurController{
             "photo" : utilisateurs.photo,
             "interet" : utilisateurs.interet,
             "propos" : utilisateurs.propos,
-            "localisation": GeoPoint(locationData.latitude as double, locationData.longitude as double),
+            "localisation": GeoPoint(utilisateurs.position.latitude as double, utilisateurs.position.longitude as double),
             "date_creation": FieldValue.serverTimestamp(),
             "status": "active"
           });

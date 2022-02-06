@@ -20,24 +20,18 @@ class _ChatBubbleState extends State<ChatBubble> {
   @override
   initState(){
     getCurrentUsersId();
-    updateLastRead();
     super.initState();
   }
 
-  updateLastRead() async {
-    
-    
-  }
 
   void getCurrentUsersId() async {
 
     await Utilisateurs.getUserId().then((value){
       setState(() {
         idCurrentUsers = value;
-        
-          if(idCurrentUsers == widget.message.idReceiver){
-            messagecontroler.updateReadMessage(widget.chatGroupId, widget.message.idmessage);
-          }
+          // if(idCurrentUsers == widget.message.idReceiver){
+          //   messagecontroler.updateReadMessage(widget.chatGroupId, widget.message.idmessage);
+          // }
       });
     });
   }

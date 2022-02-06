@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/material.dart';
 
 class RippleAnimation extends StatefulWidget {
@@ -10,10 +13,11 @@ class RippleAnimation extends StatefulWidget {
 class _RippleAnimationState extends State<RippleAnimation> with SingleTickerProviderStateMixin {
 
   late AnimationController _controller;
-
+  List<Utilisateurs> currentUser = [];
   @override
   void initState() {
     super.initState();
+    getCurrentUser();
     _controller = AnimationController(
       vsync: this,
       lowerBound: 0.5,
@@ -36,21 +40,59 @@ class _RippleAnimationState extends State<RippleAnimation> with SingleTickerProv
   }
 
   Widget _buildBody() {
-    return AnimatedBuilder(
-      animation: CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
-      builder: (context, child) {
-        return Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            _buildContainer(100 * _controller.value),
-            _buildContainer(300 * _controller.value),
-            _buildContainer(500 * _controller.value),
-            _buildContainer(700 * _controller.value),
-            const Align(child: Icon(Icons.phone_android, size: 44,)),
-          ],
-        );
-      },
-    );
+
+    if(currentUser.isNotEmpty){
+      return AnimatedBuilder(
+        animation: CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+        builder: (context, child) {
+          return Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              // _buildContainer(100 * _controller.value),
+              _buildContainer(300 * _controller.value),
+              _buildContainer(500 * _controller.value),
+              _buildContainer(700 * _controller.value),
+              Align(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width*0.2,
+                  // decoration: BoxDecoration(
+                  //   image: DecorationImage(
+                  //     image: FileImage(File(currentUser[0].photo[0]))
+                  //   )
+                  // ),
+                  child: CircleAvatar(
+                   backgroundImage: FileImage(File(currentUser[0].photo[0])),
+                   maxRadius: 100,                   
+                 )
+                )
+              ),
+            ],
+          );
+        },
+      );
+    }else{
+      return AnimatedBuilder(
+        animation: CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+        builder: (context, child) {
+          return Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              _buildContainer(100 * _controller.value),
+              _buildContainer(300 * _controller.value),
+              _buildContainer(500 * _controller.value),
+              _buildContainer(700 * _controller.value),
+              const Align(
+                child: CircleAvatar(
+                 backgroundImage: AssetImage('images/logo2.png'),
+                 maxRadius: 100,
+                )
+              ),
+            ],
+          );
+        },
+      );
+    }
+
   }
 
   Widget _buildContainer(double radius) {
@@ -62,6 +104,16 @@ class _RippleAnimationState extends State<RippleAnimation> with SingleTickerProv
         color: Theme.of(context).primaryColor.withOpacity(1 - _controller.value),
       ),
     );
+  }
+
+  void getCurrentUser() async {
+    await Utilisateurs.getCurrentUser().then((value){
+      
+      setState(() {
+        currentUser.add(value);
+      });
+
+    });
   }
 
 }

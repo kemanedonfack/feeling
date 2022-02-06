@@ -1,5 +1,6 @@
 
 import 'package:feeling/db/db.dart';
+import 'package:location/location.dart';
 
 class Utilisateurs{
   String idutilisateurs;
@@ -13,6 +14,7 @@ class Utilisateurs{
   List<dynamic> photo;
   List<dynamic> interet;
   String propos;
+  late LocationData position;
   Utilisateurs({required this.nom, required this.idutilisateurs, required this.interet, required this.age, required this.numero, 
   required this.pays, required this.photo, required this.profession, required this.sexe, required this.ville, required this.propos});
 
