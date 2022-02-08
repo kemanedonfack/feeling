@@ -11,6 +11,10 @@ class UtilisateurController{
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
   DatabaseConnection connection = DatabaseConnection();
 
+   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStatus(String id){
+    return FirebaseFirestore.instance.collection(C_USERS).doc(id).snapshots();
+  }
+
     Future<Utilisateurs>getUserById(List<dynamic> idusers) async {
       
       String idcurrentuser = await Utilisateurs.getUserId();
@@ -123,7 +127,8 @@ class UtilisateurController{
             "propos" : utilisateurs.propos,
             "localisation": GeoPoint(utilisateurs.position.latitude as double, utilisateurs.position.longitude as double),
             "date_creation": FieldValue.serverTimestamp(),
-            "status": "active"
+            "status": "active",
+            "online": true
           });
           return documentId;
       }catch(e){

@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/models/conversations.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -49,12 +51,40 @@ class _ChatUsersListState extends State<ChatUsersList> {
                   Expanded(
                     child: Row(
                       children:  <Widget>[
-                        CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(
-                            utilisateurs!.photo[0],
-                            cacheManager: customCacheManager,
-                          ),
-                          maxRadius: 30,
+                        Stack(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                utilisateurs!.photo[0],
+                                cacheManager: customCacheManager,
+                              ),
+                              maxRadius: 30,
+                              child: StreamBuilder<DocumentSnapshot>(
+                                stream: utilisateurcontroller.getUserStatus(utilisateurs.idutilisateurs),
+                                builder: (context, snapshot) {
+                                  if(snapshot.hasData){
+                                    if(snapshot.data!.exists){
+                                      if(snapshot.data!['online'] == true){
+                                        return Badge(
+                                          badgeColor: Colors.green,
+                                          position:  BadgePosition.bottomEnd(bottom: 3.0, end: 3.0),
+                                          child: Container(),
+                                        );
+                                      }else{
+                                        return Container();
+                                      } 
+                                      
+                                    }else{
+                                      return Container();
+                                    }
+                                  }else{
+                                    return Container();
+                                  }
+                                  
+                                }
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(width: 16,),
                         Expanded(

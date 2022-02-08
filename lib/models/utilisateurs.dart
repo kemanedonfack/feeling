@@ -15,8 +15,10 @@ class Utilisateurs{
   List<dynamic> interet;
   String propos;
   late LocationData position;
+  late bool online;
   Utilisateurs({required this.nom, required this.idutilisateurs, required this.interet, required this.age, required this.numero, 
-  required this.pays, required this.photo, required this.profession, required this.sexe, required this.ville, required this.propos});
+  required this.pays, required this.photo, required this.profession, required this.sexe, required this.ville, required this.propos
+  , required this.online});
 
   factory Utilisateurs.fromMap(Map<String, dynamic> data, dynamic id){
     return Utilisateurs(
@@ -31,6 +33,7 @@ class Utilisateurs{
         photo: data['photo'],
         interet: data['interet'],
         propos: data['propos'],
+        online: data['online'],
     );
   }
 

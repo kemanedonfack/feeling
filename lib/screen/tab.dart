@@ -17,9 +17,10 @@ class TabScreen extends StatefulWidget {
   _TabScreenState createState() => _TabScreenState();
 }
 
-class _TabScreenState extends State<TabScreen> {
+class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   int _currentIndex=0;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final tabs=  [
     const Tinder(),
@@ -34,6 +35,28 @@ class _TabScreenState extends State<TabScreen> {
   initState(){
     getUsers();
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+    setStatus(true);
+  }
+
+  void setStatus(bool value) async {
+
+    print("utilisateurs online $value");
+    
+    await _firestore.collection('users').doc(await Utilisateurs.getUserId()).update({
+      "online": value,
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // online
+      setStatus(true);
+    } else {
+      // offline
+      setStatus(false);
+    }
   }
 
   @override

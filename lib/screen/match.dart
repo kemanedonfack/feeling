@@ -17,7 +17,8 @@ class MatchScreen extends StatefulWidget {
 class _MatchScreenState extends State<MatchScreen> {
 
   DatabaseConnection connection = DatabaseConnection();
-  Utilisateurs utilisateurslocal = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', interet: ["interet"], age: 20, numero: 'numero', pays: 'pays', photo: ["images/userImage5.jpeg"], profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos');
+  Utilisateurs utilisateurslocal = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', interet: ["interet"], age: 20, numero: 'numero',
+   pays: 'pays', photo: ["images/userImage5.jpeg"], profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', online: false);
 
   @override
   void initState() {

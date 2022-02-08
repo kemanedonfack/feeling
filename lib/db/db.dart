@@ -103,6 +103,7 @@ class DatabaseConnection{
         propos: maps[i]['propos'],
         photo: listphotos,
         age: maps[i]['age'],
+        online: false
       );
     });
   }
