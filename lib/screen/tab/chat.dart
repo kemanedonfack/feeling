@@ -76,83 +76,97 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             ),
-            const SafeArea (
-              child: Padding(
-                padding: EdgeInsets.only(left: 16,right: 16, bottom: 10),
-                child: Text("Matchs",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-              ),
-            ),
+            
             if(idCurrentUser.isNotEmpty)
               StreamBuilder<QuerySnapshot>( 
                 stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idCurrentUser).collection(C_MATCHS).orderBy('date', descending: true).snapshots(),
                 builder: (context, snapshot) {
                   // print("donne $idCurrentUser de match ${snapshot.data!.docs[0].id}");
                   if(snapshot.hasData){
-                    return SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          for(int i=0; i<snapshot.data!.docs.length; i++)
-                            FutureBuilder<Utilisateurs>(
-                              future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
-                              builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
-                                if(snapshot.hasData){
-                                  Utilisateurs? utilisateurs = snapshot.data ;
-                                  return InkWell(
-                                    onTap: (){
-                                      Navigator.pushNamed(context, chatDetailsRoute, arguments: utilisateurs);
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(left: 16),
-                                          child: CircleAvatar(
-                                            backgroundImage: CachedNetworkImageProvider(
-                                              utilisateurs!.photo[0],
-                                              cacheManager: customCacheManager,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if(snapshot.data!.docs.isNotEmpty)
+                        const SafeArea (
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 16,right: 16, bottom: 10),
+                            child: Text("Matchs",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                        ),
+                        SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for(int i=0; i<snapshot.data!.docs.length; i++)
+                                FutureBuilder<Utilisateurs>(
+                                  future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
+                                  builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
+                                    if(snapshot.hasData){
+                                      Utilisateurs? utilisateurs = snapshot.data ;
+                                      return InkWell(
+                                        onTap: (){
+                                          Navigator.pushNamed(context, chatDetailsRoute, arguments: utilisateurs);
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.only(left: 16),
+                                              child: CircleAvatar(
+                                                backgroundImage: CachedNetworkImageProvider(
+                                                  utilisateurs!.photo[0],
+                                                  cacheManager: customCacheManager,
+                                                ),
+                                                maxRadius: 30,
+                                              ),
                                             ),
-                                            maxRadius: 30,
-                                          ),
+                                            Text(utilisateurs.nom.capitalize(), style: const TextStyle(fontWeight: FontWeight.bold),)
+                                          ],
                                         ),
-                                        Text(utilisateurs.nom.capitalize(), style: const TextStyle(fontWeight: FontWeight.bold),)
-                                      ],
-                                    ),
-                                  );
-                                }else{
-                                  return const Text("");
-                                }
-                                
-                              }
-                            )
-                        ]
-                      )
+                                      );
+                                    }else{
+                                      return const Text("");
+                                    }
+                                    
+                                  }
+                                )
+                            ]
+                          )
+                        ),
+                      ],
                     );
                   }else{
                     return const Text("");
                   }
                 }
               ),
-            const SafeArea (
-              child: Padding(
-                padding: EdgeInsets.only(left: 16,right: 16, bottom: 0),
-                child: Text("Conversations",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-              ),
-            ),
+            
             if(idCurrentUser.isNotEmpty)
               StreamBuilder<List<Conversation>>(
                 stream: messagecontroller.getConversation(idCurrentUser, 20),
                 builder: (BuildContext context, AsyncSnapshot<List<Conversation>> snapshot) {
                   if(snapshot.hasData){
                     List<Conversation> listconversation = snapshot.data ?? List.from([]);
-                    return ListView.builder(
-                      itemCount: listconversation.length,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(top: 5),
-                      physics: const ScrollPhysics(),
-                      itemBuilder: (context, index){
-                        return ChatUsersList(conversation: listconversation[index],);
-                      },
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if(snapshot.data!.isNotEmpty)
+                        const SafeArea (
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 16,right: 16, bottom: 0),
+                            child: Text("Conversations",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                          ),
+                        ),
+                        ListView.builder(
+                          itemCount: listconversation.length,
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(top: 5),
+                          physics: const ScrollPhysics(),
+                          itemBuilder: (context, index){
+                            return ChatUsersList(conversation: listconversation[index],);
+                          },
+                        ),
+                      ],
                     );
                   }else{
                     return const Text("");

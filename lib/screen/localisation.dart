@@ -22,7 +22,7 @@ class _LocationScreenState extends State<LocationScreen> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 50),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 ),
               ),
               
-              SizedBox(height: size.height*0.01),
+              SizedBox(height: size.height*0.07),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -61,7 +61,7 @@ class _LocationScreenState extends State<LocationScreen> {
               ),
               SizedBox(height: size.height*0.01),
               Text( "Activer votre position afin de rencontrer des personnes autour de vous", style: TextStyle(fontSize:  size.width*0.06,), textAlign: TextAlign.center),
-              SizedBox(height: size.height*0.04),
+              SizedBox(height: size.height*0.06),
               InkWell(
                   child: Material(
                     borderRadius: BorderRadius.circular(10.0),

@@ -87,7 +87,11 @@ class _TinderState extends State<Tinder> {
           ),
         ],
       ),
-        body: isloading ? const RippleAnimation() :  Container(
+        body: isloading ? const RippleAnimation() : 
+          listutilisateurs.isEmpty ? const Padding(
+            padding: EdgeInsets.all(8.0),
+            child:  Center(child: Text("Aucun utilisateurs modifiez vos paramètres de recherche", textAlign: TextAlign.center,)),
+          ) :  Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
@@ -695,11 +699,18 @@ class _TinderState extends State<Tinder> {
       setState(() {
         listutilisateurs =  value;
 
-        if (kDebugMode) {
-          print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
-        }
+        if(listutilisateurs.isNotEmpty){
+          if (kDebugMode) {
+            print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
+          }
           _swipeItems.clear();
           _swipeItemsMapsUser();
+        }else{
+          print("aucune donnée");
+          setState(() {
+            isloading=false;
+          });
+        }
       });
     
     });
@@ -730,11 +741,18 @@ class _TinderState extends State<Tinder> {
       setState(() {
         listutilisateurs =  value;
 
-        if (kDebugMode) {
-          print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
-        }
+        if(listutilisateurs.isNotEmpty){
+          if (kDebugMode) {
+            print("taille ${listutilisateurs.length} id ${listutilisateurs[0].photo[0]} ");
+          }
           _swipeItems.clear();
           _swipeItemsMapsUser();
+        }else{
+          print("aucune donnée");
+          setState(() {
+            isloading=false;
+          });
+        }
       });
     
     });
@@ -901,8 +919,8 @@ class _TinderState extends State<Tinder> {
 
     // sauvegarde du like en ligne
     Likes superlike = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
-    likecontroller.saveSuperLike(superlike);
-    likecontroller.findMacth(superlike).then((value){
+    // likecontroller.saveSuperLike(superlike);
+    likecontroller.findMacth(superlike, true).then((value){
       // sauvegarde du like en local
       connection.ajouterLikes(superlike);    
         if(value) matchs(context, utilisateur);
@@ -914,7 +932,7 @@ class _TinderState extends State<Tinder> {
 
     // sauvegarde du like en ligne
     Likes like = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
-      likecontroller.findMacth(like).then((value){
+      likecontroller.findMacth(like, false).then((value){
       // sauvegarde du like en local
       connection.ajouterLikes(like);    
         if(value) matchs(context, utilisateur);
@@ -926,9 +944,10 @@ class _TinderState extends State<Tinder> {
 
     // sauvegarde du like en ligne
     Likes dislike = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
-    likecontroller.saveDisLike(dislike).then((value){
-       connection.ajouterDisLikes(dislike);    
-    });
+    connection.ajouterDisLikes(dislike);    
+    // likecontroller.saveDisLike(dislike).then((value){
+    //    connection.ajouterDisLikes(dislike);    
+    // });
   }
 
   // void showData() async {

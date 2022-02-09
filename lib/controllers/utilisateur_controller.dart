@@ -78,7 +78,7 @@ class UtilisateurController{
         print("list utilisateurs initiale $listutilisateurs");
       }
 
-      if(filtre.showDislike){
+      if(filtre.showDislike == false){
         var dislikedUsers = await connection.getLikeAndDisLike('dislikes');
         /// retrait des utilisateurs que j'aime pas 
         if (dislikedUsers.isNotEmpty) {
@@ -90,19 +90,19 @@ class UtilisateurController{
       }
       
 
-      // var likedUsers = await connection.getLikeAndDisLike('likes');
-      //   /// retrait des utilisateurs que j'aime  
-      // if (likedUsers.isNotEmpty) {
-      //   likedUsers.forEach((likedUser) {
-      //     listutilisateurs.removeWhere(
-      //         (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
-      //   });
-      // }
+      var likedUsers = await connection.getLikeAndDisLike('likes');
+        /// retrait des utilisateurs que j'aime  
+      if (likedUsers.isNotEmpty) {
+        likedUsers.forEach((likedUser) {
+          listutilisateurs.removeWhere(
+              (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
+        });
+      }
       if (kDebugMode) {
         print("list utilisateurs apres retrait $listutilisateurs");
       }
       
-     return removerCurrentUsers(listutilisateurs);
+      return removerCurrentUsers(listutilisateurs);
     }
 
     Future<String> addUsers(Utilisateurs utilisateurs) async {
@@ -112,9 +112,9 @@ class UtilisateurController{
           print("pret");
         }
           
-          var documentId = users.doc().id;
+          String documentId ="";
           
-          await users.doc(documentId).set({
+          await users.add({
             "nom" : utilisateurs.nom,
             "age" : utilisateurs.age,
             "ville" : utilisateurs.ville,
@@ -129,6 +129,9 @@ class UtilisateurController{
             "date_creation": FieldValue.serverTimestamp(),
             "status": "active",
             "online": true
+          }).then((value) {
+            documentId = value.id;
+            return value.id;
           });
           return documentId;
       }catch(e){

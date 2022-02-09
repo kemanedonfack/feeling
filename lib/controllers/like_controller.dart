@@ -98,10 +98,10 @@ class LikeController{
     return listutilisateurs;
   }
 
-    Future<bool> findMacth(Likes like) async {
+    Future<bool> findMacth(Likes like, bool isSuperLike) async {
       bool result = false;
       try{
-        
+        print("issuper like $isSuperLike");
         await relations.doc(like.idSender).collection(C_LIKES).doc(like.idReceiver)
           .get().then((querySnapshot) async {
                   
@@ -110,6 +110,7 @@ class LikeController{
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({
                 "read": false,
+                "super": isSuperLike,
                 "date": FieldValue.serverTimestamp()
               });
 
@@ -127,6 +128,7 @@ class LikeController{
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({
                 "read": false,
+                "super": false,
                 "date": FieldValue.serverTimestamp()
               });
 
@@ -158,15 +160,16 @@ class LikeController{
 
     }
 
-  Future<void>saveDisLike(Likes dislike) async {
-    await relations.doc(dislike.idSender).collection(C_DISLIKES).doc(dislike.idReceiver).set({
-      "date": FieldValue.serverTimestamp()
-    });
-  }
+  // Future<void>saveDisLike(Likes dislike) async {
+  //   await relations.doc(dislike.idSender).collection(C_DISLIKES).doc(dislike.idReceiver).set({
+  //     "date": FieldValue.serverTimestamp()
+  //   });
+  // }
 
   Future<void>saveSuperLike(Likes superlike) async {
-    await relations.doc(superlike.idReceiver).collection(C_SUPERLIKES).doc(superlike.idSender).set({
+    await relations.doc(superlike.idReceiver).collection(C_LIKES).doc(superlike.idSender).set({
       "read": false,
+      "super": true,
       "date": FieldValue.serverTimestamp()
     });
   }
@@ -176,17 +179,15 @@ class LikeController{
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getMeSuperLike(String id){
-    return FirebaseFirestore.instance.collection(C_RELATIONS).doc(id).collection(C_SUPERLIKES).where('read', isEqualTo: false).orderBy('date', descending: true).snapshots();
+    return FirebaseFirestore.instance.collection(C_RELATIONS).doc(id).collection(C_LIKES).where('read', isEqualTo: false).where('super', isEqualTo: true).orderBy('date', descending: true).snapshots();
   }
 
   Future<void> updateLike(String likeUserId) async {
-    await relations.doc(await Utilisateurs.getUserId()).collection(C_LIKES).doc(likeUserId).set({
+    await relations.doc(await Utilisateurs.getUserId()).collection(C_LIKES).doc(likeUserId).update({
       'read': true
     });
-    await relations.doc(likeUserId).collection(C_LIKES).doc(await Utilisateurs.getUserId()).set({
+    await relations.doc(likeUserId).collection(C_LIKES).doc(await Utilisateurs.getUserId()).update({
       'read': true
     });
-
   }
 }
-

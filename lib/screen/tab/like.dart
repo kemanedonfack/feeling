@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/controllers/like_controller.dart';
@@ -28,7 +27,7 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
   late Utilisateurs currentUser;
   String idCurrentUser="";
   UtilisateurController utilisateurcontroller = UtilisateurController();
-    DatabaseConnection connection = DatabaseConnection();
+  DatabaseConnection connection = DatabaseConnection();
 
   @override
   initState(){
@@ -52,294 +51,156 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Column(
             children: [
-              TabBar(
-                labelPadding: EdgeInsets.symmetric(horizontal: size.width*0.1),
-                isScrollable: false,
-                // physics: NeverScrollableScrollPhysics(),
-                controller: _tabController,
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.grey,
-                indicatorColor: Colors.transparent,
-                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                // indicator: CircleTabIndicator(Colors.black, 4),
-                tabs: const [
-                  Tab(text: 'Likes'),
-                  Tab(text: 'SuperLikes'),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 20),
-                height:  double.maxFinite,
-                // width: double.maxFinite,
-                child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _tabController,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        if(idCurrentUser.isNotEmpty)
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: StreamBuilder<QuerySnapshot>(
-                              stream: likecontroller.getUserLikeMe(idCurrentUser),
-                              builder: (context, snapshot) {
-                                if(snapshot.hasData){
-                                // print("dans like ${snapshot.data!.docs}");
-                                  return Wrap(
-                                    spacing: 5,
-                                    runSpacing: 5,
-                                    children: [
-                                      for(int i=0; i<snapshot.data!.docs.length; i++)
-                                        FutureBuilder<Utilisateurs>(
-                                          future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
-                                          builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
-                                            if(snapshot.hasData){
-                                              Utilisateurs? utilisateurs = snapshot.data ;
-                                              return SizedBox(
+              
+              if(idCurrentUser.isNotEmpty)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: likecontroller.getUserLikeMe(idCurrentUser),
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData){
+                      // print("dans like ${snapshot.data!.docs}");
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child:  Text("${snapshot.data!.docs.length} Likes",
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Divider(
+                              thickness: 0.8,
+                            ),
+                            Wrap(
+                              spacing: 5,
+                              runSpacing: 5,
+                              children: [
+                                for(int i=0; i<snapshot.data!.docs.length; i++)
+                                  FutureBuilder<Utilisateurs>(
+                                    future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
+                                    builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> future) {
+                                      if(snapshot.hasData){
+                                        Utilisateurs? utilisateurs = future.data ;
+                                        return SizedBox(
+                                          width: (size.width - 15) / 2,
+                                          height: 250,
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                key: UniqueKey(),
                                                 width: (size.width - 15) / 2,
                                                 height: 250,
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      key: UniqueKey(),
-                                                      width: (size.width - 15) / 2,
-                                                      height: 250,
-                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                                                        image: DecorationImage(
-                                                          image: CachedNetworkImageProvider(
-                                                            utilisateurs!.photo[0],
-                                                            cacheManager: customCacheManager,
-                                                          ),
-                                                            fit: BoxFit.cover
-                                                        ),
-                                                      ),
+                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                                                  image: DecorationImage(
+                                                    image: CachedNetworkImageProvider(
+                                                      utilisateurs!.photo[0],
+                                                      cacheManager: customCacheManager,
                                                     ),
-                                                    Container(
-                                                      width: (size.width - 15) / 2,
-                                                      height: 250,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(10),
-                                                        gradient: LinearGradient(
-                                                          colors: [
-                                                            Colors.black.withOpacity(0.25),
-                                                            Colors.black.withOpacity(0),
-                                                          ],
-                                                          end: Alignment.topCenter,
-                                                          begin: Alignment.bottomCenter
-                                                        )
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                      fit: BoxFit.cover
+                                                  ),
+                                                  border: snapshot.data!.docs[i]['super'] ? Border.all(color: Colors.amber, width: 3, style: BorderStyle.solid) : null
+                                                ),
+                                              ),
+                                              Container(
+                                                width: (size.width - 15) / 2,
+                                                height: 250,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Colors.black.withOpacity(0.25),
+                                                      Colors.black.withOpacity(0),
+                                                    ],
+                                                    end: Alignment.topCenter,
+                                                    begin: Alignment.bottomCenter
+                                                  )
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(left: 15),
+                                                      child: Row(
                                                         children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(left: 15),
-                                                            child: Row(
-                                                              children: [
-                                                                const SizedBox(width: 5 ),
-                                                                Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age}",
-                                                                      style: TextStyle(color: Colors.white, fontSize: size.width*0.05,),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                InkWell(
-                                                                  onTap: (){
-                                                                    likecontroller.updateLike(utilisateurs.idutilisateurs);
-                                                                  },
-                                                                  child: const CircleAvatar(
-                                                                    radius: 15,
-                                                                    child: Icon(Icons.close, size: 20, color: Colors.black),
-                                                                    backgroundColor: Colors.white,
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(width: 5 ),
-                                                                InkWell(
-                                                                  onTap: (){
-                                                                    onlike(utilisateurs);
-                                                                  },
-                                                                  child: CircleAvatar(
-                                                                    radius: 15,
-                                                                    child: Icon(CupertinoIcons.heart_fill, size: 20, color: Theme.of(context).primaryColor),
-                                                                    backgroundColor: Colors.white,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
+                                                          const SizedBox(width: 5 ),
+                                                          Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age} ${snapshot.data!.docs[i]['super']}",
+                                                                style: TextStyle(color: Colors.white, fontSize: size.width*0.05,),
                                                           )
+                                                          // Text("${snapshot.data!.docs[i].id}",
+                                                          //       style: TextStyle(color: Colors.white, fontSize: size.width*0.05,),
+                                                          // )
                                                         ],
                                                       ),
                                                     ),
-                                                    InkWell(
-                                                      onTap: (){
-                                                        Navigator.pushNamed(context, profildetailsRoute, arguments: utilisateurs);
-                                                      },
-                                                      child: const Positioned(
-                                                        top: 1,
-                                                        left: 1,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.all(8.0),
-                                                          child: Icon(Icons.info, color: Colors.white,),
-                                                        )
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: (){
+                                                              likecontroller.updateLike(utilisateurs.idutilisateurs);
+                                                            },
+                                                            child: const CircleAvatar(
+                                                              radius: 15,
+                                                              child: Icon(Icons.close, size: 20, color: Colors.black),
+                                                              backgroundColor: Colors.white,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(width: 5 ),
+                                                          InkWell(
+                                                            onTap: (){
+                                                              onlike(utilisateurs);
+                                                            },
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              child: Icon(CupertinoIcons.heart_fill, size: 20, color: Theme.of(context).primaryColor),
+                                                              backgroundColor: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     )
                                                   ],
                                                 ),
-                                              );
-                                            }else{
-                                              return Container();
-                                            }
-                                          }
-                                        )
-                                    ],
-                                  );
-                                }else{
-                                  return const Text("");
-                                }
-                              }
-                            ),
-                          )
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        if(idCurrentUser.isNotEmpty)
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: StreamBuilder<QuerySnapshot>(
-                              stream: likecontroller.getMeSuperLike(idCurrentUser),
-                              builder: (context, snapshot) {
-                                if(snapshot.hasData){
-                                // print("dans super like ${snapshot.data!.docs}");
-                                  return Wrap(
-                                    spacing: 5,
-                                    runSpacing: 5,
-                                    children: [
-                                      for(int i=0; i<snapshot.data!.docs.length; i++)
-                                        FutureBuilder<Utilisateurs>(
-                                          future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
-                                          builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
-                                            if(snapshot.hasData){
-                                              Utilisateurs? utilisateurs = snapshot.data ;
-                                              return SizedBox(
-                                                width: (size.width - 15) / 2,
-                                                height: 250,
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      key: UniqueKey(),
-                                                      width: (size.width - 15) / 2,
-                                                      height: 250,
-                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                                                        image: DecorationImage(
-                                                          image: CachedNetworkImageProvider(
-                                                            utilisateurs!.photo[0],
-                                                            cacheManager: customCacheManager,
-                                                          ),
-                                                            fit: BoxFit.cover
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: (size.width - 15) / 2,
-                                                      height: 250,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(10),
-                                                        gradient: LinearGradient(
-                                                          colors: [
-                                                            Colors.black.withOpacity(0.25),
-                                                            Colors.black.withOpacity(0),
-                                                          ],
-                                                          end: Alignment.topCenter,
-                                                          begin: Alignment.bottomCenter
-                                                        )
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-                                                        children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(left: 15),
-                                                            child: Row(
-                                                              children: [
-                                                                const SizedBox(width: 5 ),
-                                                                Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age}",
-                                                                      style: TextStyle(color: Colors.white, fontSize: size.width*0.05,),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                InkWell(
-                                                                  onTap: (){
-                                                                    likecontroller.updateLike(utilisateurs.idutilisateurs);
-                                                                  },
-                                                                  child: const CircleAvatar(
-                                                                    radius: 15,
-                                                                    child: Icon(Icons.close, size: 20, color: Colors.black),
-                                                                    backgroundColor: Colors.white,
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(width: 5 ),
-                                                                InkWell(
-                                                                  onTap: (){
-                                                                    onlike(utilisateurs);
-                                                                  },
-                                                                  child: CircleAvatar(
-                                                                    radius: 15,
-                                                                    child: Icon(CupertinoIcons.heart_fill, size: 20, color: Theme.of(context).primaryColor),
-                                                                    backgroundColor: Colors.white,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: (){
-                                                        Navigator.pushNamed(context, profildetailsRoute, arguments: utilisateurs);
-                                                      },
-                                                      child: const Positioned(
-                                                        top: 1,
-                                                        left: 1,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.all(8.0),
-                                                          child: Icon(Icons.info, color: Colors.white,),
-                                                        )
-                                                      ),
-                                                    )
-                                                  ],
+                                              ),
+                                              InkWell(
+                                                onTap: (){
+                                                  Navigator.pushNamed(context, profildetailsRoute, arguments: utilisateurs);
+                                                },
+                                                child: const Positioned(
+                                                  top: 1,
+                                                  left: 1,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Icon(Icons.info, color: Colors.white,),
+                                                  )
                                                 ),
-                                              );
-                                            }else{
-                                              return Container();
-                                            }
-                                          }
-                                        )
-                                    ],
-                                  );
-                                }else{
-                                  return const Text("");
-                                }
-                              }
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }else{
+                                        return Container();
+                                      }
+                                    }
+                                  )
+                              ],
                             ),
-                          )
-                      ],
-                    ),
-                  ],
+                          ],
+                        );
+                      }else{
+                        return const Text("");
+                      }
+                    }
+                  ),
                 ),
-              )
             ],
           ),
           )
@@ -367,7 +228,7 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
     currentUser = await Utilisateurs.getCurrentUser();
     // sauvegarde du like en ligne
     Likes like = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
-      likecontroller.findMacth(like).then((value){
+      likecontroller.findMacth(like, false).then((value){
       // sauvegarde du like en local
       likecontroller.updateLike(utilisateur.idutilisateurs);
       connection.ajouterLikes(like);    
@@ -378,11 +239,11 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
   void getCurrentId() {}
 
   void getCurrentUser() async {
-     await Utilisateurs.getUserId().then((value){
-       setState(() {
-         idCurrentUser = value;
-       });
-     });
+    await Utilisateurs.getUserId().then((value){
+      setState(() {
+        idCurrentUser = value;
+      });
+    });
   }
 
 

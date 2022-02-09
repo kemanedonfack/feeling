@@ -1,5 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:feeling/controllers/like_controller.dart';
+import 'package:feeling/db/db.dart';
+import 'package:feeling/models/like.dart';
 import 'package:feeling/utile/utile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 
@@ -13,6 +17,10 @@ class ProfileDetailScreen extends StatefulWidget {
 }
 
 class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
+
+  LikeController likecontroller = LikeController();
+  DatabaseConnection connection = DatabaseConnection();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -63,7 +71,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                               ),
                               Container(
                                 padding: const EdgeInsets.all(5),
-                                child: Icon(Icons.share, color: Theme.of(context).primaryColor, size: 30),
+                                child: Icon(CupertinoIcons.heart_fill, color: Theme.of(context).primaryColor, size: 30),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
                                   borderRadius: BorderRadius.circular(10)
@@ -192,6 +200,20 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
         ),
       ),
     );
+  }
+
+  void onlike() async {
+
+    Utilisateurs currentUser;
+    currentUser = await Utilisateurs.getCurrentUser();
+    // sauvegarde du like en ligne
+    Likes like = Likes(idSender: currentUser.idutilisateurs, idReceiver: widget.utilisateurs.idutilisateurs);
+      likecontroller.findMacth(like, false).then((value){
+      // sauvegarde du like en local
+      likecontroller.updateLike(widget.utilisateurs.idutilisateurs);
+      connection.ajouterLikes(like);    
+          // print("resultats du match $value");
+      });
   }
   
 }
