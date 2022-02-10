@@ -54,16 +54,12 @@ class _RippleAnimationState extends State<RippleAnimation> with SingleTickerProv
               _buildContainer(700 * _controller.value),
               Align(
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width*0.2,
-                  // decoration: BoxDecoration(
-                  //   image: DecorationImage(
-                  //     image: FileImage(File(currentUser[0].photo[0]))
-                  //   )
-                  // ),
+                  width: MediaQuery.of(context).size.width*0.5,
                   child: CircleAvatar(
                    backgroundImage: FileImage(File(currentUser[0].photo[0])),
-                   maxRadius: 100,                   
+                   radius: 100,                   
                  )
+                 
                 )
               ),
             ],

@@ -11,7 +11,40 @@ class UtilisateurController{
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
   DatabaseConnection connection = DatabaseConnection();
 
-   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStatus(String id){
+  void updateUtilisateurs(Utilisateurs utilisateurs) async {
+      
+    await users.doc(utilisateurs.idutilisateurs).update({
+      "nom" : utilisateurs.nom,
+      "age" : utilisateurs.age,
+      "ville" : utilisateurs.ville,
+      "pays" : utilisateurs.pays,
+      "profession" : utilisateurs.profession,
+      "numero" : utilisateurs.numero,
+      "photo" : utilisateurs.photo,
+      "interet" : utilisateurs.interet,
+      "propos" : utilisateurs.propos,
+      "entreprise" : utilisateurs.entreprise,
+      "etablissement" : utilisateurs.etablissement,
+      "email" : utilisateurs.email,
+    });
+    await connection.deleteInteret().then((value){
+      connection.ajouterInteret(utilisateurs.interet);
+    });
+
+  }
+  
+  void updateInteret(Utilisateurs utilisateurs) async {
+
+    users.doc(utilisateurs.idutilisateurs).update({
+      "interet" : utilisateurs.interet,
+    });
+    connection.deleteInteret().then((value){
+      connection.ajouterInteret(utilisateurs.interet);
+    });
+
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStatus(String id){
     return FirebaseFirestore.instance.collection(C_USERS).doc(id).snapshots();
   }
 
@@ -143,22 +176,25 @@ class UtilisateurController{
 
     }
 
-    Future<List<Utilisateurs>> removerCurrentUsers(List<Utilisateurs> listutilisateurs) async {
+  Future<List<Utilisateurs>> removerCurrentUsers(List<Utilisateurs> listutilisateurs) async {
 
-      String idusers = await Utilisateurs.getUserId();
-      // retire utilisateurs courant de la liste
-      if(listutilisateurs.isNotEmpty){
-        listutilisateurs.removeWhere((element) => element.idutilisateurs == idusers);
-      }
-
-      return listutilisateurs;
+    String idusers = await Utilisateurs.getUserId();
+    // retire utilisateurs courant de la liste
+    if(listutilisateurs.isNotEmpty){
+      listutilisateurs.removeWhere((element) => element.idutilisateurs == idusers);
     }
+
+    return listutilisateurs;
+  }
 
   Future<Utilisateurs>getUserById2(String id) async {
       
     late Utilisateurs utilisateurs;
-
+    
+    print("id in controller ${id}");
+    
     await users.doc(id).get().then((value){
+      print("val ${value.data()}");
       utilisateurs = Utilisateurs.fromMap(value.data() as Map<String, dynamic>, value.id);
     });
 

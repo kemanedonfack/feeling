@@ -690,7 +690,7 @@ class _TinderState extends State<Tinder> {
     }else{
       filtres.sexe ="Homme";
     }
-    filtres.minAge = currentUser.age-5;
+    filtres.minAge = 18;
     filtres.maxAge = currentUser.age+5;
     filtres.pays = currentUser.pays;
     filtres.ville = currentUser.ville;
@@ -766,7 +766,8 @@ class _TinderState extends State<Tinder> {
           content: Utilisateurs(idutilisateurs: listutilisateurs[i].idutilisateurs, age: listutilisateurs[i].age, 
             interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom.capitalize(), numero: listutilisateurs[i].numero, 
             pays: listutilisateurs[i].pays, photo: listutilisateurs[i].photo, profession: listutilisateurs[i].profession,
-            propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville, online: listutilisateurs[i].online),
+            propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville, online: listutilisateurs[i].online, 
+            email: "", etablissement: "", entreprise: "",),
             
             likeAction: () async {
 

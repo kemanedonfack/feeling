@@ -1,5 +1,6 @@
 import 'package:feeling/screen/localisation.dart';
 import 'package:feeling/screen/tab/chat_details.dart';
+import 'package:feeling/screen/update_centre_interet.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -47,7 +48,7 @@ class AppRouter {
       case profildetailsRoute:
         return MaterialPageRoute(builder: (_) => ProfileDetailScreen(settings.arguments as Utilisateurs) );
       case editprofilRoute:
-        return MaterialPageRoute(builder: (_) => const ModifierProfilScreen() );
+        return MaterialPageRoute(builder: (_) => ModifierProfilScreen(settings.arguments as Utilisateurs) );
       case escortinscriptionRoute:
         return MaterialPageRoute(builder: (_) => EscortInscriptionScreen(settings.arguments as Utilisateurs) );
       case photoescortRoute:
@@ -70,6 +71,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ChatDetailScreen(settings.arguments as Utilisateurs) );
       case locationRoute:
         return MaterialPageRoute(builder: (_) => LocationScreen(settings.arguments as Utilisateurs) );
+      case updateInteretRoute:
+        return MaterialPageRoute(builder: (_) => UpdateInteretScreen(settings.arguments as Utilisateurs) );
     }
 
     return MaterialPageRoute(builder: (_) => const NotFoundScreen() );

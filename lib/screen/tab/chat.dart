@@ -101,9 +101,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               for(int i=0; i<snapshot.data!.docs.length; i++)
                                 FutureBuilder<Utilisateurs>(
                                   future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
-                                  builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> snapshot) {
-                                    if(snapshot.hasData){
-                                      Utilisateurs? utilisateurs = snapshot.data ;
+                                  builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> future) {
+                                    if(future.hasData){
+                                      Utilisateurs? utilisateurs = future.data ;
                                       return InkWell(
                                         onTap: (){
                                           Navigator.pushNamed(context, chatDetailsRoute, arguments: utilisateurs);

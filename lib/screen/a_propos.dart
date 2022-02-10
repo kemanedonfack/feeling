@@ -132,44 +132,6 @@ class _AProposScreenState extends State<AProposScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-      //   child: InkWell(
-          
-      //     child: 
-      //     loading ?
-      //     Material(
-      //       borderRadius: BorderRadius.circular(10.0),
-      //       color: Theme.of(context).primaryColor ,
-      //         child: MaterialButton(
-      //           minWidth: size.width,
-      //           onPressed: () {  
-      //             propos();
-      //           },
-      //           child: Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: CircularProgressIndicator(color: Colors.white),
-      //         ),
-      //       ),
-      //     ) :
-      //     Material(
-      //       borderRadius: BorderRadius.circular(10.0),
-      //       color: Theme.of(context).primaryColor ,
-      //         child: MaterialButton(
-      //           minWidth: size.width,
-      //           onPressed: () {  
-      //             propos();
-      //           },
-      //           child: Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: Text("Continue",
-      //               style: TextStyle(color: Colors.white, fontSize: size.width*0.05, fontWeight: FontWeight.bold),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
   }
 

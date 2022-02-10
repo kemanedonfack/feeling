@@ -85,7 +85,7 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
                                   FutureBuilder<Utilisateurs>(
                                     future: utilisateurcontroller.getUserById2(snapshot.data!.docs[i].id),
                                     builder: (BuildContext context,  AsyncSnapshot<Utilisateurs> future) {
-                                      if(snapshot.hasData){
+                                      if(future.hasData){
                                         Utilisateurs? utilisateurs = future.data ;
                                         return SizedBox(
                                           width: (size.width - 15) / 2,
@@ -129,7 +129,7 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
                                                       child: Row(
                                                         children: [
                                                           const SizedBox(width: 5 ),
-                                                          Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age} ${snapshot.data!.docs[i]['super']}",
+                                                          Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age}}",
                                                                 style: TextStyle(color: Colors.white, fontSize: size.width*0.05,),
                                                           )
                                                           // Text("${snapshot.data!.docs[i].id}",

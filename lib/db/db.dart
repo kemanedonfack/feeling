@@ -103,6 +103,9 @@ class DatabaseConnection{
         propos: maps[i]['propos'],
         photo: listphotos,
         age: maps[i]['age'],
+        email: maps[i]['email'] ?? "",
+        etablissement: maps[i]['etablissement'] ?? "", 
+        entreprise: maps[i]['entreprise'] ?? "",
         online: false
       );
     });
@@ -137,7 +140,26 @@ class DatabaseConnection{
     return await db.rawQuery('select idReceiver from $table');
   }
 
+  Future<void> deleteInteret() async {
 
+    final db = await init();
+    db.delete('interets');
+    
+  }
+
+  Future<void> deleteImage() async {
+
+    final db = await init();
+    db.delete('photos');
+    
+  }
+
+  Future<void> deleteUtilisateurs() async {
+
+    final db = await init();
+    db.delete('users');
+    
+  }
 
 } 
 

@@ -1,4 +1,3 @@
-
 import 'package:feeling/db/db.dart';
 import 'package:location/location.dart';
 
@@ -14,11 +13,14 @@ class Utilisateurs{
   List<dynamic> photo;
   List<dynamic> interet;
   String propos;
+  String email;
+  String etablissement;
+  String entreprise;
   late LocationData position;
   late bool online;
   Utilisateurs({required this.nom, required this.idutilisateurs, required this.interet, required this.age, required this.numero, 
   required this.pays, required this.photo, required this.profession, required this.sexe, required this.ville, required this.propos
-  , required this.online});
+  , required this.online, required this.etablissement, required this.entreprise, required this.email});
 
   factory Utilisateurs.fromMap(Map<String, dynamic> data, dynamic id){
     return Utilisateurs(
@@ -34,6 +36,9 @@ class Utilisateurs{
         interet: data['interet'],
         propos: data['propos'],
         online: data['online'],
+        email: data['email'] ?? "" ,
+        etablissement: data['etablissement'] ?? "",
+        entreprise: data['entreprise'] ?? "",
     );
   }
 
