@@ -1,6 +1,7 @@
 import 'package:feeling/screen/localisation.dart';
 import 'package:feeling/screen/tab/chat_details.dart';
 import 'package:feeling/screen/update_centre_interet.dart';
+import 'package:feeling/utile/custom_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -30,52 +31,52 @@ class AppRouter {
   static Route<dynamic> allRoutes(RouteSettings settings) {
     switch(settings.name){
       case splashRoute:
-        return MaterialPageRoute(builder: (_) => const SplashScreen() );
+        return CustomPageRoute(child: const SplashScreen() );
       case chooseLanguageRoute:
-        return MaterialPageRoute(builder: (_) => const ChooseLanguageScreen() );
+        return CustomPageRoute(child: const ChooseLanguageScreen() );
       case monSexRoute:
-        return MaterialPageRoute(builder: (_) => MonSexScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: MonSexScreen(settings.arguments as Utilisateurs) );
       case preferenceSexRoute:
-        return MaterialPageRoute(builder: (_) => const PreferenceSexScreen() );
+        return CustomPageRoute(child: const PreferenceSexScreen() );
       case inscriptionRoute:
-        return MaterialPageRoute(builder: (_) => InscriptionScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: InscriptionScreen(settings.arguments as Utilisateurs) );
       case verificationRoute:
-        return MaterialPageRoute(builder: (_) => VerificationScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: VerificationScreen(settings.arguments as Utilisateurs) );
       case tabRoute:
-        return MaterialPageRoute(builder: (_) => const TabScreen() );
+        return CustomPageRoute(child: const TabScreen() );
       case settingsRoute:
-        return MaterialPageRoute(builder: (_) => const SettingScreen() );
+        return CustomPageRoute(child: const SettingScreen() );
       case profildetailsRoute:
-        return MaterialPageRoute(builder: (_) => ProfileDetailScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: ProfileDetailScreen(settings.arguments as Utilisateurs) );
       case editprofilRoute:
-        return MaterialPageRoute(builder: (_) => ModifierProfilScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: ModifierProfilScreen(settings.arguments as Utilisateurs) );
       case escortinscriptionRoute:
-        return MaterialPageRoute(builder: (_) => EscortInscriptionScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: EscortInscriptionScreen(settings.arguments as Utilisateurs) );
       case photoescortRoute:
-        return MaterialPageRoute(builder: (_) => PhotoEscort(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: PhotoEscort(settings.arguments as Utilisateurs) );
       case phoneidenficationRoute:
-        return MaterialPageRoute(builder: (_) => const PhoneIdentificationScreen() );
+        return CustomPageRoute(child:  const PhoneIdentificationScreen(), direction: AxisDirection.left );
       case uploadimageRoute:
-        return MaterialPageRoute(builder: (_) => UploadImageScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: UploadImageScreen(settings.arguments as Utilisateurs) );
       case aproposRoute:
-        return MaterialPageRoute(builder: (_) => AProposScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: AProposScreen(settings.arguments as Utilisateurs) );
       case centreinteretRoute:
-        return MaterialPageRoute(builder: (_) => InteretScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: InteretScreen(settings.arguments as Utilisateurs) );
       case modifierinformationRoute:
-        return MaterialPageRoute(builder: (_) => const ModifierInformation() );
+        return CustomPageRoute(child: const ModifierInformation() );
       case welcomeRoute:
-        return MaterialPageRoute(builder: (_) => const WelcomeScreen() );
+        return CustomPageRoute(child: const WelcomeScreen() );
       case matchRoute:
-        return MaterialPageRoute(builder: (_) => MatchScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: MatchScreen(settings.arguments as Utilisateurs) );
       case chatDetailsRoute:
-        return MaterialPageRoute(builder: (_) => ChatDetailScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: ChatDetailScreen(settings.arguments as Utilisateurs) );
       case locationRoute:
-        return MaterialPageRoute(builder: (_) => LocationScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: LocationScreen(settings.arguments as Utilisateurs) );
       case updateInteretRoute:
-        return MaterialPageRoute(builder: (_) => UpdateInteretScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: UpdateInteretScreen(settings.arguments as Utilisateurs) );
     }
 
-    return MaterialPageRoute(builder: (_) => const NotFoundScreen() );
+    return CustomPageRoute(child: const NotFoundScreen() );
 
   }
 

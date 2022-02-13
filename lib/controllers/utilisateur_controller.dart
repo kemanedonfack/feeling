@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/constant/constant.dart';
+import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -10,6 +11,7 @@ class UtilisateurController{
   
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
   DatabaseConnection connection = DatabaseConnection();
+  NotificationController notificationController = NotificationController();
 
   void updateUtilisateurs(Utilisateurs utilisateurs) async {
       
@@ -26,7 +28,9 @@ class UtilisateurController{
       "entreprise" : utilisateurs.entreprise,
       "etablissement" : utilisateurs.etablissement,
       "email" : utilisateurs.email,
+      "token": await notificationController.getToken()
     });
+
     await connection.deleteInteret().then((value){
       connection.ajouterInteret(utilisateurs.interet);
     });
@@ -161,7 +165,8 @@ class UtilisateurController{
             "localisation": GeoPoint(utilisateurs.position.latitude as double, utilisateurs.position.longitude as double),
             "date_creation": FieldValue.serverTimestamp(),
             "status": "active",
-            "online": true
+            "online": true,
+            "token": await notificationController.getToken()
           }).then((value) {
             documentId = value.id;
             return value.id;

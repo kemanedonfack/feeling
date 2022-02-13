@@ -112,6 +112,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -123,6 +124,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: GridView.builder(
+                      physics: const BouncingScrollPhysics(),        
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         mainAxisExtent: MediaQuery.of(context).size.height * 0.28,
                         crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),

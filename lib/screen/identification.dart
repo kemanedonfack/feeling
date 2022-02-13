@@ -15,7 +15,7 @@ class _PhoneIdentificationScreenState extends State<PhoneIdentificationScreen> {
 
   Utilisateurs  utilisateurs = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', interet: ['interet'], age: 20, 
   numero: '690', pays: 'pays', photo: ['photo'], profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', 
-  online: false, email: "", etablissement: "", entreprise: "",);
+  online: false, email: "", etablissement: "", entreprise: "", token: '',);
   final _formKey = GlobalKey<FormState>();
 
   final phonecontroller = TextEditingController();

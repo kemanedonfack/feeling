@@ -21,7 +21,7 @@ class DatabaseConnection{
           await db.execute("""
             CREATE TABLE users (idusers TEXT PRIMARY KEY, nom TEXT NOT NULL,
             age INTEGER NOT NULL, ville TEXT NOT NULL, pays TEXT NOT NULL, profession TEXT NOT NULL, 
-            sexe TEXT NOT NULL, numero TEXT NOT NULL, propos TEXT NOT NULL)"""
+            sexe TEXT NOT NULL, numero TEXT NOT NULL, propos TEXT NOT NULL, token TEXT NOT NULL)"""
           );
 
           await db.execute("""
@@ -40,8 +40,18 @@ class DatabaseConnection{
             CREATE TABLE dislikes (iddislike INTEGER PRIMARY KEY, idReceiver TEXT NOT NULL)"""
           );
           
+          await db.execute("""
+            CREATE TABLE profilesprogression (value TEXT NOT NULL)"""
+          );
         }
     );
+  }
+  Future<void> profileProgress(String valeur) async{
+
+    final db = await init(); //open database
+     
+    await db.rawInsert('INSERT INTO profilesprogression (nom) VALUES (?)',
+      [ valeur ]);
   }
 
   Future<void> ajouterLikes(Likes likes) async{
@@ -59,12 +69,16 @@ class DatabaseConnection{
       [dislikes.idReceiver]);
     
   }
-
+  void initProfileProgress(Utilisateurs utilisateurs){
+    if(utilisateurs.propos.length>=200){
+      
+    }
+  }
   Future<void> ajouterUtilisateurs(Utilisateurs utilisateurs) async{
-
+    
     final db = await init(); //open database
-    await db.rawInsert('INSERT INTO users (idusers, nom, age, ville, pays, profession, sexe, numero, propos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [utilisateurs.idutilisateurs, utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos]);
+    await db.rawInsert('INSERT INTO users (idusers, nom, age, ville, pays, profession, sexe, numero, propos, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [utilisateurs.idutilisateurs, utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos, '']);
     
   }
 
@@ -103,6 +117,7 @@ class DatabaseConnection{
         propos: maps[i]['propos'],
         photo: listphotos,
         age: maps[i]['age'],
+        token: maps[i]['token'],
         email: maps[i]['email'] ?? "",
         etablissement: maps[i]['etablissement'] ?? "", 
         entreprise: maps[i]['entreprise'] ?? "",

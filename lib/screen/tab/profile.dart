@@ -20,11 +20,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double TWO_PI = 3.14 * 2;
   Utilisateurs utilisateursOnline = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', 
   interet: ['interet'], age: 12, numero: 'numero', pays: 'pays', photo: ['photo'], etablissement: "", 
-  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', email: "", entreprise: "", online: true); 
+  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', email: "", entreprise: "", online: true, token: ''); 
 
   Utilisateurs utilisateur = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', 
   interet: ['interet'], age: 12, numero: 'numero', pays: 'pays', photo: ['photo'], 
-  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', online: true, email: "", etablissement: "", entreprise: "",);
+  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', online: true, email: "", etablissement: "", entreprise: "", token: '',);
 
   DatabaseConnection connection = DatabaseConnection();
   UtilisateurController controller = UtilisateurController();
@@ -99,47 +99,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
     
       const size = 200.0;
     if(_image == null){
-      return SizedBox(
-        width: size,
-        height: size,
-        child: Stack(
-          children: [
-            ShaderMask(
-              shaderCallback: (rect){
-                return SweepGradient(
-                  startAngle: 0.0,
-                  endAngle: TWO_PI,
-                  stops: const [0.1, 0.1],
-                  center: Alignment.center,
-                  colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColor.withOpacity(0.2)]
-                ).createShader(rect);
-              },
-              child: Container(
-                width: size,
-                height: size,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.pink
+      return TweenAnimationBuilder(
+        duration: const Duration(seconds: 3),
+        tween: Tween(begin: 0.0, end: 0.3),
+        builder: (context, value, child) {
+          return SizedBox(
+            width: size,
+            height: size,
+            child: Stack(
+              children: [
+                ShaderMask(
+                  shaderCallback: (rect){
+                    return SweepGradient(
+                      startAngle: 0.0,
+                      endAngle: TWO_PI,
+                      stops: [value as double, value as double],
+                      center: Alignment.center,
+                      colors: [Theme.of(context).primaryColor, Colors.grey.withOpacity(0.2)]
+                    ).createShader(rect);
+                  },
+                  child: Container(
+                    width: size,
+                    height: size,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(3),
-                width: size-20,
-                height: size-20,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle
-                ),
-                child: CircleAvatar(
-                  radius: 100,
-                  backgroundImage: FileImage(File(utilisateur.photo[0])),
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.all(3),
+                    width: size-20,
+                    height: size-20,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle
+                    ),
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundImage: FileImage(File(utilisateur.photo[0])),
+                    )
+                  ),
                 )
-              ),
-            )
-          ],
-        ),
+              ],
+            ),
+          );
+        },
       );
     }else{
       return Container(

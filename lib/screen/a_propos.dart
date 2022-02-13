@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feeling/controllers/notification_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
@@ -24,6 +25,7 @@ class _AProposScreenState extends State<AProposScreen> {
   final firebase  = FirebaseFirestore.instance;
   bool loading = false;
   UtilisateurController controller = UtilisateurController();
+  NotificationController notificationController = NotificationController();
   
 
   @override
@@ -155,6 +157,7 @@ class _AProposScreenState extends State<AProposScreen> {
               print("id insersion $value");
             }
             widget.utilisateurs.idutilisateurs = value;
+            widget.utilisateurs.token = await notificationController.getToken() as String;
             await DatabaseConnection().ajouterInteret(widget.utilisateurs.interet);
             await DatabaseConnection().ajouterUtilisateurs(widget.utilisateurs);
 

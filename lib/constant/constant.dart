@@ -8,3 +8,6 @@ const String C_DISLIKES = "dislikes";
 const String C_SUPERLIKES = "superlikes";
 const String C_CONVERSATIONS = "conversations";
 const String C_MESSAGES = "messages";
+const String KEY_MESSAGING = "AAAAbIf4WDg:APA91bEJyHf1pA3Z7ztcrYy1UcKEZdO-Bb2kSjDlPxmLON-nYLSLk4huBo4alQBWJjVLTMhy73ldtKcB-_euh8lescM_X1yeLTwa9EhbqLPyXa7-lh6zQ497n-_QDXLRLzbkQ_NBFAqD";
+
+

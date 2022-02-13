@@ -4,6 +4,8 @@ import 'package:feeling/models/like.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
 
+import 'notification_controller.dart';
+
 
 class LikeController{
   
@@ -101,7 +103,6 @@ class LikeController{
     Future<bool> findMacth(Likes like, bool isSuperLike) async {
       bool result = false;
       try{
-        print("issuper like $isSuperLike");
         await relations.doc(like.idSender).collection(C_LIKES).doc(like.idReceiver)
           .get().then((querySnapshot) async {
                   
@@ -114,16 +115,9 @@ class LikeController{
                 "date": FieldValue.serverTimestamp()
               });
 
-              if (kDebugMode) {
-                print("Ajout du like");
-              }
-
-                result = false;
+              result = false;
 
             }else{
-              if (kDebugMode) {
-                print("Ajout du match");
-              }
               // si l'un des deux à liker la photo de l'autre
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({
@@ -142,10 +136,6 @@ class LikeController{
                 "date": FieldValue.serverTimestamp(),
                 "active": false
               });
-
-              if(kDebugMode) {
-                print("nombre d'element trouvé ${querySnapshot.exists}");
-              }
               result = true;
             }
           }

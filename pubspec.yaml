@@ -32,14 +32,17 @@ dependencies:
   cloud_firestore: ^3.1.5
   firebase_core: ^1.10.6
   firebase_storage: ^10.2.4
+  firebase_messaging: ^11.2.6
+
   image_picker: ^0.8.4+4
+  flutter_image_compress: ^1.1.0
+  cached_network_image: ^3.2.0
+  flutter_cache_manager: ^3.3.0
+  
   pinput: ^1.2.2
   path_provider: ^2.0.8
   sqflite: ^2.0.2
   swipe_cards: ^1.0.0
-  flutter_image_compress: ^1.1.0
-  cached_network_image: ^3.2.0
-  flutter_cache_manager: ^3.3.0
   fluttertoast: ^8.0.8
   flutter_svg: ^1.0.3
   location: ^4.3.0
@@ -48,6 +51,7 @@ dependencies:
   flutter_carousel_slider: ^1.0.8
   intl: ^0.17.0
   badges: ^2.0.2
+  http:
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/like_controller.dart';
+import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/like.dart';
@@ -42,6 +43,7 @@ class _TinderState extends State<Tinder> {
   
   UtilisateurController utilisateurcontroller = UtilisateurController();
   LikeController likecontroller = LikeController();
+  NotificationController notificationController = NotificationController();
 
   // variable pour le filtre de recherche
   List<String> villes = ["Douala", "Yaoundé", "Bamenda", "Buéa", "Ngaoundére", "Garoua", "Maroua"];
@@ -60,6 +62,7 @@ class _TinderState extends State<Tinder> {
     super.initState();
     _sliderController = CarouselSliderController();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -767,7 +770,8 @@ class _TinderState extends State<Tinder> {
             interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom.capitalize(), numero: listutilisateurs[i].numero, 
             pays: listutilisateurs[i].pays, photo: listutilisateurs[i].photo, profession: listutilisateurs[i].profession,
             propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville, online: listutilisateurs[i].online, 
-            email: "", etablissement: "", entreprise: "",),
+            email: listutilisateurs[i].email, etablissement: listutilisateurs[i].etablissement, entreprise: listutilisateurs[i].entreprise, 
+            token: listutilisateurs[i].token,),
             
             likeAction: () async {
 
@@ -923,8 +927,14 @@ class _TinderState extends State<Tinder> {
     // likecontroller.saveSuperLike(superlike);
     likecontroller.findMacth(superlike, true).then((value){
       // sauvegarde du like en local
-      connection.ajouterLikes(superlike);    
-        if(value) matchs(context, utilisateur);
+      connection.ajouterLikes(superlike);   
+      if(value == true){
+          matchs(context, utilisateur);
+          notificationController.sendPushNotification("Match", "Vous avez un nouveau match", utilisateur.token);
+        }else{
+          print(" notification like");
+          notificationController.sendPushNotification("SuperLike", "${currentUser.nom} vous à envoyer un SuperLike", utilisateur.token);
+        }  
           // print("resultats du match $value");
     });
   }
@@ -934,9 +944,16 @@ class _TinderState extends State<Tinder> {
     // sauvegarde du like en ligne
     Likes like = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
       likecontroller.findMacth(like, false).then((value){
-      // sauvegarde du like en local
-      connection.ajouterLikes(like);    
-        if(value) matchs(context, utilisateur);
+        // sauvegarde du like en local
+        connection.ajouterLikes(like);  
+        if(value == true){
+          matchs(context, utilisateur);
+           notificationController.sendPushNotification("Match", "Vous avez un nouveau match", utilisateur.token);
+        }else{
+          print(" notification like");
+          notificationController.sendPushNotification("Like", "${currentUser.nom} à liker votre profil", utilisateur.token);
+        }  
+        
           // print("resultats du match $value");
       });
   }

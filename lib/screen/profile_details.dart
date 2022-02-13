@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/like_controller.dart';
+import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/like.dart';
 import 'package:feeling/utile/utile.dart';
@@ -20,6 +21,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
   LikeController likecontroller = LikeController();
   DatabaseConnection connection = DatabaseConnection();
+  NotificationController notificationController = NotificationController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +71,17 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                   Text(widget.utilisateurs.profession, style: TextStyle(fontSize: size.width*0.04, color:Colors.grey, fontWeight: FontWeight.w500),),
                                 ],
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                child: Icon(CupertinoIcons.heart_fill, color: Theme.of(context).primaryColor, size: 30),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.circular(10)
+                              InkWell(
+                                onTap: (){
+                                  print("ici");
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Icon(CupertinoIcons.heart_fill, color: Theme.of(context).primaryColor, size: 30),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
+                                    borderRadius: BorderRadius.circular(10)
+                                  ),
                                 ),
                               )
                             ],

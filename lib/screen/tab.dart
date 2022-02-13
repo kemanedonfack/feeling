@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/constant/constant.dart';
+import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,9 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+
+    NotificationController.initialize();
+
     return Scaffold(
       
       body: tabs[_currentIndex],
