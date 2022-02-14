@@ -5,18 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:feeling/routes/route.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/couleur.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-// // If you're going to use other Firebase services in the background, such as Firestore,
-// // make sure you call `initializeApp` before using other Firebase services.
-// // await Firebase.initializeApp();
-//   print('Background message ${message.messageId}');
-// }
+import 'localization/Demolocalisation.dart';
+import 'localization/language_constants.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+// If you're going to use other Firebase services in the background, such as Firestore,
+// make sure you call `initializeApp` before using other Firebase services.
+// await Firebase.initializeApp();
+  // if (kDebugMode) {
+  //   print('Background message ${message.messageId}');
+  // }
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp]
@@ -26,9 +32,37 @@ Future<void> main() async {
   
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
- 
+  static void setLocale(BuildContext context, Locale newLocale) {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state!.setLocale(newLocale);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  Locale _locale = const Locale('fr', 'FR');
+
+  setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    getLocale().then((locale) {
+      setState(() {
+        _locale = locale;
+      });
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,13 +71,33 @@ class MyApp extends StatelessWidget {
         fontFamily: 'San Francisco',
         primarySwatch: primary,
       ),
+      locale: _locale,
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('fr', 'FR'),
+      ],
+      
+      localizationsDelegates: const [
+        DemoLocalization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale!.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.last;
+      },
       // home: LocationScreen(),
       onGenerateRoute: AppRouter.allRoutes,
       initialRoute: splashRoute,
       debugShowCheckedModeBanner: false,
     );
   }
-   
 }
 
 

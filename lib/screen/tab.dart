@@ -41,8 +41,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   }
 
   void setStatus(bool value) async {
-
-    print("utilisateurs online $value");
     
     await _firestore.collection('users').doc(await Utilisateurs.getUserId()).update({
       "online": value,

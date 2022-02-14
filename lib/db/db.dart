@@ -41,17 +41,48 @@ class DatabaseConnection{
           );
           
           await db.execute("""
-            CREATE TABLE profilesprogression (value TEXT NOT NULL)"""
+            CREATE TABLE profilesprogression (id INTEGER PRIMARY KEY, photo TEXT NOT NULL, numero TEXT NOT NULL, email TEXT NOT NULL, etablissement TEXT NOT NULL, progression INTEGER NOT NULL)"""
           );
         }
     );
   }
-  Future<void> profileProgress(String valeur) async{
 
+  Future<void> initProfileProgress(Utilisateurs utilisateurs) async{
+    
     final db = await init(); //open database
+    String photo ="false", numero = "false", email = "false", etablissement  = "false";
+
+    int progress = 50;
+    if(utilisateurs.numero.isNotEmpty){
+      progress = progress + 10;
+      numero = "true";
+    }
+
+    final List<Map<String, dynamic>> photos = await db.rawQuery('select chemin from photos');
+    if(photos.length>=3){
+      progress = progress + 10;
+      photo = "true";
+    }
+
+    if(utilisateurs.email.isNotEmpty){
+      progress = progress + 10;
+      email = "true";
+    }
+
+    if(utilisateurs.etablissement.isNotEmpty){
+      progress = progress + 10;
+      etablissement = "true";
+    }
      
-    await db.rawInsert('INSERT INTO profilesprogression (nom) VALUES (?)',
-      [ valeur ]);
+    await db.rawInsert('INSERT INTO profilesprogression ( photo, numero , email , etablissement, progression) VALUES ( ?, ?, ?, ?, ?)',
+      [ photo, numero, email, etablissement, progress ]);
+  }
+
+  Future<List<Map<String, dynamic>>> getProfileProgression() async{
+
+    final db = await init();
+
+    return await db.rawQuery('select * from profilesprogression');
   }
 
   Future<void> ajouterLikes(Likes likes) async{
@@ -69,17 +100,13 @@ class DatabaseConnection{
       [dislikes.idReceiver]);
     
   }
-  void initProfileProgress(Utilisateurs utilisateurs){
-    if(utilisateurs.propos.length>=200){
-      
-    }
-  }
+ 
   Future<void> ajouterUtilisateurs(Utilisateurs utilisateurs) async{
     
     final db = await init(); //open database
     await db.rawInsert('INSERT INTO users (idusers, nom, age, ville, pays, profession, sexe, numero, propos, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [utilisateurs.idutilisateurs, utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos, '']);
-    
+    initProfileProgress(utilisateurs);
   }
 
   Future<List<Utilisateurs>> getUtilisateurs() async {
@@ -120,7 +147,6 @@ class DatabaseConnection{
         token: maps[i]['token'],
         email: maps[i]['email'] ?? "",
         etablissement: maps[i]['etablissement'] ?? "", 
-        entreprise: maps[i]['entreprise'] ?? "",
         online: false
       );
     });

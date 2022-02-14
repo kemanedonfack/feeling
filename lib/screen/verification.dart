@@ -4,6 +4,8 @@ import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
+import '../localization/language_constants.dart';
+
 class VerificationScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
@@ -68,17 +70,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   height: MediaQuery.of(context).size.width*0.1,
-                // ),
-                // Center(
-                //   child: Text("Vérification" , style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.055))
-                // ),
                 SizedBox(
                   height: MediaQuery.of(context).size.width*0.1,
                 ),
                 Center(
-                  child: Text("Saisissez le code de vérification que nous vous avons envoyé", textAlign: TextAlign.center , style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.055))
+                  child: Text(getTranslated(context, "saisir_code"), textAlign: TextAlign.center , style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.055))
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.width*0.15,
@@ -114,7 +110,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Envoyé",
+                        child: Text(getTranslated(context, "btn_envoyer"),
                           style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -125,25 +121,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-      //   child: Material(
-      //     borderRadius: BorderRadius.circular(10.0),
-      //     color: Theme.of(context).primaryColor ,
-      //       child: MaterialButton(
-      //         minWidth: MediaQuery.of(context).size.width,
-      //         onPressed: () {  
-      //           verification();
-      //         },
-      //         child: Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Text("Envoyé",
-      //             style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      // ),
     );
   }
   
@@ -168,8 +145,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: Text("Veuillez entrer le code à 6 chiffres envoyé pas sms au ${widget.utilisateurs.numero}"),
+            title: Text(getTranslated(context, "title_erreur")),
+            content: Text(" ${getTranslated(context, "veiller_entrer_code") } ${widget.utilisateurs.numero}"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
+import 'package:feeling/localization/language_constants.dart';
 import 'package:feeling/models/interets.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/utile/utile.dart';
@@ -75,9 +76,12 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
     Interet(nom: "volleyball", icone: Icons.sports_volleyball),
   ];
   
+  var progression = [];
+
   @override
   void initState() {
     initialisation();
+    getProfileProgression();
     super.initState();
   }
 
@@ -90,7 +94,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text("Modifier mon profil", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),),
+        title: Text(getTranslated(context,'modifier_profil'), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),),
         centerTitle: true,
         leading: InkWell(
           onTap: (){
@@ -105,7 +109,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
             },
             child: Center(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Text("Enregistré", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold), ),
+                child: Text(getTranslated(context,'enregistrer'), style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold), ),
               ),
             ),
           ),
@@ -192,7 +196,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.03),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("A propos de moi", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'a_propos'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   TextFormField(
                     controller: proposcontroller,
@@ -211,7 +215,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.02),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Nom", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'nom'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   TextFormField(
                       controller: nomcontroller,
@@ -228,7 +232,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Age", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'age'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   TextFormField(
                       controller: agecontroller,
@@ -246,7 +250,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Profession", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'profession'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   TextFormField(
                     controller: professioncontroller,
@@ -260,27 +264,27 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                       fillColor: Colors.white,
                     ),
                   ),
+                  // SizedBox(height: MediaQuery.of(context).size.height*0.01),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Text(getTranslated(context,'entreprise'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                  // ),
+                  // TextFormField(
+                  //   controller: entreprisecontroller,
+                  //   decoration: const InputDecoration(
+                  //     enabled: true,
+                  //     border: OutlineInputBorder(
+                  //       borderSide: BorderSide.none,
+                  //     ),
+                  //     contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //   ),
+                  // ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Entreprise", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
-                  ),
-                  TextFormField(
-                    controller: entreprisecontroller,
-                    decoration: const InputDecoration(
-                      enabled: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.01),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Etablissement Scolaire", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'etablissement'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   TextFormField(
                     controller: etablissementcontroller,
@@ -310,7 +314,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Centre d'intérêt", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'centre_interet'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   InkWell(
                     onTap: (){
@@ -334,7 +338,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Adresse email", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
+                    child: Text(getTranslated(context,'email'), style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
                   TextFormField(
                     controller: emailcontroller,
@@ -366,7 +370,6 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
       proposcontroller.text = widget.utilisateurs.propos;
       professioncontroller.text = widget.utilisateurs.profession;
       emailcontroller.text = widget.utilisateurs.email;
-      entreprisecontroller.text = widget.utilisateurs.entreprise;
       etablissementcontroller.text = widget.utilisateurs.etablissement;
     });
   }
@@ -377,7 +380,6 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
       widget.utilisateurs.nom = nomcontroller.text;
       widget.utilisateurs.age = int.parse(agecontroller.text);
       widget.utilisateurs.propos = proposcontroller.text;
-      widget.utilisateurs.entreprise = entreprisecontroller.text;
       widget.utilisateurs.etablissement = etablissementcontroller.text;
       widget.utilisateurs.email = emailcontroller.text;
       widget.utilisateurs.profession = professioncontroller.text;
@@ -395,6 +397,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
       await DatabaseConnection().ajouterUtilisateurs(widget.utilisateurs);
       utilisateurController.updateUtilisateurs(widget.utilisateurs);
       Navigator.pushNamedAndRemoveUntil(context, tabRoute, (route) => false);
+
     }else{
       erreur();
     }
@@ -513,14 +516,25 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
      return savedImage.path;  
   }
 
+  void getProfileProgression() async {
+    
+    DatabaseConnection().getProfileProgression().then((value) {
+     
+      setState(() {
+        progression = value;
+      });
+    });
+
+  }
+
   Future<void> erreur(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: const Text("Veuillez renseignez vos informations"),
+            title: Text(getTranslated(context,'title_erreur')),
+            content: Text(getTranslated(context,'renseigner_information')),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

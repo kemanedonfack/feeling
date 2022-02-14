@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:feeling/constant/constant.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationController{
@@ -12,11 +12,11 @@ class NotificationController{
     FirebaseMessaging.instance.requestPermission();
 
     FirebaseMessaging.onMessage.listen((event) {
-      print('A new onMessage event was published!');
+      // print('A new onMessage event was published!');
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
+      // print('A new onMessageOpenedApp event was published!');
     });
   }
 
@@ -48,10 +48,14 @@ class NotificationController{
       ),
     ).then((http.Response response) {
       if (response.statusCode == 200) {
-        print('sendPushNotification() -> success ${response.body}');
+        if (kDebugMode) {
+          print('sendPushNotification() -> success ${response.body}');
+        }
       }
     }).catchError((error) {
-      print('sendPushNotification() -> error: $error');
+      if (kDebugMode) {
+        print('sendPushNotification() -> error: $error');
+      }
     });
   }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:feeling/localization/language_constants.dart';
 import 'package:feeling/utile/utile.dart';
 import 'package:feeling/db/db.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:path_provider/path_provider.dart';
+
 
 class UploadImageScreen extends StatefulWidget {
   
@@ -63,24 +65,14 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.02),
-                Text("Importez vos Photos", style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.05)
+                Text(getTranslated(context,'importer_photo'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.05)
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.01),
-                InkWell(
-                  onTap: (){
-                    if (kDebugMode) {
-                      print("oui");
-                    }
-                    setState(() {
-                      selectedFile = [];
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Text("Choisissez 3 photos.", style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
-                      ),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Text(getTranslated(context,'choisir_photo'), style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
+                    ),
+                  ],
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.02),
                 photoUser(),
@@ -124,7 +116,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Continue",
+                        child: Text(getTranslated(context,'btn_continue'),
                           style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -371,8 +363,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: const Text("Veuiillez choisiz 3 photos "),
+            title: Text(getTranslated(context,'title_erreur')),
+            content: Text(getTranslated(context,'veillez_choisir_photo')),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
@@ -392,8 +384,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: const Text("Veuillez vous connectez à internet"),
+            title: Text(getTranslated(context,'title_erreur')),
+            content: Text(getTranslated(context,'erreur_internet')),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
@@ -413,9 +405,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       final appDir = appDocDirectory.path;  
       var fileName = p.basename(image.path);  
       // fileName ="uploads/avatar/$fileName";
-      if (kDebugMode) {
-        print("nom du fichier $fileName");
-      }
+      
       final savedImage = await image.copy('$appDir/$fileName');
 
      return savedImage.path;  

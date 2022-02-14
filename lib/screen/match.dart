@@ -19,7 +19,7 @@ class _MatchScreenState extends State<MatchScreen> {
   DatabaseConnection connection = DatabaseConnection();
   Utilisateurs utilisateurslocal = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', interet: ["interet"], age: 20, numero: 'numero',
    pays: 'pays', photo: ["images/userImage5.jpeg"], profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', online: false, 
-   email: "", etablissement: "", entreprise: "", token: '',);
+   email: "", etablissement: "", token: '',);
 
   @override
   void initState() {

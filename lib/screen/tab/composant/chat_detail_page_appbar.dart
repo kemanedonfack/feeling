@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:feeling/constant/constant.dart';
 import 'package:feeling/controllers/like_controller.dart';
 import 'package:feeling/controllers/message_controller.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';

@@ -1,7 +1,10 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
+import 'package:feeling/localization/language_constants.dart';
 import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -20,14 +23,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double TWO_PI = 3.14 * 2;
   Utilisateurs utilisateursOnline = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', 
   interet: ['interet'], age: 12, numero: 'numero', pays: 'pays', photo: ['photo'], etablissement: "", 
-  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', email: "", entreprise: "", online: true, token: ''); 
+  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', email: "", online: true, token: ''); 
 
   Utilisateurs utilisateur = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', 
   interet: ['interet'], age: 12, numero: 'numero', pays: 'pays', photo: ['photo'], 
-  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', online: true, email: "", etablissement: "", entreprise: "", token: '',);
+  profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', online: true, email: "", etablissement: "", token: '',);
 
   DatabaseConnection connection = DatabaseConnection();
   UtilisateurController controller = UtilisateurController();
+  double progression=0;
 
   @override
   void initState() {
@@ -50,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Profil",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+                    Text(getTranslated(context,'profil'),style: const TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                     InkWell(
                       onTap: (){
                         Navigator.pushNamed(context, settingsRoute);
@@ -83,11 +87,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  child: Text("Complété mon profil (10%)", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, color: Colors.white, fontWeight: FontWeight.bold),)
+                  child: TweenAnimationBuilder(
+                    duration: const Duration(seconds: 3),
+                    tween: Tween(begin: 0.0, end: progression),
+                    builder: (context, value, child) {
+                    int percentage = (double.parse(value.toString()) *100).ceil();
+                      return Text("${getTranslated(context,'profil_complete')} $percentage%", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, color: Colors.white, fontWeight: FontWeight.bold),);
+                    }
+                  )
                 )
               ),
-              
-              
              ],
           ),
         ),
@@ -95,13 +104,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+
     Widget imagePath(){
     
       const size = 200.0;
     if(_image == null){
       return TweenAnimationBuilder(
         duration: const Duration(seconds: 3),
-        tween: Tween(begin: 0.0, end: 0.3),
+        tween: Tween(begin: progression, end: progression),
         builder: (context, value, child) {
           return SizedBox(
             width: size,
@@ -113,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return SweepGradient(
                       startAngle: 0.0,
                       endAngle: TWO_PI,
-                      stops: [value as double, value as double],
+                      stops: [value as double, value],
                       center: Alignment.center,
                       colors: [Theme.of(context).primaryColor, Colors.grey.withOpacity(0.2)]
                     ).createShader(rect);
@@ -129,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Center(
                   child: Container(
-                    padding: EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(3),
                     width: size-20,
                     height: size-20,
                     decoration: const BoxDecoration(
@@ -155,6 +165,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void getCurrentUser() async {
+    
+    DatabaseConnection().getProfileProgression().then((value) {
+      setState(() {
+        progression = (value[value.length-1]['progression'])/100;
+      });
+    });
+
     await Utilisateurs.getCurrentUser().then((value){
       setState(() {
         utilisateur = value;
@@ -162,11 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     });
 
-    print("id ${utilisateur.idutilisateurs}");
-
     await controller.getUserById2(utilisateur.idutilisateurs).then((value){
       setState(() {
-        print("information $value");
         utilisateursOnline = value;
       });
     });

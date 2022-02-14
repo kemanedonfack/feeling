@@ -1,3 +1,4 @@
+import 'package:feeling/localization/language_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
 
@@ -37,7 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       child: Image.asset("images/logo2.png")
                     ),
                     SizedBox(height: size.height*0.01),
-                    Text("L'application de rencontres feeling est une communauté où les hommes et les femmes célibataires camerounais peuvent nouer des relations.", textAlign: TextAlign.center, 
+                    Text(getTranslated(context, 'app_description'), textAlign: TextAlign.center, 
                       style: TextStyle(color: Colors.white, fontSize: size.width*0.047),),
                   ],
                 ),
@@ -53,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         onPressed: () { Navigator.pushNamed(context, phoneidenficationRoute); },
-                        child: Text("Inscription",
+                        child: Text(getTranslated(context, 'btn_inscription'),
                           style: TextStyle(color: Colors.white, fontSize: size.width*0.05, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -69,7 +70,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         onPressed: () { Navigator.pushNamed(context, phoneidenficationRoute); },
-                        child: Text("Connexion",
+                        child: Text(getTranslated(context, 'btn_connexion'),
                           style: TextStyle(color: Colors.black, fontSize: size.width*0.05, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -77,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     SizedBox(height: size.height*0.03),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text("En vous inscrivant, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.", textAlign: TextAlign.center, 
+                      child: Text(getTranslated(context, 'politique'), textAlign: TextAlign.center, 
                         style: TextStyle(color: Colors.white, fontSize: size.width*0.04),),
                     ),
                   ],

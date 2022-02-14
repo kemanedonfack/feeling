@@ -15,13 +15,12 @@ class Utilisateurs{
   String propos;
   String email;
   String etablissement;
-  String entreprise;
   String token;
   late LocationData position;
   late bool online;
   Utilisateurs({required this.nom, required this.idutilisateurs, required this.interet, required this.age, required this.numero, 
   required this.pays, required this.photo, required this.profession, required this.sexe, required this.ville, required this.propos
-  , required this.online, required this.etablissement, required this.entreprise, required this.email, required this.token});
+  , required this.online, required this.etablissement, required this.email, required this.token});
 
   factory Utilisateurs.fromMap(Map<String, dynamic> data, dynamic id){
     return Utilisateurs(
@@ -40,7 +39,6 @@ class Utilisateurs{
         token: data['token'],
         email: data['email'] ?? "" ,
         etablissement: data['etablissement'] ?? "",
-        entreprise: data['entreprise'] ?? "",
     );
   }
 

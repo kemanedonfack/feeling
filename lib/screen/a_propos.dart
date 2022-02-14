@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/controllers/notification_controller.dart';
-import 'package:flutter/foundation.dart';
+import 'package:feeling/localization/language_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/utile.dart';
+
 
 class AProposScreen extends StatefulWidget {
   
@@ -64,10 +65,10 @@ class _AProposScreenState extends State<AProposScreen> {
                     ),
                   ),
                   SizedBox(height: size.height*0.04),
-                  Text("A Propos de moi", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.06)
+                  Text(getTranslated(context,'a_propos'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.06)
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
-                  Text("Donne une brèvre description de toi en quelques mots.", style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
+                  Text(getTranslated(context,'description'), style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.05),
                     TextFormField(
@@ -75,7 +76,7 @@ class _AProposScreenState extends State<AProposScreen> {
                       maxLines: 10,
                       controller: proposcontroller,
                       decoration: InputDecoration(
-                      hintText: "Je suis une étudiante en biochimie à l'Université de douala à la recherche d'une relation sérieuse...",
+                      hintText: getTranslated(context,'exemple_description'),
                       // prefixIcon: Icon(Icons.work, color: Theme.of(context).primaryColor,),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -87,7 +88,7 @@ class _AProposScreenState extends State<AProposScreen> {
                     ),
                     validator: (value){
                       if(value!.isEmpty){
-                          return "Entre une brèvre description de toi";
+                          return getTranslated(context,'entrer_description');
                         }else{
                           return null;
                         }
@@ -121,7 +122,7 @@ class _AProposScreenState extends State<AProposScreen> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text("Continue",
+                            child: Text(getTranslated(context,'btn_continue'),
                               style: TextStyle(color: Colors.white, fontSize: size.width*0.05, fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -138,10 +139,7 @@ class _AProposScreenState extends State<AProposScreen> {
   }
 
   void propos() async {
-    if (kDebugMode) {
-      print("Données utilisateurs ${widget.utilisateurs.interet}");
-    }
-
+    
     if(_formKey.currentState!.validate()){
 
       setState(() {
@@ -153,9 +151,7 @@ class _AProposScreenState extends State<AProposScreen> {
       if(await tryConnection() == true){
         await controller.addUsers(widget.utilisateurs).then((value) async {
           if(value != "error"){
-            if (kDebugMode) {
-              print("id insersion $value");
-            }
+            
             widget.utilisateurs.idutilisateurs = value;
             widget.utilisateurs.token = await notificationController.getToken() as String;
             await DatabaseConnection().ajouterInteret(widget.utilisateurs.interet);
@@ -184,8 +180,8 @@ class _AProposScreenState extends State<AProposScreen> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: const Text("Veuillez vous connectez à internet"),
+            title: Text(getTranslated(context,'title_erreur')),
+            content: Text(getTranslated(context,'erreur_internet')),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

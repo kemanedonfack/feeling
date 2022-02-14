@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
+import '../localization/language_constants.dart';
 
 class InscriptionScreen extends StatefulWidget {
 
@@ -62,14 +63,14 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     ),
                   ),
                   Center(
-                    child: Text("Profil", style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.065)
+                    child: Text(getTranslated(context,'profil'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.065)
                     ),
                   ),              
                   SizedBox(height: MediaQuery.of(context).size.height*0.05),
                   TextFormField(
                     controller: nomcontroller,
                     decoration: InputDecoration(
-                    hintText: "Entrer votre nom d'utilisateur",
+                    hintText: getTranslated(context,'nom_utilisateur'),
                     prefixIcon: Icon(Icons.person, color: Theme.of(context).primaryColor,),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -81,7 +82,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   ),
                   validator: (value){
                     if(value!.isEmpty){
-                        return "Veuillez entrer votre nom";
+                        return getTranslated(context,'entrer_nom');
                       }else{
                         return null;
                       }
@@ -92,7 +93,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     keyboardType: TextInputType.number,
                     controller: agecontroller,
                     decoration: InputDecoration(
-                      hintText: 'votre age',
+                      hintText: getTranslated(context,'age'),
                       prefixIcon: Icon(Icons.date_range, color:  Theme.of(context).primaryColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -104,7 +105,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     ),
                     validator: (value){
                       if(value!.isEmpty){
-                          return "Veuillez entrer votre âge";
+                          return getTranslated(context,'entrer_age');
                         }else{
                           return null;
                         }
@@ -114,7 +115,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   TextFormField(
                     controller: professioncontroller,
                     decoration: InputDecoration(
-                    hintText: "Entrer votre Profession",
+                    hintText: getTranslated(context,'entrer_profession'),
                     prefixIcon: Icon(Icons.work, color: Theme.of(context).primaryColor,),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -126,7 +127,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                   ),
                   validator: (value){
                     if(value!.isEmpty){
-                        return "Veuillez entrer votre Profession";
+                        return  getTranslated(context,'entrer_profession');
                       }else{
                         return null;
                       }
@@ -158,10 +159,6 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       textFieldInputBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                       ),
-                      // textFieldInputBorder: UnderlineInputBorder(
-                      //   borderSide: const BorderSide(color: Colors.black, width: 3, style: BorderStyle.solid),
-                      //   borderRadius: BorderRadius.circular(20)
-                      // ),
                     ),
                   ),
             
@@ -174,7 +171,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                       onPressed: () { inscription(); },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Inscription",
+                        child: Text( getTranslated(context,'btn_inscription'),
                           style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
                         ),
                       ),

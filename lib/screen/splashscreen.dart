@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
     listutilisateurs = await connection.getUtilisateurs();
 
     if(listutilisateurs.isEmpty){
-      Navigator.pushReplacementNamed(context, welcomeRoute);
+      Navigator.pushReplacementNamed(context, chooseLanguageRoute);
     }else{
       if (kDebugMode) {
       print("splash users ${listutilisateurs[0].idutilisateurs}");

@@ -4,7 +4,6 @@ import 'package:feeling/models/like.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
 
-import 'notification_controller.dart';
 
 
 class LikeController{

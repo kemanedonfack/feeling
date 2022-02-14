@@ -25,7 +25,6 @@ class UtilisateurController{
       "photo" : utilisateurs.photo,
       "interet" : utilisateurs.interet,
       "propos" : utilisateurs.propos,
-      "entreprise" : utilisateurs.entreprise,
       "etablissement" : utilisateurs.etablissement,
       "email" : utilisateurs.email,
       "token": await notificationController.getToken()
@@ -195,11 +194,9 @@ class UtilisateurController{
   Future<Utilisateurs>getUserById2(String id) async {
       
     late Utilisateurs utilisateurs;
-    
-    print("id in controller ${id}");
-    
+        
     await users.doc(id).get().then((value){
-      print("val ${value.data()}");
+      // print("val ${value.data()}");
       utilisateurs = Utilisateurs.fromMap(value.data() as Map<String, dynamic>, value.id);
     });
 

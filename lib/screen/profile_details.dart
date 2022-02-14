@@ -4,7 +4,6 @@ import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/like.dart';
 import 'package:feeling/utile/utile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 
@@ -71,19 +70,19 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                                   Text(widget.utilisateurs.profession, style: TextStyle(fontSize: size.width*0.04, color:Colors.grey, fontWeight: FontWeight.w500),),
                                 ],
                               ),
-                              InkWell(
-                                onTap: (){
-                                  print("ici");
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Icon(CupertinoIcons.heart_fill, color: Theme.of(context).primaryColor, size: 30),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.circular(10)
-                                  ),
-                                ),
-                              )
+                              // InkWell(
+                              //   onTap: (){
+                              //     onlike();
+                              //   },
+                              //   child: Container(
+                              //     padding: const EdgeInsets.all(5),
+                              //     child: Icon(CupertinoIcons.heart_fill, color: Theme.of(context).primaryColor, size: 30),
+                              //     decoration: BoxDecoration(
+                              //       border: Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
+                              //       borderRadius: BorderRadius.circular(10)
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                           SizedBox(height: size.height*0.03),

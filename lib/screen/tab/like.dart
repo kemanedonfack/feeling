@@ -41,7 +41,6 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
 
     var size = MediaQuery.of(context).size;
-  TabController _tabController = TabController(length: 2, vsync: this);
 
     return Scaffold(
       body:  isloading ? const RippleAnimation() :  SingleChildScrollView(

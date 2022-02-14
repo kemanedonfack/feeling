@@ -1,8 +1,10 @@
+import 'package:feeling/localization/language_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/interets.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
+
 
 class InteretScreen extends StatefulWidget {
     
@@ -16,7 +18,6 @@ class InteretScreen extends StatefulWidget {
 class _InteretScreenState extends State<InteretScreen> {
 
   List<String> mesinteret = [];
-  List tags = ['one','two']; 
 
   List<Interet> listinteret = [
     Interet(nom: "Shopping", icone: Icons.shopping_bag_outlined),
@@ -26,7 +27,7 @@ class _InteretScreenState extends State<InteretScreen> {
     Interet(nom: "Music", icone: Icons.music_note),
     Interet(nom: "Cinéma", icone: Icons.local_movies_rounded),
     Interet(nom: "Hanball", icone: Icons.sports_handball),
-    Interet(nom: "Jeux vidéo", icone: Icons.sports_esports_rounded),
+    Interet(nom: "jeux", icone: Icons.sports_esports_rounded),
     Interet(nom: "Art", icone: Icons.format_paint),
     Interet(nom: "Cuisine", icone: Icons.food_bank),
     Interet(nom: "Football", icone: Icons.sports_soccer),
@@ -70,40 +71,13 @@ class _InteretScreenState extends State<InteretScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.02),
-                Text("Centre d'intérêts", style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.06)
+                Text(getTranslated(context,'centre_interet'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.06)
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.01),
-                Text("sélectionnez quelques-uns de vos centres d'intérêt et faites savoir à tout le monde ce qui vous passionne.", style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
+                Text(getTranslated(context,'selectionner_interet'), style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
                 ), 
                 SizedBox(height: MediaQuery.of(context).size.height*0.03),
                 
-                // Wrap(
-                //   spacing: 10,
-                //   runSpacing: 10,
-                //   children: [
-                //     for(int i=0; i<listinteret.length; i++)
-                //       InkWell(
-                //         onTap: (){
-                //           ajouter(listinteret[i].nom);
-                //         },
-                //         child: Container(
-                //           padding: const EdgeInsets.all(4),
-                //           decoration: BoxDecoration(
-                //             color: mesinteret.contains(listinteret[i].nom) ? Theme.of(context).primaryColor : Colors.white,
-                //             borderRadius: BorderRadius.circular(10),
-                //             border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid)
-                //           ),
-                //           child: Wrap(
-                //             children: [
-                //               Icon(listinteret[i].icone, color: mesinteret.contains(listinteret[i].nom) ? Colors.white : Theme.of(context).primaryColor),
-                //               SizedBox(width: MediaQuery.of(context).size.width*0.025),
-                //               Text(listinteret[i].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[i].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04)),
-                //             ],
-                //           ),
-                //         ),
-                //       )
-                //   ],
-                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: GridView.builder(
@@ -116,20 +90,20 @@ class _InteretScreenState extends State<InteretScreen> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: (){
-                          ajouter(listinteret[index].nom);
+                          ajouter(getTranslated(context, listinteret[index].nom));
                         },
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: mesinteret.contains(listinteret[index].nom) ? Theme.of(context).primaryColor : Colors.white,
+                            color: mesinteret.contains(getTranslated(context, listinteret[index].nom)) ? Theme.of(context).primaryColor : Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid)
                           ),
                           child: Row(
                             children: [
-                              Icon(listinteret[index].icone, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Theme.of(context).primaryColor),
+                              Icon(listinteret[index].icone, color: mesinteret.contains(getTranslated(context, listinteret[index].nom)) ? Colors.white : Theme.of(context).primaryColor),
                               SizedBox(width: MediaQuery.of(context).size.width*0.025),
-                              Flexible(child: Text(listinteret[index].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(listinteret[index].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
+                              Flexible(child: Text(getTranslated(context, listinteret[index].nom), maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, color: mesinteret.contains(getTranslated(context, listinteret[index].nom)) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
                             ],
                           ),
                         ),
@@ -148,7 +122,7 @@ class _InteretScreenState extends State<InteretScreen> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Continue",
+                      child: Text(getTranslated(context,'btn_continue'),
                         style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -159,28 +133,6 @@ class _InteretScreenState extends State<InteretScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
-      //   child: InkWell(
-          
-      //     child: Material(
-      //       borderRadius: BorderRadius.circular(10.0),
-      //       color: Theme.of(context).primaryColor ,
-      //         child: MaterialButton(
-      //           minWidth: MediaQuery.of(context).size.width,
-      //           onPressed: () {  
-      //             continuer();
-      //            },
-      //           child: Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: Text("Continue",
-      //               style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //   ),
-      // ),
     );
   }
 
@@ -217,8 +169,8 @@ class _InteretScreenState extends State<InteretScreen> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: const Text("Veuillez choisir au moins un centre intérêt"),
+            title: Text(getTranslated(context,'title_erreur')),
+            content: Text(getTranslated(context,'veuillez_choisir_interet')),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

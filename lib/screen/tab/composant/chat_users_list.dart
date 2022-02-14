@@ -66,7 +66,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
                                     if(snapshot.data!.exists){
                                       if(snapshot.data!['online'] == true){
                                         return Badge(
-                                          borderSide: BorderSide(color: Colors.white, width: 1, style: BorderStyle.solid),
+                                          borderSide: const BorderSide(color: Colors.white, width: 1, style: BorderStyle.solid),
                                           badgeColor: Colors.green,
                                           position:  BadgePosition.bottomEnd(bottom: 3.0, end: 3.0),
                                           child: Container(),

@@ -1,10 +1,9 @@
 import 'package:feeling/controllers/utilisateur_controller.dart';
-import 'package:feeling/db/db.dart';
+import 'package:feeling/localization/language_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/interets.dart';
 import 'package:feeling/models/utilisateurs.dart';
-import 'package:feeling/routes/route_name.dart';
 
 class UpdateInteretScreen extends StatefulWidget {
     
@@ -25,7 +24,7 @@ class _UpdateInteretScreenState extends State<UpdateInteretScreen> {
     Interet(nom: "Music", icone: Icons.music_note),
     Interet(nom: "Cinéma", icone: Icons.local_movies_rounded),
     Interet(nom: "Hanball", icone: Icons.sports_handball),
-    Interet(nom: "Jeux vidéo", icone: Icons.sports_esports_rounded),
+    Interet(nom: "jeux", icone: Icons.sports_esports_rounded),
     Interet(nom: "Art", icone: Icons.format_paint),
     Interet(nom: "Cuisine", icone: Icons.food_bank),
     Interet(nom: "Football", icone: Icons.sports_soccer),
@@ -69,10 +68,10 @@ class _UpdateInteretScreenState extends State<UpdateInteretScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.02),
-                Text("Centre d'intérêts", style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.06)
+                Text(getTranslated(context,'centre_interet'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.06)
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*0.01),
-                Text("sélectionnez quelques-uns de vos centres d'intérêt et faites savoir à tout le monde ce qui vous passionne.", style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
+                Text(getTranslated(context,'selectionner_interet'), style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
                 ), 
                 SizedBox(height: MediaQuery.of(context).size.height*0.03),
                 
@@ -88,21 +87,21 @@ class _UpdateInteretScreenState extends State<UpdateInteretScreen> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: (){
-                          ajouter(listinteret[index].nom);
+                          ajouter(getTranslated(context, listinteret[index].nom));
                         },
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: widget.utilisateurs.interet.contains(listinteret[index].nom) ? Theme.of(context).primaryColor : Colors.white,
+                            color: widget.utilisateurs.interet.contains(getTranslated(context, listinteret[index].nom)) ? Theme.of(context).primaryColor : Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.grey.shade300, width: 1, style: BorderStyle.solid)
                           ),
                           child: Row(
                             children: [
-                              Icon(listinteret[index].icone, color: widget.utilisateurs.interet.contains(listinteret[index].nom) ? Colors.white : Theme.of(context).primaryColor),
+                              Icon(listinteret[index].icone, color: widget.utilisateurs.interet.contains(getTranslated(context, listinteret[index].nom)) ? Colors.white : Theme.of(context).primaryColor),
                               SizedBox(width: MediaQuery.of(context).size.width*0.025),
-                              Flexible(child: Text(listinteret[index].nom, maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, 
-                              color: widget.utilisateurs.interet.contains(listinteret[index].nom) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
+                              Flexible(child: Text(getTranslated(context, listinteret[index].nom), maxLines: 1,  overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.w600, 
+                              color: widget.utilisateurs.interet.contains(getTranslated(context, listinteret[index].nom)) ? Colors.white : Colors.black, fontSize: MediaQuery.of(context).size.width*0.04))),
                             ],
                           ),
                         ),
@@ -163,14 +162,14 @@ class _UpdateInteretScreenState extends State<UpdateInteretScreen> {
     }
   }
 
-    Future<void> erreurInteret(){
+     Future<void> erreurInteret(){
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: const Text("Erreur"),
-            content: const Text("Veuillez choisir au moins un centre intérêt"),
+            title: Text(getTranslated(context,'title_erreur')),
+            content: Text(getTranslated(context,'veuillez_choisir_interet')),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

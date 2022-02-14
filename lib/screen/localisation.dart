@@ -3,6 +3,8 @@ import 'package:feeling/routes/route_name.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
+import '../localization/language_constants.dart';
+
 class LocationScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
@@ -56,11 +58,11 @@ class _LocationScreenState extends State<LocationScreen> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Activer votre position", style: TextStyle(fontSize: size.width*0.09, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  child: Text(getTranslated(context,'activer_position'), style: TextStyle(fontSize: size.width*0.09, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                 ),
               ),
               SizedBox(height: size.height*0.01),
-              Text( "Activer votre position afin de rencontrer des personnes autour de vous", style: TextStyle(fontSize:  size.width*0.06,), textAlign: TextAlign.center),
+              Text(getTranslated(context,'activer_position_description'), style: TextStyle(fontSize:  size.width*0.06,), textAlign: TextAlign.center),
               SizedBox(height: size.height*0.06),
               InkWell(
                   child: Material(
@@ -73,7 +75,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("Autoriser",
+                          child: Text(getTranslated(context,'btn_autoriser'),
                             style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
                           ),
                         ),

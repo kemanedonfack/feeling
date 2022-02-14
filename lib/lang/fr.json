@@ -1,0 +1,94 @@
+{
+   
+    "choisir_langue_prefere": "Choisissez votre langue préférée",
+    "choisir_langue": "Svp choisissez une langue",
+
+    "app_description": "L'application de rencontres feeling est une communauté où les hommes et les femmes célibataires camerounais peuvent nouer des relations.",
+    "btn_connexion": "Connexion",
+    "politique": "En vous inscrivant, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.",
+
+    "mon_numero": "Mon numéro",
+    "entrer_numero_valid": "Veuillez entrer votre numéro de téléphone valide. Nous vous enverrons un code à 6 chiffres pour vérifier votre compte",
+    "entrer_numero": "Entrer votre numéro de téléphone",
+    "invalid_numero": "votre numéro est invalid",
+    "btn_continue": "Continuer",
+
+    "saisir_code": "Saisissez le code de vérification que nous vous avons envoyé",
+    "btn_envoyer": "Envoyé",
+    "title_erreur": "Erreur",
+    "veiller_entrer_code": "Veuillez entrer le code à 6 chiffres envoyé pas sms au",
+
+    "mon_sex": "Je suis un(e)",
+    "homme": "Homme",
+    "femme": "Femme",
+    "choisir_sexe": "Choisir ton sexe",
+
+    "profil": "Profil",
+    "nom_utilisateur": "Entrer votre nom d'utilisateur",
+    "entrer_nom": "Veuillez entrer votre nom",
+    "age": "votre âge",
+    "entrer_age": "Veuillez entrer votre âge",
+    "entrer_profession": "Entrer votre Profession",
+    "btn_inscription": "Inscription",
+
+    "importer_photo": "Ajoutez vos Photos",
+    "choisir_photo": "Choisissez 3 photos",
+    "veillez_choisir_photo": "Veuillez choisir 3 photos",
+
+    "Shopping": "Shopping",
+    "Photographie": "Photographie",
+    "Basket": "Basket",
+    "Course": "Course",
+    "Music": "Music",
+    "Cinéma": "Cinéma",
+    "Hanball": "Hanball",
+    "jeux": "Jeux vidéo",
+    "Cuisine": "Cuisine",
+    "Art": "Art",
+    "Football": "Football",
+    "Lecture": "Lecture",
+    "Facebook": "Facebook",
+    "Voyage": "Voyage",
+    "Business": "Business",
+    "Agriculture": "Agriculture",
+    "bénévolat": "bénévolat",
+    "Tenis": "Tennis",
+    "Lutte": "Lutte",
+    "Boxes": "Boxes",
+    "volleyball": "volleyball",
+    "centre_interet": "Centre d'intérêts",
+    "veuillez_choisir_interet": "Veuillez choisir un centre d'intérêt",
+    "selectionner_interet": "sélectionnez quelques-uns de vos centres d'intérêt et faites savoir à tout le monde ce qui vous passionne.",
+
+    "a_propos": "A Propos de moi",
+    "description": "Donne une brève description de toi en quelques mots.",
+    "exemple_description": "Je suis une étudiante en biochimie à l'Université de douala à la recherche d'une relation sérieuse...",
+    "entrer_description": "Entre une brève description de toi",
+
+    "activer_position": "Activer votre position",
+    "activer_position_description": "Activer votre position afin de rencontrer des personnes autour de vous",
+    "btn_autoriser": "Autoriser",
+
+    "decouvrir": "Découvrir",
+    "select_age": "Age",
+    "aucun_utilisateur": "Aucun utilisateurs modifiez vos paramètres de recherche",
+    "filtre": "Filtres",
+    "interesse_par": "intéréssé par",
+    "localisation": "Localisation",
+    "profil_rejete": "Revoir les profils rejetés ?",
+    "btn_appliquer": "Appliquer",
+
+    "profil_complete": "profil complété à ",
+    "modifier_profil": "Modifier mon profil",
+    "enregistrer": "Enregistré",
+    "nom": "Nom",
+    "profession": "Profession",
+    "entreprise": "Entreprise",
+    "etablissement": "Etablissement Scolaire",
+    "email": "Adresse email",
+    "renseigner_information": "Veuillez renseigner vos informations"
+
+
+
+
+}

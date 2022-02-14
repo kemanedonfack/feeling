@@ -7,6 +7,7 @@ import 'package:feeling/db/db.dart';
 import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/like.dart';
 import 'package:feeling/routes/route_name.dart';
+import 'package:feeling/localization/language_constants.dart';
 import 'package:feeling/utile/ripple_animation.dart';
 import 'package:feeling/utile/utile.dart';
 import 'package:flutter/foundation.dart';
@@ -76,7 +77,7 @@ class _TinderState extends State<Tinder> {
         foregroundColor: Colors.black,
         elevation: 0,
         backgroundColor: Colors.white,
-        title: const Text("Découvrir"),
+        title: Text(getTranslated(context,'decouvrir')),
         centerTitle: true,
         actions: [
           InkWell(
@@ -91,9 +92,9 @@ class _TinderState extends State<Tinder> {
         ],
       ),
         body: isloading ? const RippleAnimation() : 
-          listutilisateurs.isEmpty ? const Padding(
-            padding: EdgeInsets.all(8.0),
-            child:  Center(child: Text("Aucun utilisateurs modifiez vos paramètres de recherche", textAlign: TextAlign.center,)),
+          listutilisateurs.isEmpty ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:  Center(child: Text(getTranslated(context,'aucun_utilisateur'), textAlign: TextAlign.center,)),
           ) :  Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
@@ -110,26 +111,6 @@ class _TinderState extends State<Tinder> {
                       itemBuilder: (BuildContext context, int index) {
                         return Stack(
                           children: [
-                            // true ? Positioned(
-                            //   child: Container(
-                            //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                            //     decoration: BoxDecoration(
-                            //       border: Border.all(color: true ? Colors.green : Colors.red, width: 2),
-                            //     ),
-                            //     child: Text( true ? 'LIKE' : 'NON',
-                            //       style: TextStyle(
-                            //         color: Colors.green,
-                            //         fontSize: MediaQuery.of(context).size.width*0.06,
-                            //         fontWeight: FontWeight.bold,
-                            //       ),
-                            //     ),
-                            //     transform: true ? Matrix4.rotationZ(-0.2) : Matrix4.rotationZ(0.2),
-                            //   ),
-                            //   top: 25,
-                            //   left: 10,
-                            // ): Container(
-                
-                            // ),
                             Container(
                               // height: size.height*0.,
                               key: UniqueKey(),
@@ -144,14 +125,6 @@ class _TinderState extends State<Tinder> {
                                     spreadRadius: 2
                                   ),
                                 ],
-                                // image: DecorationImage(
-                                //   image: CachedNetworkImageProvider(
-                                //     _swipeItems[index].content.photo[0],
-                                //     cacheManager: Utile.customCacheManager,
-                                //   ),
-                                //   // image: NetworkImage(listutilisateurs[index].photo[0]),
-                                //     fit: BoxFit.cover
-                                // ),
                               ),
                               child: CarouselSlider.builder(
                                 unlimitedMode: true,
@@ -175,36 +148,7 @@ class _TinderState extends State<Tinder> {
                                   );
                                 }, 
                               ) ,
-                              // child: CachedNetworkImage(
-                              //   key: UniqueKey(),
-                              //   fit: BoxFit.cover,
-                              //   cacheManager: customCacheManager,
-                              //   imageUrl: listutilisateurs[index].photo[0],
-                              //   placeholder: (context, url){
-                              //     return const Center(child: CircularProgressIndicator());
-                              //   },
-                              // ),
                             ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            //   children: [
-                            //     ElevatedButton(
-                            //         onPressed: () {
-                            //           _matchEngine.currentItem?.nope();
-                            //         },
-                            //         child: Text("Nope")),
-                            //     ElevatedButton(
-                            //         onPressed: () {
-                            //           _matchEngine.currentItem?.superLike();
-                            //         },
-                            //         child: Text("Superlike")),
-                            //     ElevatedButton(
-                            //         onPressed: () {
-                            //           _matchEngine.currentItem?.like();
-                            //         },
-                            //         child: Text("Like"))
-                            //   ],
-                            // ),
                             
                             Container(
                               width: size.width,
@@ -464,10 +408,10 @@ class _TinderState extends State<Tinder> {
                         );
                       },
                       onStackFinished: () {
-                        _scaffoldKey.currentState!.showSnackBar(const SnackBar(
-                          content: Text("Stack Finished"),
-                          duration: Duration(milliseconds: 500),
-                        ));
+                        // _scaffoldKey.currentState!.showSnackBar(const SnackBar(
+                        //   content: Text("Stack Finished"),
+                        //   duration: Duration(milliseconds: 500),
+                        // ));
                         getUtilisateurs();
                       },
                       itemChanged: (SwipeItem item, int index) {
@@ -530,13 +474,13 @@ class _TinderState extends State<Tinder> {
                             },
                             child: Icon(Icons.close, color: Theme.of(context).primaryColor)
                           ),
-                          Text("Filtres", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.06),),
+                          Text(getTranslated(context,'filtre'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.06),),
                           const Text(" "),
                         ],
                       ),
                     ),
                     SizedBox(height: size.width*0.05),
-                    Text("intéréssé par", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
+                    Text(getTranslated(context,'interesse_par'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
                     const SizedBox(height: 10,),
                     Container(
                       width: size.width*0.89,
@@ -549,7 +493,7 @@ class _TinderState extends State<Tinder> {
                           InkWell(
                             onTap: (){
                               setState(() {
-                                selectSexe("Homme");
+                                selectSexe(getTranslated(context,'homme'));
                               });
                             },
                             child: ClipRRect(
@@ -559,16 +503,16 @@ class _TinderState extends State<Tinder> {
                               ),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 12),
-                                color: filtres.sexe.contains("Homme") ? Theme.of(context).primaryColor : Colors.white,
+                                color: filtres.sexe.contains(getTranslated(context,'homme')) ? Theme.of(context).primaryColor : Colors.white,
                                 width: size.width*0.44,
-                                child: Center(child: Text("Homme", style: TextStyle(color: filtres.sexe.contains("Homme") ? Colors.white : Colors.black ),)),
+                                child: Center(child: Text(getTranslated(context,'homme'), style: TextStyle(color: filtres.sexe.contains(getTranslated(context,'homme')) ? Colors.white : Colors.black ),)),
                               ),
                             ),
                           ),
                           InkWell(
                             onTap: (){
                               setState(() {
-                                selectSexe("Femme");
+                                selectSexe(getTranslated(context,'femme'));
                               });
                             },
                             child: ClipRRect(
@@ -577,10 +521,10 @@ class _TinderState extends State<Tinder> {
                                 topRight: Radius.circular(10),
                               ),
                               child: Container(
-                                color: filtres.sexe.contains("Femme") ? Theme.of(context).primaryColor : Colors.white,
+                                color: filtres.sexe.contains(getTranslated(context,'femme')) ? Theme.of(context).primaryColor : Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 width: size.width*0.44,
-                                child: Center(child: Text("Femme", style: TextStyle(color: filtres.sexe.contains("Femme") ? Colors.white : Colors.black ),)),
+                                child: Center(child: Text(getTranslated(context,'femme'), style: TextStyle(color: filtres.sexe.contains(getTranslated(context,'femme')) ? Colors.white : Colors.black ),)),
                               ),
                             ),
                           ),
@@ -588,7 +532,7 @@ class _TinderState extends State<Tinder> {
                       ),
                     ),
                     SizedBox(height: size.width*0.05),
-                    Text("Localisation", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
+                    Text(getTranslated(context,'localisation'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
                     SizedBox(height: size.width*0.06,),
                     Material(
                     borderRadius: BorderRadius.circular(10.0),
@@ -617,7 +561,7 @@ class _TinderState extends State<Tinder> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Age", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
+                        Text(getTranslated(context,'select_age'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
                         Text("${filtres.minAge} - ${filtres.maxAge} ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),)
                       ],
                     ),
@@ -629,9 +573,6 @@ class _TinderState extends State<Tinder> {
                       max: 50,
                       values: valuesage,
                       onChanged: (value){
-                        if (kDebugMode) {
-                          print("START: ${value.start}, End: ${value.end}");
-                        }
                         setState(() {
                             valuesage =value;
                             filtres.minAge = value.start.ceil();
@@ -644,7 +585,7 @@ class _TinderState extends State<Tinder> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Revoir les profils rejetés ?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
+                        Text(getTranslated(context,'profil_rejete'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
                         Switch(
                           activeColor: Theme.of(context).primaryColor,
                           value: filtres.showDislike, 
@@ -667,7 +608,7 @@ class _TinderState extends State<Tinder> {
                       onPressed: () {  filtre(); Navigator.pop(context); },
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Appliquer",
+                        child: Text(getTranslated(context,'btn_appliquer'),
                           style: TextStyle(color: Colors.white, fontSize: size.width*0.05, fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -689,7 +630,7 @@ class _TinderState extends State<Tinder> {
       
     currentUser = await Utilisateurs.getCurrentUser();
     if(currentUser.sexe == "Homme"){
-      filtres.sexe="Femme";
+      filtres.sexe=getTranslated(context,'femme');
     }else{
       filtres.sexe ="Homme";
     }
@@ -709,7 +650,9 @@ class _TinderState extends State<Tinder> {
           _swipeItems.clear();
           _swipeItemsMapsUser();
         }else{
-          print("aucune donnée");
+          if (kDebugMode) {
+            print("aucune donnée");
+          }
           setState(() {
             isloading=false;
           });
@@ -751,7 +694,9 @@ class _TinderState extends State<Tinder> {
           _swipeItems.clear();
           _swipeItemsMapsUser();
         }else{
-          print("aucune donnée");
+          if (kDebugMode) {
+            print("aucune donnée");
+          }
           setState(() {
             isloading=false;
           });
@@ -770,7 +715,7 @@ class _TinderState extends State<Tinder> {
             interet: listutilisateurs[i].interet, nom: listutilisateurs[i].nom.capitalize(), numero: listutilisateurs[i].numero, 
             pays: listutilisateurs[i].pays, photo: listutilisateurs[i].photo, profession: listutilisateurs[i].profession,
             propos: listutilisateurs[i].propos, sexe: listutilisateurs[i].sexe, ville: listutilisateurs[i].ville, online: listutilisateurs[i].online, 
-            email: listutilisateurs[i].email, etablissement: listutilisateurs[i].etablissement, entreprise: listutilisateurs[i].entreprise, 
+            email: listutilisateurs[i].email, etablissement: listutilisateurs[i].etablissement, 
             token: listutilisateurs[i].token,),
             
             likeAction: () async {
@@ -932,7 +877,6 @@ class _TinderState extends State<Tinder> {
           matchs(context, utilisateur);
           notificationController.sendPushNotification("Match", "Vous avez un nouveau match", utilisateur.token);
         }else{
-          print(" notification like");
           notificationController.sendPushNotification("SuperLike", "${currentUser.nom} vous à envoyer un SuperLike", utilisateur.token);
         }  
           // print("resultats du match $value");
@@ -950,7 +894,6 @@ class _TinderState extends State<Tinder> {
           matchs(context, utilisateur);
            notificationController.sendPushNotification("Match", "Vous avez un nouveau match", utilisateur.token);
         }else{
-          print(" notification like");
           notificationController.sendPushNotification("Like", "${currentUser.nom} à liker votre profil", utilisateur.token);
         }  
         
