@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:feeling/constant/constant.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationController{
@@ -12,7 +13,8 @@ class NotificationController{
     FirebaseMessaging.instance.requestPermission();
 
     FirebaseMessaging.onMessage.listen((event) {
-      // print('A new onMessage event was published!');
+      print('Nouveau Message!');
+      display(event);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -58,6 +60,39 @@ class NotificationController{
       }
     });
   }
+
+  
+  static final _notificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  static void initializeLocalNotification(){
+
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher')
+    );
+    _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  static void display(RemoteMessage message) async {
+
+    try {
+      final id = DateTime.now().millisecondsSinceEpoch ~/1000;
+      
+      const NotificationDetails notificationDetails = NotificationDetails(
+        android: AndroidNotificationDetails(
+          'feeling_channel', 
+          'feeling_channel name',
+          importance: Importance.max,
+          priority: Priority.high
+        ),
+        iOS: IOSNotificationDetails()
+      );
+      
+      await _notificationsPlugin.show(id, message.notification!.title, message.notification!.body, notificationDetails);
+    } on Exception catch (e) {
+      print("message d'erreur local notification $e");
+    }
+  }
+
 
 }
   

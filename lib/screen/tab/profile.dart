@@ -8,6 +8,7 @@ import 'package:feeling/localization/language_constants.dart';
 import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -41,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var size =  MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -97,6 +99,92 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   )
                 )
               ),
+              SizedBox(height: size.height*0.08),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          blurRadius: 5,
+                          spreadRadius: 2
+                        ),
+                      ] 
+                    ),
+                    width: size.width*0.4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 5,
+                                spreadRadius: 2
+                              ),
+                            ] 
+                          ),
+                          child: SvgPicture.asset(
+                            "images/star_icon.svg",                                                
+                          ),
+                        ),
+                        SizedBox(height: size.height*0.01),
+                        const Text("0 Restant", style: TextStyle(fontWeight: FontWeight.bold),),
+                        SizedBox(height: size.height*0.005),
+                        const Text("Obtenir plus de Super Likes", textAlign: TextAlign.center, style: TextStyle(color: Colors.blue),)
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: size.width*0.1),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          blurRadius: 5,
+                          spreadRadius: 2
+                        ),
+                      ] 
+                    ),
+                    width: size.width*0.4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 5,
+                                spreadRadius: 2
+                              ),
+                            ] 
+                          ),
+                          child: SvgPicture.asset(
+                            "images/thunder_icon.svg",                                                
+                          ),
+                        ),
+                        SizedBox(height: size.height*0.01),
+                        const Text("0 Restant", style: TextStyle(fontWeight: FontWeight.bold),),
+                        SizedBox(height: size.height*0.005),
+                        const Text("Obtenir plus de Super Likes", textAlign: TextAlign.center, style: TextStyle(color: Colors.purple),)
+                      ],
+                    ),
+                  )
+                ],
+              )
              ],
           ),
         ),

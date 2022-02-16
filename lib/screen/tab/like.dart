@@ -128,7 +128,7 @@ class _LikeScreenState extends State<LikeScreen> with TickerProviderStateMixin {
                                                       child: Row(
                                                         children: [
                                                           const SizedBox(width: 5 ),
-                                                          Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age}}",
+                                                          Text("${utilisateurs.nom.capitalize()}, ${utilisateurs.age}",
                                                                 style: TextStyle(color: Colors.white, fontSize: size.width*0.05,),
                                                           )
                                                           // Text("${snapshot.data!.docs[i].id}",
