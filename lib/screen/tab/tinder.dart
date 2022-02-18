@@ -1,3 +1,4 @@
+
 // ignore_for_file: deprecated_member_use
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,6 +9,7 @@ import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/like.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/localization/language_constants.dart';
+import 'package:feeling/utile/custom_dialog_box.dart';
 import 'package:feeling/utile/ripple_animation.dart';
 import 'package:feeling/utile/utile.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +19,7 @@ import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -56,6 +59,7 @@ class _TinderState extends State<Tinder> {
   bool isloading = true;
   late CarouselSliderController _sliderController;
   Filtres filtres = Filtres(minAge: 18, maxAge: 23, sexe: 'sexe', pays: 'pays', ville: 'ville', showDislike: false);
+  int booster=0, superLike=0;
 
   @override
   void initState() {
@@ -319,8 +323,23 @@ class _TinderState extends State<Tinder> {
                                           ),
                                           InkWell(
                                             onTap: (){
-                                               _matchEngine.currentItem?.superLike();
-                                               onsuperlike(_swipeItems[index].content);
+                                              if(superLike>0){
+                                                print("super Like en cours");
+                                                _matchEngine.currentItem?.superLike();
+                                                onsuperlike(_swipeItems[index].content);
+                                                setSuperLike();
+                                              }else{
+                                                showDialog(context: context,
+                                                  builder: (BuildContext context){
+                                                    return CustomDialogBox(
+                                                      title: "infos",
+                                                      descriptions: "vous n'avez plus de like",
+                                                      text: "ok",
+                                                      img: currentUser.photo[0]
+                                                    );
+                                                  }
+                                                );
+                                              }
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(16),
@@ -371,8 +390,20 @@ class _TinderState extends State<Tinder> {
                                           ),
                                           InkWell(
                                             onTap: (){
-                                              // matchs(context, listutilisateurs[index]);
-                                              // showData();
+                                              if(booster>0){
+                                                setBooster();
+                                              }else{
+                                                showDialog(context: context,
+                                                  builder: (BuildContext context){
+                                                    return CustomDialogBox(
+                                                      title: "infos",
+                                                      descriptions: "vous n'avez plus de booster invite un ami et gagner un Booster",
+                                                      text: "ok",
+                                                      img: currentUser.photo[0]
+                                                    );
+                                                  }
+                                                );
+                                              }
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(16),
@@ -493,7 +524,7 @@ class _TinderState extends State<Tinder> {
                           InkWell(
                             onTap: (){
                               setState(() {
-                                selectSexe(getTranslated(context,'homme'));
+                                selectSexe('Homme');
                               });
                             },
                             child: ClipRRect(
@@ -503,16 +534,16 @@ class _TinderState extends State<Tinder> {
                               ),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 12),
-                                color: filtres.sexe.contains(getTranslated(context,'homme')) ? Theme.of(context).primaryColor : Colors.white,
+                                color: filtres.sexe.contains('Homme') ? Theme.of(context).primaryColor : Colors.white,
                                 width: size.width*0.44,
-                                child: Center(child: Text(getTranslated(context,'homme'), style: TextStyle(color: filtres.sexe.contains(getTranslated(context,'homme')) ? Colors.white : Colors.black ),)),
+                                child: Center(child: Text(getTranslated(context,'homme'), style: TextStyle(color: filtres.sexe.contains('Homme') ? Colors.white : Colors.black ),)),
                               ),
                             ),
                           ),
                           InkWell(
                             onTap: (){
                               setState(() {
-                                selectSexe(getTranslated(context,'femme'));
+                                selectSexe('Femme');
                               });
                             },
                             child: ClipRRect(
@@ -521,10 +552,10 @@ class _TinderState extends State<Tinder> {
                                 topRight: Radius.circular(10),
                               ),
                               child: Container(
-                                color: filtres.sexe.contains(getTranslated(context,'femme')) ? Theme.of(context).primaryColor : Colors.white,
+                                color: filtres.sexe.contains('Femme') ? Theme.of(context).primaryColor : Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 width: size.width*0.44,
-                                child: Center(child: Text(getTranslated(context,'femme'), style: TextStyle(color: filtres.sexe.contains(getTranslated(context,'femme')) ? Colors.white : Colors.black ),)),
+                                child: Center(child: Text(getTranslated(context,'femme'), style: TextStyle(color: filtres.sexe.contains('Femme') ? Colors.white : Colors.black ),)),
                               ),
                             ),
                           ),
@@ -627,6 +658,7 @@ class _TinderState extends State<Tinder> {
   }
   
   void getUtilisateurs() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
       
     currentUser = await Utilisateurs.getCurrentUser();
     if(currentUser.sexe == "Homme"){
@@ -661,8 +693,18 @@ class _TinderState extends State<Tinder> {
     
     });
 
-    
-      
+    await utilisateurcontroller.getGains(currentUser.idutilisateurs).then((value){
+      Map gains = {};
+      setState(() {
+        gains = value.data() as Map;
+        print("gains de l'utilisateurs courant ^$gains");
+        _prefs.setInt("booster", gains['booster']);
+        _prefs.setInt("superLike", gains['superLike']);
+        booster = gains['booster'];
+        superLike = gains['superLike'];
+      });
+    });
+
   }
 
   void selectSexe(String sexe) {
@@ -896,8 +938,6 @@ class _TinderState extends State<Tinder> {
         }else{
           notificationController.sendPushNotification("Like", "${currentUser.nom} à liker votre profil", utilisateur.token);
         }  
-        
-          // print("resultats du match $value");
       });
   }
 
@@ -906,20 +946,68 @@ class _TinderState extends State<Tinder> {
     // sauvegarde du like en ligne
     Likes dislike = Likes(idSender: currentUser.idutilisateurs, idReceiver: utilisateur.idutilisateurs);
     connection.ajouterDisLikes(dislike);    
-    // likecontroller.saveDisLike(dislike).then((value){
-    //    connection.ajouterDisLikes(dislike);    
-    // });
+  }
+  
+
+  void setSuperLike() async{
+    superLike = superLike-1;
+    utilisateurcontroller.superLike(currentUser.idutilisateurs);
+  }
+  
+  void setBooster() async{
+    booster = booster-1;
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setBool("isBooster", true);
+    var now =  DateTime.now(); 
+    print("date de debut ${ (now.millisecondsSinceEpoch.toString())}");
+    var t = now.add(Duration(minutes: 2));
+    print("date de fin ${ t.millisecondsSinceEpoch.toString()}");
+
+    _prefs.setInt('dateToEndBooster', t.millisecondsSinceEpoch);
+    utilisateurcontroller.booster(currentUser.idutilisateurs);
   }
 
-  // void showData() async {
+  Future<void> erreurBooster(){
+      return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext buildContext){
+          return AlertDialog(
+            title: Text("erreur"),
+            content: Text("vous n'avez plus de booster"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              )
+            ],
+          );
+        }
+      );
+  }
 
-  //   var result1 = await connection.getLikeAndDisLike('likes');
-
-  //   var result2 = await connection.getLikeAndDisLike('dislikes');
-
-  //   // print("likes $result1 dislikes $result2");
-  // }
-
+  Future<void> erreurSuperLiker(){
+      return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext buildContext){
+          return AlertDialog(
+            title: Text("erreur"),
+            content: Text("vous n'avez plus de Super Like"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              )
+            ],
+          );
+        }
+      );
+  }
       
 
 }

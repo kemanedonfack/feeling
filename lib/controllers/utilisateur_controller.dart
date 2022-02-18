@@ -5,13 +5,44 @@ import 'package:feeling/db/db.dart';
 import 'package:feeling/models/filtres.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class UtilisateurController{
   
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
+  CollectionReference gains  = FirebaseFirestore.instance.collection(C_GAINS);
   DatabaseConnection connection = DatabaseConnection();
   NotificationController notificationController = NotificationController();
+
+  void superLike(String idusers) async {
+    
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+
+    gains.doc(idusers).update({
+      'superLike': _prefs.getInt('superLike')!-1
+    });
+  }
+
+  void endBooster(String idusers) async {
+    
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    users.doc(idusers).update({
+      'booster': 0
+    });
+  }
+
+  void booster(String idusers) async {
+    
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+
+    users.doc(idusers).update({
+      'booster': 1
+    });
+    gains.doc(idusers).update({
+      'booster': _prefs.getInt('booster')!-1
+    });
+  }
 
   void updateUtilisateurs(Utilisateurs utilisateurs) async {
       
@@ -66,31 +97,31 @@ class UtilisateurController{
       return utilisateurs;
     }
 
-    Future<List<Utilisateurs>> getFiltersUsers(String sexe, double minage, double maxage, String ville) async {
+    // Future<List<Utilisateurs>> getFiltersUsers(String sexe, double minage, double maxage, String ville) async {
 
-      List<Utilisateurs> listutilisateurs = [];
-      if (kDebugMode) {
-        print("dans le controller");
-      }
+    //   List<Utilisateurs> listutilisateurs = [];
+    //   if (kDebugMode) {
+    //     print("dans le controller");
+    //   }
  
-      await users
-        .where('age', isLessThanOrEqualTo: maxage)
-        .where('age', isGreaterThanOrEqualTo: minage)
-        .where('ville', isEqualTo: ville)
-        .where('sexe', isEqualTo: sexe)
-        .orderBy('age')
-        .orderBy('date_creation')
-        .get().then((querySnapshot){
-          for (var element in querySnapshot.docs) {
-            if (kDebugMode) {
-              print(element.data());
-            }
-              listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
-          }
-        });
+    //   await users
+    //     .where('age', isLessThanOrEqualTo: maxage)
+    //     .where('age', isGreaterThanOrEqualTo: minage)
+    //     .where('ville', isEqualTo: ville)
+    //     .where('sexe', isEqualTo: sexe)
+    //     .orderBy('age')
+    //     .orderBy('date_creation')
+    //     .get().then((querySnapshot){
+    //       for (var element in querySnapshot.docs) {
+    //         if (kDebugMode) {
+    //           print(element.data());
+    //         }
+    //           listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
+    //       }
+    //     });
 
-      return removerCurrentUsers(listutilisateurs);
-    }
+    //   return removerCurrentUsers(listutilisateurs);
+    // }
 
     Future<List<Utilisateurs>> getAllUsers(Filtres filtre) async {
 
@@ -126,21 +157,26 @@ class UtilisateurController{
       }
       
 
-      var likedUsers = await connection.getLikeAndDisLike('likes');
-        /// retrait des utilisateurs que j'aime  
-      if (likedUsers.isNotEmpty) {
-        likedUsers.forEach((likedUser) {
-          listutilisateurs.removeWhere(
-              (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
-        });
-      }
+      // var likedUsers = await connection.getLikeAndDisLike('likes');
+      //   /// retrait des utilisateurs que j'aime  
+      // if (likedUsers.isNotEmpty) {
+      //   likedUsers.forEach((likedUser) {
+      //     listutilisateurs.removeWhere(
+      //         (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
+      //   });
+      // }
       if (kDebugMode) {
         print("list utilisateurs apres retrait $listutilisateurs");
       }
       
       return removerCurrentUsers(listutilisateurs);
     }
+    
+    Future<DocumentSnapshot> getGains(String idusers) async{
 
+      return await gains.doc(idusers).get();
+    }
+    
     Future<String> addUsers(Utilisateurs utilisateurs) async {
 
       try{
@@ -170,6 +206,12 @@ class UtilisateurController{
             documentId = value.id;
             return value.id;
           });
+
+          gains.doc(documentId).set({
+            "superLike": 1,
+            "booster": 1,
+          });
+
           return documentId;
       }catch(e){
         if (kDebugMode) {

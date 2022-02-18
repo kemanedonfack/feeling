@@ -65,6 +65,7 @@
     "description": "Donne une brève description de toi en quelques mots.",
     "exemple_description": "Je suis une étudiante en biochimie à l'Université de douala à la recherche d'une relation sérieuse...",
     "entrer_description": "Entre une brève description de toi",
+    "parrainage": "Code de parrainage",
 
     "activer_position": "Activer votre position",
     "activer_position_description": "Activer votre position afin de rencontrer des personnes autour de vous",

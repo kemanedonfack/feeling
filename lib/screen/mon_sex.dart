@@ -56,20 +56,20 @@ class _MonSexScreenState extends State<MonSexScreen> {
       
                 InkWell(
                   onTap: (){
-                      select(getTranslated(context,'homme'));
+                    select('Homme');
                   },
                   child: Container(
                     padding: const EdgeInsets.only(left: 15, right: 10, top: 15, bottom: 15),
                     decoration: BoxDecoration(
-                      color: sex.contains(getTranslated(context,'homme')) ? Theme.of(context).primaryColor : Colors.white,
+                      color: sex.contains('Homme') ? Theme.of(context).primaryColor : Colors.white,
                       borderRadius: BorderRadius.circular(15),
-                      border: sex.contains(getTranslated(context,'homme')) ? null : Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
+                      border: sex.contains('Homme') ? null : Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(getTranslated(context,'homme'), style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.05, color:sex.contains(getTranslated(context,'homme')) ? Colors.white : Colors.black)),
-                        Icon(Icons.check, color: sex.contains(getTranslated(context,'homme')) ? Colors.white : Colors.black)
+                        Text(getTranslated(context,'homme'), style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.05, color:sex.contains('Homme') ? Colors.white : Colors.black)),
+                        Icon(Icons.check, color: sex.contains('Homme') ? Colors.white : Colors.black)
                       ],
                     ),
                   ),
@@ -78,20 +78,20 @@ class _MonSexScreenState extends State<MonSexScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height*0.04),
                 InkWell(
                   onTap: (){
-                      select(getTranslated(context,'femme'));
+                    select('Femme');
                   },
                   child: Container(
                     padding: const EdgeInsets.only(left: 15, right: 10, top: 15, bottom: 15),
                     decoration: BoxDecoration(
-                      color: sex.contains(getTranslated(context,'femme')) ? Theme.of(context).primaryColor : Colors.white,
+                      color: sex.contains('Femme') ? Theme.of(context).primaryColor : Colors.white,
                       borderRadius: BorderRadius.circular(15),
-                      border: sex.contains(getTranslated(context,'femme')) ? null : Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
+                      border: sex.contains('Femme') ? null : Border.all(color: Colors.grey, width: 1, style: BorderStyle.solid),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(getTranslated(context,'femme'), style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.05, color:sex.contains(getTranslated(context,'femme')) ? Colors.white : Colors.black)),
-                        Icon(Icons.check, color: sex.contains(getTranslated(context,'femme')) ? Colors.white : Colors.black)
+                        Text(getTranslated(context,'femme'), style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.05, color:sex.contains('Femme') ? Colors.white : Colors.black)),
+                        Icon(Icons.check, color: sex.contains('Femme') ? Colors.white : Colors.black)
                       ],
                     ),
                   ),
@@ -138,7 +138,7 @@ class _MonSexScreenState extends State<MonSexScreen> {
   void continuer(){
 
     widget.utilisateurs.sexe = sex;
-    if(sex.contains(getTranslated(context,'femme')) || sex.contains(getTranslated(context,'homme')) ){
+    if(sex.contains('Femme') || sex.contains('Homme') ){
         
       if (kDebugMode) {
         print(" mon sexe $sex");
@@ -153,7 +153,7 @@ class _MonSexScreenState extends State<MonSexScreen> {
   }
 
     Future<void> erreurSex(){
-    return showDialog(
+      return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext buildContext){
@@ -170,8 +170,8 @@ class _MonSexScreenState extends State<MonSexScreen> {
             ],
           );
         }
-    );
-  }
+      );
+    }
 
 }
 

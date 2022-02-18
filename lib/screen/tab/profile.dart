@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -9,6 +10,7 @@ import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -33,6 +35,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DatabaseConnection connection = DatabaseConnection();
   UtilisateurController controller = UtilisateurController();
   double progression=0;
+  Map gains = {};
+  int booster = 0, superLike=0; 
+  bool isbooster=false;
 
   @override
   void initState() {
@@ -136,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         SizedBox(height: size.height*0.01),
-                        const Text("0 Restant", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("$superLike Restant", style: const TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: size.height*0.005),
                         const Text("Obtenir plus de Super Likes", textAlign: TextAlign.center, style: TextStyle(color: Colors.blue),)
                       ],
@@ -177,9 +182,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         SizedBox(height: size.height*0.01),
-                        const Text("0 Restant", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("$booster Restant", style: const TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: size.height*0.005),
-                        const Text("Obtenir plus de Super Likes", textAlign: TextAlign.center, style: TextStyle(color: Colors.purple),)
+                        const Text("Obtenir plus de Booster", textAlign: TextAlign.center, style: TextStyle(color: Colors.purple),)
                       ],
                     ),
                   )
@@ -226,18 +231,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(3),
-                    width: size-20,
-                    height: size-20,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle
-                    ),
-                    child: CircleAvatar(
-                      radius: 100,
-                      backgroundImage: FileImage(File(utilisateur.photo[0])),
-                    )
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        width: size-20,
+                        height: size-20,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle
+                        ),
+                        child: CircleAvatar(
+                          radius: 100,
+                          backgroundImage: FileImage(File(utilisateur.photo[0])),
+                        )
+                      ),
+                      isbooster ? Positioned(
+                        bottom: -1,
+                        right: -1,
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 5,
+                                spreadRadius: 2
+                              ),
+                            ] 
+                          ),
+                          child: SvgPicture.asset(
+                            "images/thunder_icon.svg", 
+                            height: 40,
+                          ),
+                        ),
+                      ) : const Text("")
+                    ],
                   ),
                 )
               ],
@@ -254,6 +285,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void getCurrentUser() async {
     
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      booster = _prefs.getInt("booster")!;
+      superLike = _prefs.getInt("superLike")!;
+      isbooster = _prefs.getBool('isBooster')!;
+    });
+
     DatabaseConnection().getProfileProgression().then((value) {
       setState(() {
         progression = (value[value.length-1]['progression'])/100;

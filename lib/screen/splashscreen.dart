@@ -1,8 +1,10 @@
+import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -35,6 +37,20 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTime() async {
+
+    UtilisateurController utilisateurController = UtilisateurController();
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    if(_prefs.getBool('isBooster') == true){
+        
+      int now =  DateTime.now().millisecondsSinceEpoch; 
+      int end = _prefs.getInt('dateToEndBooster') as int;
+      if(now >= end){
+        utilisateurController.endBooster(_prefs.getString('idusers') as String);
+        _prefs.setBool('isBooster', false);
+      }
+      
+    }
+
     List<Utilisateurs> listutilisateurs = [];
     DatabaseConnection connection = DatabaseConnection();
     listutilisateurs = await connection.getUtilisateurs();

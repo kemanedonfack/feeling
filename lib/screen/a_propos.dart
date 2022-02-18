@@ -7,6 +7,7 @@ import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/utile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class AProposScreen extends StatefulWidget {
@@ -20,8 +21,9 @@ class AProposScreen extends StatefulWidget {
 
 class _AProposScreenState extends State<AProposScreen> {  
 
-  
   TextEditingController proposcontroller = TextEditingController();
+  TextEditingController codecontroller = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   final firebase  = FirebaseFirestore.instance;
   bool loading = false;
@@ -71,11 +73,11 @@ class _AProposScreenState extends State<AProposScreen> {
                   Text(getTranslated(context,'description'), style: TextStyle(fontWeight: FontWeight.w400, fontSize: MediaQuery.of(context).size.width*0.04)
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.05),
-                    TextFormField(
-                      minLines: 5,
-                      maxLines: 10,
-                      controller: proposcontroller,
-                      decoration: InputDecoration(
+                  TextFormField(
+                    minLines: 5,
+                    maxLines: 10,
+                    controller: proposcontroller,
+                    decoration: InputDecoration(
                       hintText: getTranslated(context,'exemple_description'),
                       // prefixIcon: Icon(Icons.work, color: Theme.of(context).primaryColor,),
                       border: OutlineInputBorder(
@@ -88,12 +90,24 @@ class _AProposScreenState extends State<AProposScreen> {
                     ),
                     validator: (value){
                       if(value!.isEmpty){
-                          return getTranslated(context,'entrer_description');
-                        }else{
-                          return null;
-                        }
-                      },
+                        return getTranslated(context,'entrer_description');
+                      }else{
+                        return null;
+                      }
+                    },
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height*0.03),
+                  InkWell(
+                    onTap: (){
+                      codeParrainage();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(getTranslated(context,'parrainage'), textAlign: TextAlign.right, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: size.width*0.05),),
+                      ],
                     ),
+                  ), 
                   SizedBox(height: MediaQuery.of(context).size.height*0.05),
                   InkWell(
                     child: 
@@ -151,7 +165,8 @@ class _AProposScreenState extends State<AProposScreen> {
       if(await tryConnection() == true){
         await controller.addUsers(widget.utilisateurs).then((value) async {
           if(value != "error"){
-            
+            SharedPreferences _prefs = await SharedPreferences.getInstance();
+            _prefs.setString("idusers", value);
             widget.utilisateurs.idutilisateurs = value;
             widget.utilisateurs.token = await notificationController.getToken() as String;
             await DatabaseConnection().ajouterInteret(widget.utilisateurs.interet);
@@ -194,6 +209,47 @@ class _AProposScreenState extends State<AProposScreen> {
         }
     );
   }
+
+  Future<void> codeParrainage(){
+      return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext buildContext){
+          return AlertDialog(
+            title: Text(getTranslated(context,'parrainage')),
+            content: TextFormField(
+              keyboardType: TextInputType.number,
+              controller: codecontroller,
+              decoration: InputDecoration(
+                hintText: getTranslated(context,'parrainage'),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.all(20),
+                filled: true,
+                // fillColor: Colors.grey.withOpacity(0.3),
+              ),
+              validator: (value){
+                if(value!.isEmpty){
+                  return getTranslated(context,'parrainage');
+                }else{
+                  return null;
+                }
+              },
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                child: const Text("OK"),
+              )
+            ],
+          );
+        }
+      );
+    }
 
 
 }
