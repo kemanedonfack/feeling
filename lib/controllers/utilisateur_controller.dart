@@ -15,6 +15,18 @@ class UtilisateurController{
   DatabaseConnection connection = DatabaseConnection();
   NotificationController notificationController = NotificationController();
 
+  void updateCountry(Utilisateurs utilisateurs) async {
+
+    users.doc(utilisateurs.idutilisateurs).update({
+      "ville" : utilisateurs.ville,
+      "pays" : utilisateurs.pays,
+    });
+    
+    connection.deleteInteret().then((value){
+      connection.ajouterInteret(utilisateurs.interet);
+    });
+
+  }
   void superLike(String idusers) async {
     
     SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -24,12 +36,9 @@ class UtilisateurController{
     });
   }
 
-  void endBooster(String idusers) async {
+  Future<void> endBooster(String idusers) async {
     
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    users.doc(idusers).update({
-      'booster': 0
-    });
+    return users.doc(idusers).update({ 'booster': 0});
   }
 
   void booster(String idusers) async {
@@ -97,32 +106,6 @@ class UtilisateurController{
       return utilisateurs;
     }
 
-    // Future<List<Utilisateurs>> getFiltersUsers(String sexe, double minage, double maxage, String ville) async {
-
-    //   List<Utilisateurs> listutilisateurs = [];
-    //   if (kDebugMode) {
-    //     print("dans le controller");
-    //   }
- 
-    //   await users
-    //     .where('age', isLessThanOrEqualTo: maxage)
-    //     .where('age', isGreaterThanOrEqualTo: minage)
-    //     .where('ville', isEqualTo: ville)
-    //     .where('sexe', isEqualTo: sexe)
-    //     .orderBy('age')
-    //     .orderBy('date_creation')
-    //     .get().then((querySnapshot){
-    //       for (var element in querySnapshot.docs) {
-    //         if (kDebugMode) {
-    //           print(element.data());
-    //         }
-    //           listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
-    //       }
-    //     });
-
-    //   return removerCurrentUsers(listutilisateurs);
-    // }
-
     Future<List<Utilisateurs>> getAllUsers(Filtres filtre) async {
 
       List<Utilisateurs> listutilisateurs = [];
@@ -135,6 +118,7 @@ class UtilisateurController{
         .where('pays', isEqualTo: filtre.pays)
         .orderBy('age')
         .orderBy('date_creation', descending: true)
+        .limit(10)
         .get().then((querySnapshot){
         for (var element in querySnapshot.docs) {
             listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
@@ -145,7 +129,7 @@ class UtilisateurController{
         print("list utilisateurs initiale $listutilisateurs");
       }
 
-      if(filtre.showDislike == false){
+      if(filtre.showDislike == true){
         var dislikedUsers = await connection.getLikeAndDisLike('dislikes');
         /// retrait des utilisateurs que j'aime pas 
         if (dislikedUsers.isNotEmpty) {
@@ -157,18 +141,18 @@ class UtilisateurController{
       }
       
 
-      // var likedUsers = await connection.getLikeAndDisLike('likes');
-      //   /// retrait des utilisateurs que j'aime  
-      // if (likedUsers.isNotEmpty) {
-      //   likedUsers.forEach((likedUser) {
-      //     listutilisateurs.removeWhere(
-      //         (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
-      //   });
-      // }
+      var likedUsers = await connection.getLikeAndDisLike('likes');
+        /// retrait des utilisateurs que j'aime  
+      if (likedUsers.isNotEmpty) {
+        likedUsers.forEach((likedUser) {
+          listutilisateurs.removeWhere(
+              (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
+        });
+      }
       if (kDebugMode) {
         print("list utilisateurs apres retrait $listutilisateurs");
       }
-      
+      // return listutilisateurs;
       return removerCurrentUsers(listutilisateurs);
     }
     
@@ -201,6 +185,7 @@ class UtilisateurController{
             "date_creation": FieldValue.serverTimestamp(),
             "status": "active",
             "online": true,
+            "booster": 0,
             "token": await notificationController.getToken()
           }).then((value) {
             documentId = value.id;

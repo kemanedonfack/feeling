@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
@@ -13,8 +12,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ModifierProfilScreen extends StatefulWidget {
   
@@ -30,7 +30,7 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
 
   
   final ImagePicker picker = ImagePicker();
-  List<XFile> selectedFile = [];
+  List<File> selectedFile = [];
   List<String> mesinteret = [];
   List<String> localImageUrls = [];
   FirebaseStorage storage = FirebaseStorage.instance;
@@ -76,12 +76,10 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
     Interet(nom: "volleyball", icone: Icons.sports_volleyball),
   ];
   
-  var progression = [];
 
   @override
   void initState() {
     initialisation();
-    getProfileProgression();
     super.initState();
   }
 
@@ -303,12 +301,17 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text("Lieu de Résidence", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.047, fontWeight: FontWeight.bold),),
                   ),
-                  Container(
-                    width: double.infinity,
-                    color: Colors.white,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                      child: Text("Douala, Cameroun"),
+                  InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, updateCountryRoute, arguments: widget.utilisateurs);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      color: Colors.white,
+                      child:  Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                        child: Text("${widget.utilisateurs.ville}, ${widget.utilisateurs.pays}"),
+                      ),
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.01),
@@ -318,7 +321,8 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
                   ),
                   InkWell(
                     onTap: (){
-                      Navigator.pushNamed(context, updateInteretRoute, arguments: widget.utilisateurs);                 },
+                      Navigator.pushNamed(context, updateInteretRoute, arguments: widget.utilisateurs);
+                    },
                     child: Container(
                       width: double.infinity,
                       color: Colors.white,
@@ -371,6 +375,8 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
       professioncontroller.text = widget.utilisateurs.profession;
       emailcontroller.text = widget.utilisateurs.email;
       etablissementcontroller.text = widget.utilisateurs.etablissement;
+      payscontroller.text = widget.utilisateurs.pays;
+      villecontroller.text = widget.utilisateurs.ville;
     });
   }
 
@@ -393,6 +399,8 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
         await DatabaseConnection().deleteImage();
         await DatabaseConnection().ajouterImages(localImageUrls);
       }
+      /// suppression des informations de l'utilisateurs local 
+      /// puis insersion des nouvelles information
       await DatabaseConnection().deleteUtilisateurs();
       await DatabaseConnection().ajouterUtilisateurs(widget.utilisateurs);
       utilisateurController.updateUtilisateurs(widget.utilisateurs);
@@ -419,26 +427,51 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
   }
 
   Future<void> selectImage() async {
+
     setState(() {
       isloading = true;
     });
+
     try{
 
-      final List<XFile>? imgs = await picker.pickMultiImage();
-      if(imgs!.isNotEmpty){
+      final XFile? imgs = await picker.pickImage(source: ImageSource.gallery);
+      if(imgs != null){
 
-        selectedFile.addAll(imgs);
+        ImageCropper imageCropper = ImageCropper();
+    
+          File? croppedFile = await imageCropper.cropImage(
+            sourcePath: imgs.path,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            androidUiSettings: const AndroidUiSettings(
+                toolbarTitle: 'Redimensionnement',
+                toolbarColor: Colors.deepOrange,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            iosUiSettings: const IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            )
+          );
+          var imagesUrl = await upload(croppedFile!);
 
-        for(int i=0; i<imgs.length; i++){
-          var imagesUrl = await upload(imgs[i]);
           setState(() {
             widget.utilisateurs.photo.add(imagesUrl.toString());
           });
-        }
-        setState(() {
-          isloading = false;
-        });
+  
+          selectedFile.add(croppedFile);
+
+          setState(() {
+            isloading = false;
+          });
+        
       }
+      
 
     }catch(e){
       if (kDebugMode) {
@@ -447,9 +480,63 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
     }
   }
 
-  Future<String> upload(XFile image) async {
+  // Future<void> selectImage() async {
+  //   setState(() {
+  //     isloading = true;
+  //   });
+  //   try{
 
-    Reference reference = storage.ref().child("avatars").child(image.name);
+  //     final List<XFile>? imgs = await picker.pickMultiImage();
+  //     if(imgs!.isNotEmpty){
+
+  //       selectedFile.addAll(imgs);
+
+  //       for(int i=0; i<imgs.length; i++){
+ 
+  //         ImageCropper imageCropper = ImageCropper();
+    
+  //         XFile croppedFile = await imageCropper.cropImage(
+  //           sourcePath: imgs[i].path,
+  //           aspectRatioPresets: [
+  //             CropAspectRatioPreset.square,
+  //             CropAspectRatioPreset.ratio3x2,
+  //             CropAspectRatioPreset.original,
+  //             CropAspectRatioPreset.ratio4x3,
+  //             CropAspectRatioPreset.ratio16x9
+  //           ],
+  //           androidUiSettings: const AndroidUiSettings(
+  //               toolbarTitle: 'Cropper',
+  //               toolbarColor: Colors.deepOrange,
+  //               toolbarWidgetColor: Colors.white,
+  //               initAspectRatio: CropAspectRatioPreset.original,
+  //               lockAspectRatio: false),
+  //           iosUiSettings: const IOSUiSettings(
+  //             minimumAspectRatio: 1.0,
+  //           )
+  //         ) as XFile;
+
+  //         var imagesUrl = await upload(croppedFile);
+          
+  //         setState(() {
+  //           widget.utilisateurs.photo.add(imagesUrl.toString());
+  //         });
+
+  //       }
+  //       setState(() {
+  //         isloading = false;
+  //       });
+  //     }
+
+  //   }catch(e){
+  //     if (kDebugMode) {
+  //       print("erreur "+e.toString());
+  //     }
+  //   }
+  // }
+
+  Future<String> upload(File image) async {
+
+    Reference reference = storage.ref().child("avatars").child(DateTime.now().millisecondsSinceEpoch.toString()+widget.utilisateurs.age.toString());
     File image1 = await compress(File(image.path));
     UploadTask uploadTask =  reference.putFile(File(image1.path));
     await uploadTask.whenComplete((){
@@ -516,17 +603,6 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
      return savedImage.path;  
   }
 
-  void getProfileProgression() async {
-    
-    DatabaseConnection().getProfileProgression().then((value) {
-     
-      setState(() {
-        progression = value;
-      });
-    });
-
-  }
-
   Future<void> erreur(){
     return showDialog(
         context: context,
@@ -548,5 +624,30 @@ class _ModifierProfilScreenState extends State<ModifierProfilScreen> {
     );
   }
 
+  // Future<File?> _cropImage(filePath) async {
+
+  //   ImageCropper imageCropper = ImageCropper();
+    
+  //   File croppedFile = await imageCropper.cropImage(
+  //     sourcePath: filePath,
+  //      aspectRatioPresets: [
+  //       CropAspectRatioPreset.square,
+  //       CropAspectRatioPreset.ratio3x2,
+  //       CropAspectRatioPreset.original,
+  //       CropAspectRatioPreset.ratio4x3,
+  //       CropAspectRatioPreset.ratio16x9
+  //     ],
+  //     androidUiSettings: const AndroidUiSettings(
+  //         toolbarTitle: 'Cropper',
+  //         toolbarColor: Colors.deepOrange,
+  //         toolbarWidgetColor: Colors.white,
+  //         initAspectRatio: CropAspectRatioPreset.original,
+  //         lockAspectRatio: false),
+  //     iosUiSettings: const IOSUiSettings(
+  //       minimumAspectRatio: 1.0,
+  //     )
+  //   );
+  //   return croppedFile;
+  // }
 
 }

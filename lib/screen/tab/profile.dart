@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -289,14 +288,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       booster = _prefs.getInt("booster")!;
       superLike = _prefs.getInt("superLike")!;
-      isbooster = _prefs.getBool('isBooster')!;
+      isbooster = _prefs.getBool('isBooster') ?? false;
     });
 
-    DatabaseConnection().getProfileProgression().then((value) {
       setState(() {
-        progression = (value[value.length-1]['progression'])/100;
+        progression = (_prefs.getInt("progression") as int )/100;
       });
-    });
 
     await Utilisateurs.getCurrentUser().then((value){
       setState(() {

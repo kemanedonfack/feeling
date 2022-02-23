@@ -1,7 +1,7 @@
-
 // ignore_for_file: deprecated_member_use
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:csc_picker/csc_picker.dart';
 import 'package:feeling/controllers/like_controller.dart';
 import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/db/db.dart';
@@ -18,7 +18,6 @@ import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -271,31 +270,31 @@ class _TinderState extends State<Tinder> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          InkWell(
-                                            onTap: (){
-                                              getUtilisateurs();
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(16),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(color: Colors.amber),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.withOpacity(0.1),
-                                                    spreadRadius: 5,
-                                                    blurRadius: 10,
-                                                    // changes position of shadow
-                                                  ),
-                                                ]
-                                              ),
-                                              child: Center(
-                                                child: SvgPicture.asset(
-                                                  "images/refresh_icon.svg",                                                
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                          // InkWell(
+                                          //   onTap: (){
+                                          //     getUtilisateurs();
+                                          //   },
+                                          //   child: Container(
+                                          //     padding: const EdgeInsets.all(16),
+                                          //     decoration: BoxDecoration(
+                                          //       shape: BoxShape.circle,
+                                          //       border: Border.all(color: Colors.amber),
+                                          //       boxShadow: [
+                                          //         BoxShadow(
+                                          //           color: Colors.grey.withOpacity(0.1),
+                                          //           spreadRadius: 5,
+                                          //           blurRadius: 10,
+                                          //           // changes position of shadow
+                                          //         ),
+                                          //       ]
+                                          //     ),
+                                          //     child: Center(
+                                          //       child: SvgPicture.asset(
+                                          //         "images/refresh_icon.svg",                                                
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
                                           InkWell(
                                             onTap: (){
                                                _matchEngine.currentItem?.nope();
@@ -324,7 +323,9 @@ class _TinderState extends State<Tinder> {
                                           InkWell(
                                             onTap: (){
                                               if(superLike>0){
-                                                print("super Like en cours");
+                                                if (kDebugMode) {
+                                                  print("super Like en cours");
+                                                }
                                                 _matchEngine.currentItem?.superLike();
                                                 onsuperlike(_swipeItems[index].content);
                                                 setSuperLike();
@@ -473,7 +474,7 @@ class _TinderState extends State<Tinder> {
         return StatefulBuilder(
           builder: (BuildContext context, void Function(void Function()) setState ){
             return Container(
-              height: size.height*0.8,
+              height: size.height*0.85,
             color: const Color(0xff737373),
             child: Container(
               padding: const EdgeInsets.only(bottom: 20),
@@ -565,29 +566,76 @@ class _TinderState extends State<Tinder> {
                     SizedBox(height: size.width*0.05),
                     Text(getTranslated(context,'localisation'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.045),),
                     SizedBox(height: size.width*0.06,),
-                    Material(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.grey.withOpacity(0.3),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: DropdownButton(
-                        isExpanded: true,
-                        hint: Text(ville!) ,
-                        underline: const SizedBox(),
-                        items: villes.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState((){
-                            ville = value as String?; 
-                          });
-                        },
+                    CSCPicker(
+                      
+                      showStates: true,
+                      showCities: true,
+                      flagState: CountryFlag.DISABLE,
+
+                      ///Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER] (USE with disabledDropdownDecoration)
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade300, width: 1)
                       ),
-                    )
-                  ),
+
+                      disabledDropdownDecoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.grey.shade300,
+                        border:  Border.all(color: Colors.grey.shade300, width: 1)
+                      ),
+
+                      countrySearchPlaceholder: "Pays",
+                      stateSearchPlaceholder: "Region",
+                      citySearchPlaceholder: "Ville",
+
+                      countryDropdownLabel: "Pays",
+                      stateDropdownLabel: "Region",
+                      cityDropdownLabel: "Ville",
+
+                      defaultCountry: DefaultCountry.Cameroon,
+
+                      selectedItemStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+
+                      dropdownHeadingStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
+
+                      dropdownItemStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+
+                      dropdownDialogRadius: 10.0,
+
+                      searchBarRadius: 10.0,
+
+                      onCountryChanged: (value) {
+                        setState(() {
+                          filtres.pays = value;
+                        });
+                      },
+
+                      onStateChanged: (value) {
+                        if(value != null){
+                          setState(() {
+                            // state.text = value;
+                          });
+                        }
+                      },
+
+                      onCityChanged: (value) {
+                        if(value != null){
+                          setState(() {
+                            filtres.ville = value;
+                          });
+                        }
+                      },
+                    ),
                     SizedBox(height: size.width*0.04),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -659,8 +707,9 @@ class _TinderState extends State<Tinder> {
   
   void getUtilisateurs() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-      
     currentUser = await Utilisateurs.getCurrentUser();
+    // print("donne utilisateurs courant ${currentUser.ville} ${currentUser.pays}");
+    // print("je veux ${currentUser.age+5} ${currentUser.pays} ${currentUser.ville} ${currentUser.age+5}");
     if(currentUser.sexe == "Homme"){
       filtres.sexe=getTranslated(context,'femme');
     }else{
@@ -673,6 +722,7 @@ class _TinderState extends State<Tinder> {
 
     await utilisateurcontroller.getAllUsers(filtres).then((value) async {
       setState(() {
+        // print("j'ai récupérer ${value.length} utilisateurs");
         listutilisateurs =  value;
 
         if(listutilisateurs.isNotEmpty){
@@ -697,7 +747,7 @@ class _TinderState extends State<Tinder> {
       Map gains = {};
       setState(() {
         gains = value.data() as Map;
-        print("gains de l'utilisateurs courant ^$gains");
+        // print("gains de l'utilisateurs courant ^$gains");
         _prefs.setInt("booster", gains['booster']);
         _prefs.setInt("superLike", gains['superLike']);
         booster = gains['booster'];
@@ -761,38 +811,16 @@ class _TinderState extends State<Tinder> {
             token: listutilisateurs[i].token,),
             
             likeAction: () async {
-
               onlike(listutilisateurs[i]);
+            },
 
-                Fluttertoast.showToast(
-                    msg: "J'aime bien ${listutilisateurs[i].nom}",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.TOP,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
-              },
+            nopeAction: () {
+              ondislike(listutilisateurs[i]);
+            },
 
-              nopeAction: () {
-                ondislike(listutilisateurs[i]);
-                Fluttertoast.showToast(
-                    msg: "J'aime pas ${listutilisateurs[i].nom}",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.TOP,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0
-                );
-              },
-
-              superlikeAction: () {
-                onsuperlike(listutilisateurs[i]);
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Superliked ${listutilisateurs[i].nom}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
+            superlikeAction: () {
+              onlike(listutilisateurs[i]);
+            },
         )
       );
     }
@@ -959,9 +987,9 @@ class _TinderState extends State<Tinder> {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     _prefs.setBool("isBooster", true);
     var now =  DateTime.now(); 
-    print("date de debut ${ (now.millisecondsSinceEpoch.toString())}");
-    var t = now.add(Duration(minutes: 2));
-    print("date de fin ${ t.millisecondsSinceEpoch.toString()}");
+    // print("date de debut ${ (now.millisecondsSinceEpoch.toString())}");
+    var t = now.add(const Duration(days: 2));
+    // print("date de fin ${ t.millisecondsSinceEpoch.toString()}");
 
     _prefs.setInt('dateToEndBooster', t.millisecondsSinceEpoch);
     utilisateurcontroller.booster(currentUser.idutilisateurs);
@@ -973,8 +1001,8 @@ class _TinderState extends State<Tinder> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("erreur"),
-            content: Text("vous n'avez plus de booster"),
+            title: const Text("erreur"),
+            content: const Text("vous n'avez plus de booster"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){
@@ -994,8 +1022,8 @@ class _TinderState extends State<Tinder> {
         barrierDismissible: false,
         builder: (BuildContext buildContext){
           return AlertDialog(
-            title: Text("erreur"),
-            content: Text("vous n'avez plus de Super Like"),
+            title: const Text("erreur"),
+            content: const Text("vous n'avez plus de Super Like"),
             actions: <Widget>[
               TextButton(
                 onPressed: (){

@@ -4,6 +4,7 @@ import 'package:feeling/utile/utile.dart';
 import 'package:feeling/db/db.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as p;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:path_provider/path_provider.dart';
 
-
+ 
 class UploadImageScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
@@ -25,7 +26,7 @@ class UploadImageScreen extends StatefulWidget {
 class _UploadImageScreenState extends State<UploadImageScreen> {
   
   final ImagePicker picker = ImagePicker();
-  List<XFile> selectedFile = [];
+  List<File> selectedFile = [];
   FirebaseStorage storage = FirebaseStorage.instance;
   List<String> imageUrls = [];
   List<String> localImageUrls = [];
@@ -251,40 +252,44 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
     try{
 
-      final List<XFile>? imgs = await picker.pickMultiImage();
-      if(imgs!.isNotEmpty){
-        selectedFile.addAll(imgs);
+      final XFile? imgs = await picker.pickImage(source: ImageSource.gallery);
+      if(imgs != null){
 
-        File image = File(imgs[0].path);
-        final tailleAvant = image.lengthSync();
-        if (kDebugMode) {
-          print("taille initiale $tailleAvant KB");
-        }
-
-        File compressImage = await compress(image);
-
-        final tailleAapres = compressImage.lengthSync();
-        if (kDebugMode) {
-          print("taille finale $tailleAapres KB");
-        }
+        ImageCropper imageCropper = ImageCropper();
+    
+          File? croppedFile = await imageCropper.cropImage(
+            sourcePath: imgs.path,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            androidUiSettings: const AndroidUiSettings(
+                toolbarTitle: 'Redimensionnement',
+                toolbarColor: Colors.deepOrange,
+                toolbarWidgetColor: Colors.white,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            iosUiSettings: const IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            )
+          );
+        
+        selectedFile.add(croppedFile!);
+        
       }
       
-      if(imgs.length>3){
-        erreurImage();
-      }
 
     }catch(e){
       if (kDebugMode) {
         print("erreur "+e.toString());
       }
     }
-
-    setState(() {
-      
-    });
   }
 
-  void uploadFunction(List<XFile> images) async {
+  void uploadFunction(List<File> images) async {
 
     // setState(() {
     //   loading = true;
@@ -319,10 +324,12 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     
   }
 
-  Future<String> upload(XFile image) async {
-
-    Reference reference = storage.ref().child("avatars").child(image.name);
+  Future<String> upload(File image) async {
+    // print("image nom");
+    Reference reference = storage.ref().child("avatars").child(DateTime.now().millisecondsSinceEpoch.toString()+widget.utilisateurs.age.toString());
+    // print("image compression");
     File image1 = await compress(File(image.path));
+    // print("image envoi");
     UploadTask uploadTask =  reference.putFile(File(image1.path));
     await uploadTask.whenComplete((){
       // Navigator.pushNamed(context, centreinteretRoute, arguments: widget.utilisateurs);

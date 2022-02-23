@@ -26,6 +26,8 @@ import 'package:feeling/screen/upload_image.dart';
 import 'package:feeling/screen/verification.dart';
 import 'package:feeling/screen/welcome.dart';
 
+import '../screen/modifier_pays.dart';
+
 class AppRouter {
 
   static Route<dynamic> allRoutes(RouteSettings settings) {
@@ -74,6 +76,8 @@ class AppRouter {
         return CustomPageRoute(child: LocationScreen(settings.arguments as Utilisateurs) );
       case updateInteretRoute:
         return CustomPageRoute(child: UpdateInteretScreen(settings.arguments as Utilisateurs) );
+      case updateCountryRoute:
+        return CustomPageRoute(child: UpdateCountryScreen(settings.arguments as Utilisateurs) );
     }
 
     return CustomPageRoute(child: const NotFoundScreen() );

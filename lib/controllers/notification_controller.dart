@@ -13,7 +13,7 @@ class NotificationController{
     FirebaseMessaging.instance.requestPermission();
 
     FirebaseMessaging.onMessage.listen((event) {
-      print('Nouveau Message!');
+      // print('Nouveau Message!');
       display(event);
     });
 
@@ -89,7 +89,9 @@ class NotificationController{
       
       await _notificationsPlugin.show(id, message.notification!.title, message.notification!.body, notificationDetails);
     } on Exception catch (e) {
-      print("message d'erreur local notification $e");
+      if (kDebugMode) {
+        print("message d'erreur local notification $e");
+      }
     }
   }
 

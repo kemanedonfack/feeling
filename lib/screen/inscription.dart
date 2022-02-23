@@ -1,4 +1,5 @@
-import 'package:country_state_city_pro/country_state_city_pro.dart';
+
+import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
@@ -24,15 +25,10 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
   TextEditingController nomcontroller = TextEditingController();
   TextEditingController agecontroller = TextEditingController();
   TextEditingController villecontroller = TextEditingController();
-  TextEditingController payscontroller = TextEditingController();
   TextEditingController professioncontroller = TextEditingController();
   TextEditingController country=TextEditingController();
   TextEditingController state=TextEditingController();
   TextEditingController city=TextEditingController();
-  
-  List<String> villes = ["Douala", "Yaoundé", "Bamenda", "Buéa", "Ngaoundére", "Garoua", "Maroua"];
-  String? ville="Douala";
-  String pays="Cameroun";
 
   @override
   Widget build(BuildContext context) {
@@ -134,32 +130,75 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
                     },
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height*0.03),
-                  TextFormField(
-                    // controller: professioncontroller,
-                    decoration: InputDecoration(
-                      hintText: pays,
-                      enabled: false,
-                      prefixIcon: Icon(Icons.location_city, color: Theme.of(context).primaryColor,),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.all(20),
-                      filled: true,
-                      fillColor: Colors.grey.withOpacity(0.3),
+                  CSCPicker(
+                    
+                    showStates: true,
+                    showCities: true,
+                    flagState: CountryFlag.DISABLE,
+
+                    ///Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER] (USE with disabledDropdownDecoration)
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade300, width: 1)
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.03),
-                  Container(
-                    color: Colors.grey.withOpacity(0.3),
-                    child: CountryStateCityPicker(
-                      country: country,
-                      state: state,
-                      city: city,    
-                      textFieldInputBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                      ),
+
+                    disabledDropdownDecoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.grey.shade300,
+                      border:  Border.all(color: Colors.grey.shade300, width: 1)
                     ),
+
+                    countrySearchPlaceholder: "Pays",
+                    stateSearchPlaceholder: "region",
+                    citySearchPlaceholder: "ville",
+
+                    countryDropdownLabel: "Pays",
+                    stateDropdownLabel: "region",
+                    cityDropdownLabel: "ville",
+
+                    defaultCountry: DefaultCountry.Cameroon,
+
+                    selectedItemStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+
+                    dropdownHeadingStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold),
+
+                    dropdownItemStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+
+                    dropdownDialogRadius: 10.0,
+
+                    searchBarRadius: 10.0,
+
+                    onCountryChanged: (value) {
+                      setState(() {
+                        country.text = value;
+                      });
+                    },
+
+                    onStateChanged: (value) {
+                      if(value != null){
+                        setState(() {
+                          state.text = value;
+                        });
+                      }
+                    },
+
+                    onCityChanged: (value) {
+                      if(value != null){
+                        setState(() {
+                          city.text = value;
+                        });
+                      }
+                    },
                   ),
             
                   SizedBox(height: MediaQuery.of(context).size.height*0.03),
@@ -193,10 +232,9 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
 
       widget.utilisateurs.age = int.parse(agecontroller.text);
       widget.utilisateurs.nom = nomcontroller.text;
-      widget.utilisateurs.pays = payscontroller.text;
+      widget.utilisateurs.pays = country.text;
       widget.utilisateurs.ville = city.text;
       widget.utilisateurs.profession = professioncontroller.text;
-      widget.utilisateurs.pays = pays;
 
       Navigator.pushNamed(context, uploadimageRoute, arguments: widget.utilisateurs);
     }else{

@@ -1,6 +1,7 @@
 import 'package:feeling/models/like.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -40,49 +41,34 @@ class DatabaseConnection{
             CREATE TABLE dislikes (iddislike INTEGER PRIMARY KEY, idReceiver TEXT NOT NULL)"""
           );
           
-          await db.execute("""
-            CREATE TABLE profilesprogression (id INTEGER PRIMARY KEY, photo TEXT NOT NULL, numero TEXT NOT NULL, email TEXT NOT NULL, etablissement TEXT NOT NULL, progression INTEGER NOT NULL)"""
-          );
         }
     );
   }
 
   Future<void> initProfileProgress(Utilisateurs utilisateurs) async{
     
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    
     final db = await init(); //open database
-    String photo ="false", numero = "false", email = "false", etablissement  = "false";
 
     int progress = 50;
     if(utilisateurs.numero.isNotEmpty){
       progress = progress + 10;
-      numero = "true";
     }
 
     final List<Map<String, dynamic>> photos = await db.rawQuery('select chemin from photos');
     if(photos.length>=3){
       progress = progress + 10;
-      photo = "true";
     }
 
     if(utilisateurs.email.isNotEmpty){
       progress = progress + 10;
-      email = "true";
     }
 
     if(utilisateurs.etablissement.isNotEmpty){
-      progress = progress + 10;
-      etablissement = "true";
+      progress = progress + 5;
     }
-     
-    await db.rawInsert('INSERT INTO profilesprogression ( photo, numero , email , etablissement, progression) VALUES ( ?, ?, ?, ?, ?)',
-      [ photo, numero, email, etablissement, progress ]);
-  }
-
-  Future<List<Map<String, dynamic>>> getProfileProgression() async{
-
-    final db = await init();
-
-    return await db.rawQuery('select * from profilesprogression');
+     _prefs.setInt("progression", progress);
   }
 
   Future<void> ajouterLikes(Likes likes) async{
@@ -105,8 +91,11 @@ class DatabaseConnection{
     
     final db = await init(); //open database
     await db.rawInsert('INSERT INTO users (idusers, nom, age, ville, pays, profession, sexe, numero, propos, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [utilisateurs.idutilisateurs, utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos, '']);
-    initProfileProgress(utilisateurs);
+        [utilisateurs.idutilisateurs, utilisateurs.nom, utilisateurs.age, utilisateurs.ville, utilisateurs.pays, 
+        utilisateurs.profession, utilisateurs.sexe, utilisateurs.numero, utilisateurs.propos, '']).then((value) async {
+          
+          await initProfileProgress(utilisateurs);
+        });
   }
 
   Future<List<Utilisateurs>> getUtilisateurs() async {

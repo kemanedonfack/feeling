@@ -1,6 +1,7 @@
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
+import 'package:feeling/utile/utile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/routes/route_name.dart';
@@ -45,8 +46,12 @@ class _SplashScreenState extends State<SplashScreen> {
       int now =  DateTime.now().millisecondsSinceEpoch; 
       int end = _prefs.getInt('dateToEndBooster') as int;
       if(now >= end){
-        utilisateurController.endBooster(_prefs.getString('idusers') as String);
-        _prefs.setBool('isBooster', false);
+        if(await tryConnection() == true){
+          await utilisateurController.endBooster(_prefs.getString('idusers') as String).then((value) {
+            _prefs.setBool('isBooster', false);
+          });
+        }
+
       }
       
     }

@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
         }
         return supportedLocales.last;
       },
-      // home: LocationScreen(),
+      // home: MyHomePage(),
       onGenerateRoute: AppRouter.allRoutes,
       initialRoute: splashRoute,
       debugShowCheckedModeBanner: false,
