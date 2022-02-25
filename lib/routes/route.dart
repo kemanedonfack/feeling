@@ -27,6 +27,7 @@ import 'package:feeling/screen/verification.dart';
 import 'package:feeling/screen/welcome.dart';
 
 import '../screen/modifier_pays.dart';
+import '../screen/update_language.dart';
 
 class AppRouter {
 
@@ -47,7 +48,7 @@ class AppRouter {
       case tabRoute:
         return CustomPageRoute(child: const TabScreen() );
       case settingsRoute:
-        return CustomPageRoute(child: const SettingScreen() );
+        return CustomPageRoute(child: const SettingScreen(), direction: AxisDirection.up );
       case profildetailsRoute:
         return CustomPageRoute(child: ProfileDetailScreen(settings.arguments as Utilisateurs) );
       case editprofilRoute:
@@ -78,6 +79,8 @@ class AppRouter {
         return CustomPageRoute(child: UpdateInteretScreen(settings.arguments as Utilisateurs) );
       case updateCountryRoute:
         return CustomPageRoute(child: UpdateCountryScreen(settings.arguments as Utilisateurs) );
+      case updateLanguageRoute:
+        return CustomPageRoute(child: const UpdateLanguageScreen() );
     }
 
     return CustomPageRoute(child: const NotFoundScreen() );

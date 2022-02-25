@@ -7,6 +7,8 @@ import 'package:feeling/utile/utile.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 
+import '../localization/language_constants.dart';
+
 class ProfileDetailScreen extends StatefulWidget {
   
   final Utilisateurs utilisateurs;
@@ -92,7 +94,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Localisation", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
+                                  Text(getTranslated(context,'localisation'), style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                                   Text("${widget.utilisateurs.ville}, ${widget.utilisateurs.pays}", style: TextStyle(fontSize: size.width*0.04, color:Colors.grey, fontWeight: FontWeight.w500),),
                                 ],
                               ),
@@ -117,14 +119,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                               (widget.utilisateurs.sexe == "Femme") ? const Icon(Icons.female) : const Icon(Icons.male),
                               Text(widget.utilisateurs.sexe, style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold)),
                             ],
-                          ),
+                          ), 
                           SizedBox(height: size.height*0.025),
-                          Text("A propos", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
+                          Text(getTranslated(context,'a_propos'), style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.015),
                           Text(widget.utilisateurs.propos, textAlign: TextAlign.justify, style: TextStyle(fontSize: size.width*0.04),),
                           
                           SizedBox(height: size.height*0.03),
-                          Text("Centre d'intérêt", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
+                          Text(getTranslated(context,'centre_interet'), style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.02),
                           GridView.builder(
                             shrinkWrap: true,
@@ -160,7 +162,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                           //   ],
                           // ),
                           SizedBox(height: size.height*0.03),
-                          Text("Gallerie", style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
+                          Text(getTranslated(context,'gallerie'), style: TextStyle(fontSize: size.width*0.045, fontWeight: FontWeight.bold),),
                           SizedBox(height: size.height*0.02),
                           GridView.builder(
                               physics: const ScrollPhysics(),

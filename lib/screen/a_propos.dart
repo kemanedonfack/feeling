@@ -118,7 +118,7 @@ class _AProposScreenState extends State<AProposScreen> {
                         child: MaterialButton(
                           minWidth: size.width,
                           onPressed: () {  
-                            propos();
+                            
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
@@ -163,10 +163,11 @@ class _AProposScreenState extends State<AProposScreen> {
       widget.utilisateurs.propos = proposcontroller.text;
 
       if(await tryConnection() == true){
+        if(codecontroller.text.isNotEmpty){
+          controller.sendBooster(int.parse(codecontroller.text));
+        }
         await controller.addUsers(widget.utilisateurs).then((value) async {
-          if(value != "error"){
-            SharedPreferences _prefs = await SharedPreferences.getInstance();
-            _prefs.setString("idusers", value);
+          if(value != "error"){            
             widget.utilisateurs.idutilisateurs = value;
             widget.utilisateurs.token = await notificationController.getToken() as String;
             await DatabaseConnection().ajouterInteret(widget.utilisateurs.interet);

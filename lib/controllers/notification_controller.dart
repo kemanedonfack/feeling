@@ -71,8 +71,25 @@ class NotificationController{
     );
     _notificationsPlugin.initialize(initializationSettings);
   }
+  void showNotification(String body) async {
 
-  static void display(RemoteMessage message) async {
+    final id = DateTime.now().millisecondsSinceEpoch ~/1000;
+      
+      const NotificationDetails notificationDetails = NotificationDetails(
+        android: AndroidNotificationDetails(
+          'feeling_channel', 
+          'feeling_channel name',
+          importance: Importance.max,
+          priority: Priority.high
+        ),
+        iOS: IOSNotificationDetails()
+      );
+      
+      await _notificationsPlugin.show(id, "Feeling", body, notificationDetails);
+    
+  }
+
+  static void display(RemoteMessage message) async { 
 
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/1000;

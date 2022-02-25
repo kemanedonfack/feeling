@@ -23,3 +23,4 @@ const String chatDetailsRoute = 'chatdetails';
 const String locationRoute = 'location';
 const String updateInteretRoute = 'updateinteret';
 const String updateCountryRoute = 'updatecountry';
+const String updateLanguageRoute = 'updatelanguage';

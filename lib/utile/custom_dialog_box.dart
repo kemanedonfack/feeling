@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomDialogBox extends StatefulWidget {
   final String title, descriptions, text;
-  final String img;
+  final String svg_icon;
 
-  const CustomDialogBox({Key? key, required this.title, required this.descriptions, required this.text, required this.img}) : super(key: key);
+  const CustomDialogBox({Key? key, required this.title, required this.descriptions, required this.text, required this.svg_icon}) : super(key: key);
 
-  @override
+  @override 
   _CustomDialogBoxState createState() => _CustomDialogBoxState();
 }
 
@@ -63,12 +64,16 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
         ),
         Positioned(
           left: Constants.padding,
-            right: Constants.padding,
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              radius: 40,
-              backgroundImage: FileImage(File(widget.img)),
-            ),
+          right: Constants.padding,
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 35,
+            child: SvgPicture.asset(
+             widget.svg_icon,
+             height: 40,
+
+            )
+          ),
         ),
       ],
     );

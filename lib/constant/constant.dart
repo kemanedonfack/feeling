@@ -2,6 +2,7 @@
 
 const String C_USERS = "users";
 const String C_GAINS = "gains";
+const String C_CODES = "codes";
 const String C_RELATIONS = "relations";
 const String C_MATCHS = "matchs";
 const String C_LIKES = "likes";

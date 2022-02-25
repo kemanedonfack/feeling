@@ -87,5 +87,27 @@
     "entreprise": "Business",
     "etablissement": "Educational establishment",
     "email": "E-mail address",
-    "renseigner_information": "Please fill in your information"
+    "renseigner_information": "Please fill in your information",
+
+    "infos": "Info",
+    "aucun_booster": "you no longer have a booster invite a friend and win a Booster go to settings then invite a friend",
+    "aucun_like": "you no longer have a like",
+
+    "pays": "Country",
+    "region": "Region",
+    "ville": "City",
+    
+    "felicitation": "Congratulations",
+    "macth": "It's a ",
+    "envoye_message": "sent a message",
+    "plus_tard": "Later",
+
+    "nouveau_match": "You have a new ",
+    "nouveau_super_like": "sent you a",
+    "like": "like you",
+
+    "restant": "Remaining",
+    "obtenir_plus": "get more",
+
+    "gallerie": "Gallery"
 }

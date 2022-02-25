@@ -57,8 +57,11 @@ class DatabaseConnection{
     }
 
     final List<Map<String, dynamic>> photos = await db.rawQuery('select chemin from photos');
+    if (kDebugMode) {
+      print("nombre de photos ${photos.length}");
+    }
     if(photos.length>=3){
-      progress = progress + 10;
+      progress = progress + 15;
     }
 
     if(utilisateurs.email.isNotEmpty){

@@ -249,7 +249,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   }
 
   Future<void> selectImage() async {
-
     try{
 
       final XFile? imgs = await picker.pickImage(source: ImageSource.gallery);
@@ -277,7 +276,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             )
           );
         
-        selectedFile.add(croppedFile!);
+        setState(() {
+          selectedFile.add(croppedFile!);
+        });
         
       }
       

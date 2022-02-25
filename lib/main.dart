@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
       },
       // home: MyHomePage(),
       onGenerateRoute: AppRouter.allRoutes,
-      initialRoute: splashRoute,
+      initialRoute: settingsRoute,
       debugShowCheckedModeBanner: false,
     );
   }

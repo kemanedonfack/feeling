@@ -12,9 +12,20 @@ class UtilisateurController{
   
   CollectionReference users  = FirebaseFirestore.instance.collection(C_USERS);
   CollectionReference gains  = FirebaseFirestore.instance.collection(C_GAINS);
+  CollectionReference codes  = FirebaseFirestore.instance.collection(C_CODES);
   DatabaseConnection connection = DatabaseConnection();
   NotificationController notificationController = NotificationController();
 
+  void sendBooster(int code) async {
+    await codes.where('code', isEqualTo: code).get().then((querySnapshot){
+      for (var element in querySnapshot.docs) {
+        gains.doc(element.id).update({
+          'booster': FieldValue.increment(1)
+        });
+      }
+    });
+  }
+  
   void updateCountry(Utilisateurs utilisateurs) async {
 
     users.doc(utilisateurs.idutilisateurs).update({
@@ -27,6 +38,7 @@ class UtilisateurController{
     });
 
   }
+  
   void superLike(String idusers) async {
     
     SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -118,11 +130,11 @@ class UtilisateurController{
         .where('pays', isEqualTo: filtre.pays)
         .orderBy('age')
         .orderBy('date_creation', descending: true)
-        .limit(10)
+        .limit(20)
         .get().then((querySnapshot){
         for (var element in querySnapshot.docs) {
             listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
-         }
+        }
       });
 
       if (kDebugMode) {
@@ -162,7 +174,7 @@ class UtilisateurController{
     }
     
     Future<String> addUsers(Utilisateurs utilisateurs) async {
-
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
       try{
         if (kDebugMode) {
           print("pret");
@@ -197,6 +209,13 @@ class UtilisateurController{
             "booster": 1,
           });
 
+          codes.doc(documentId).set({
+            'code': documentId.hashCode
+          });
+
+          _prefs.setString("idusers", documentId);
+          _prefs.setInt("referralCode", documentId.hashCode);
+          
           return documentId;
       }catch(e){
         if (kDebugMode) {

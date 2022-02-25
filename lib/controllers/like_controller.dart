@@ -100,12 +100,16 @@ class LikeController{
   }
 
     Future<bool> findMacth(Likes like, bool isSuperLike) async {
+      
       bool result = false;
       try{
         await relations.doc(like.idSender).collection(C_LIKES).doc(like.idReceiver)
           .get().then((querySnapshot) async {
-                  
+            
             if(!querySnapshot.exists){
+              if (kDebugMode) {
+              print("dans finmatch like false 1 ${querySnapshot.id}");
+            }
               // si aucun des deux n'a liker le profil de l'autre
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({
@@ -117,6 +121,9 @@ class LikeController{
               result = false;
 
             }else{
+              if (kDebugMode) {
+                print("dans finmatch like false");
+              }
               // si l'un des deux à liker la photo de l'autre
               // on ajoute le like dans la base de données
               await relations.doc(like.idReceiver).collection(C_LIKES).doc(like.idSender).set({

@@ -88,7 +88,30 @@
     "entreprise": "Entreprise",
     "etablissement": "Etablissement Scolaire",
     "email": "Adresse email",
-    "renseigner_information": "Veuillez renseigner vos informations"
+    "renseigner_information": "Veuillez renseigner vos informations",
+
+    "infos": "Infos",
+    "aucun_booster": "vous n'avez plus de booster invitez un ami et gagner un Booster aller dans paramètre puis invitez un ami ",
+    "aucun_like": "vous n'avez plus de like",
+
+    "pays": "Pays",
+    "region": "Region",
+    "ville": "Ville",
+    
+    "felicitation": "Félicitation",
+    "macth": "C'est un ",
+    "envoye_message": "Envoyé un message",
+    "plus_tard": "Plus tard",
+
+    "nouveau_match": "Vous avez un nouveau ",
+    "nouveau_super_like": "vous a envoyer un ",
+    "like": "t'aimes bien",
+
+    "restant": "Restant",
+    "obtenir_plus": "Obtenir plus de",
+
+    "gallerie": "Gallerie"
+
 
 
 

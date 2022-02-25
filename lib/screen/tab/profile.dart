@@ -140,9 +140,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         SizedBox(height: size.height*0.01),
-                        Text("$superLike Restant", style: const TextStyle(fontWeight: FontWeight.bold),),
+                        Text("$superLike ${getTranslated(context,'restant')}", style: const TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: size.height*0.005),
-                        const Text("Obtenir plus de Super Likes", textAlign: TextAlign.center, style: TextStyle(color: Colors.blue),)
+                        Text("${getTranslated(context,'obtenir_plus')} Super Likes", textAlign: TextAlign.center, style: TextStyle(color: Colors.blue),)
                       ],
                     ),
                   ),
@@ -181,9 +181,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         SizedBox(height: size.height*0.01),
-                        Text("$booster Restant", style: const TextStyle(fontWeight: FontWeight.bold),),
+                        Text("$booster ${getTranslated(context,'restant')}", style: const TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: size.height*0.005),
-                        const Text("Obtenir plus de Booster", textAlign: TextAlign.center, style: TextStyle(color: Colors.purple),)
+                        Text("${getTranslated(context,'obtenir_plus')} Booster", textAlign: TextAlign.center, style: TextStyle(color: Colors.purple),)
                       ],
                     ),
                   )
