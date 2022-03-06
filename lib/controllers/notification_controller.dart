@@ -67,7 +67,7 @@ class NotificationController{
   static void initializeLocalNotification(){
 
     const InitializationSettings initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher')
+      android: AndroidInitializationSettings('@mipmap/launcher_icon')
     );
     _notificationsPlugin.initialize(initializationSettings);
   }

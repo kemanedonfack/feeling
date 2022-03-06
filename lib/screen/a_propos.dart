@@ -96,19 +96,22 @@ class _AProposScreenState extends State<AProposScreen> {
                       }
                     },
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.03),
+                  SizedBox(height: MediaQuery.of(context).size.height*0.02),
                   InkWell(
                     onTap: (){
                       codeParrainage();
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(getTranslated(context,'parrainage'), textAlign: TextAlign.right, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: size.width*0.05),),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(getTranslated(context,'parrainage'), textAlign: TextAlign.right, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: size.width*0.05),),
+                        ],
+                      ),
                     ),
                   ), 
-                  SizedBox(height: MediaQuery.of(context).size.height*0.05),
+                  SizedBox(height: MediaQuery.of(context).size.height*0.03),
                   InkWell(
                     child: 
                     loading ?
@@ -168,7 +171,6 @@ class _AProposScreenState extends State<AProposScreen> {
         }
         await controller.addUsers(widget.utilisateurs).then((value) async {
           if(value != "error"){            
-            widget.utilisateurs.idutilisateurs = value;
             widget.utilisateurs.token = await notificationController.getToken() as String;
             await DatabaseConnection().ajouterInteret(widget.utilisateurs.interet);
             await DatabaseConnection().ajouterUtilisateurs(widget.utilisateurs);

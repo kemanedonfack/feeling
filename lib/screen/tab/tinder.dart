@@ -16,6 +16,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/controllers/utilisateur_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_transforms.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -366,7 +368,7 @@ class _TinderState extends State<Tinder> {
                                           InkWell(
                                             onTap: (){
                                               if(booster>0){
-                                                setBooster();
+                                                setBooster(context);
                                               }else{
                                                 showDialog(context: context,
                                                   builder: (BuildContext context){
@@ -961,7 +963,7 @@ class _TinderState extends State<Tinder> {
     
   }
   
-  void setBooster() async{
+  void setBooster(BuildContext contect) async{
 
     booster = booster-1;
     SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -973,7 +975,16 @@ class _TinderState extends State<Tinder> {
 
     _prefs.setInt('dateToEndBooster', t.millisecondsSinceEpoch);
     utilisateurcontroller.booster(currentUser.idutilisateurs);
-    notificationController.showNotification("Ton profil à été booster pour 2 Jours tu as plus de likes :) ");
+    showDialog(context: context,
+      builder: (BuildContext context){
+        return CustomDialogBox(
+          title: getTranslated(context,'infos'),
+          descriptions: getTranslated(context,'profil_booster'),
+          text: "ok",
+          svg_icon: "images/thunder_icon.svg",
+        );
+      }
+    );
   }
 
   Future<void> testConnection(){

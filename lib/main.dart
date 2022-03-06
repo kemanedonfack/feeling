@@ -1,15 +1,19 @@
 import 'package:feeling/controllers/notification_controller.dart';
+import 'package:feeling/signin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:feeling/routes/route.dart';
-import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/couleur.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'add.dart';
+import 'banner.dart';
 import 'localization/Demolocalisation.dart';
 import 'localization/language_constants.dart';
+import 'routes/route.dart';
+import 'routes/route_name.dart';
+import 'screen/identification.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 // If you're going to use other Firebase services in the background, such as Firestore,
@@ -23,6 +27,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   NotificationController.initializeLocalNotification();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -95,9 +100,9 @@ class _MyAppState extends State<MyApp> {
         }
         return supportedLocales.last;
       },
-      // home: MyHomePage(),
+      // home: const PhoneIdentificationScreen(),
       onGenerateRoute: AppRouter.allRoutes,
-      initialRoute: settingsRoute,
+      initialRoute: splashRoute,
       debugShowCheckedModeBanner: false,
     );
   }

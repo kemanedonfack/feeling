@@ -17,8 +17,14 @@ class UtilisateurController{
   NotificationController notificationController = NotificationController();
 
   void sendBooster(int code) async {
+    if (kDebugMode) {
+      print("afficher le code $code");
+    }
     await codes.where('code', isEqualTo: code).get().then((querySnapshot){
       for (var element in querySnapshot.docs) {
+        if (kDebugMode) {
+          print("afficher le code ${element.id}");
+        }
         gains.doc(element.id).update({
           'booster': FieldValue.increment(1)
         });
@@ -121,46 +127,75 @@ class UtilisateurController{
     Future<List<Utilisateurs>> getAllUsers(Filtres filtre) async {
 
       List<Utilisateurs> listutilisateurs = [];
-            
-      await users
-        .where('age', isLessThanOrEqualTo: filtre.maxAge)
-        .where('age', isGreaterThanOrEqualTo: filtre.minAge)
-        .where('ville', isEqualTo: filtre.ville)
-        .where("sexe", isEqualTo: filtre.sexe)
-        .where('pays', isEqualTo: filtre.pays)
-        .orderBy('age')
-        .orderBy('date_creation', descending: true)
-        .limit(20)
-        .get().then((querySnapshot){
+
+      List<String> listlikedUsers = [];
+      var likedUsers = await connection.getLikeAndDisLike('likes');
+      if (likedUsers.isNotEmpty) {
+        likedUsers.forEach((likedUser) {
+          listlikedUsers.add(likedUser['idReceiver']);
+        });
+      }
+
+      Query usersQuery = users
+                        .where('age', isLessThanOrEqualTo: filtre.maxAge)
+                        .where('age', isGreaterThanOrEqualTo: filtre.minAge)
+                        .where('ville', isEqualTo: filtre.ville)
+                        .where("sexe", isEqualTo: filtre.sexe)
+                        .where('pays', isEqualTo: filtre.pays)
+                        .limit(20);
+                        
+      // usersQuery = usersQuery.where(FieldPath.documentId, whereNotIn: listlikedUsers);
+
+      await usersQuery.get().then((querySnapshot){
         for (var element in querySnapshot.docs) {
-            listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
+          print("element ${element.data()}");
+          listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
         }
       });
+      
+      
+      if (kDebugMode) {
+        print("utilisateurs Liker ${listlikedUsers}");
+      }
+            
+      // await users
+      //   .where('age', isLessThanOrEqualTo: filtre.maxAge)
+      //   .where('age', isGreaterThanOrEqualTo: filtre.minAge)
+      //   .where('ville', isEqualTo: filtre.ville)
+      //   .where("sexe", isEqualTo: filtre.sexe)
+      //   .where('pays', isEqualTo: filtre.pays)
+      //   .where(FieldPath.documentId, whereNotIn: listlikedUsers)
+      //   .limit(20)
+      //   .get().then((querySnapshot){
+      //   for (var element in querySnapshot.docs) {
+      //       listutilisateurs.add(Utilisateurs.fromMap(element.data() as Map<String, dynamic>, element.id));
+      //   }
+      // });
 
       if (kDebugMode) {
         print("list utilisateurs initiale $listutilisateurs");
       }
 
-      if(filtre.showDislike == true){
-        var dislikedUsers = await connection.getLikeAndDisLike('dislikes');
-        /// retrait des utilisateurs que j'aime pas 
-        if (dislikedUsers.isNotEmpty) {
-          dislikedUsers.forEach((dislikedUser) {
-            listutilisateurs.removeWhere(
-                (userDoc) => userDoc.idutilisateurs == dislikedUser['idReceiver']);
-          });
-        }
-      }
+      // if(filtre.showDislike == true){
+      //   var dislikedUsers = await connection.getLikeAndDisLike('dislikes');
+      //   /// retrait des utilisateurs que j'aime pas 
+      //   if (dislikedUsers.isNotEmpty) {
+      //     dislikedUsers.forEach((dislikedUser) {
+      //       listutilisateurs.removeWhere(
+      //           (userDoc) => userDoc.idutilisateurs == dislikedUser['idReceiver']);
+      //     });
+      //   }
+      // }
       
 
-      var likedUsers = await connection.getLikeAndDisLike('likes');
-        /// retrait des utilisateurs que j'aime  
-      if (likedUsers.isNotEmpty) {
-        likedUsers.forEach((likedUser) {
-          listutilisateurs.removeWhere(
-              (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
-        });
-      }
+      // var likedUsers = await connection.getLikeAndDisLike('likes');
+      //   /// retrait des utilisateurs que j'aime  
+      // if (likedUsers.isNotEmpty) {
+      //   likedUsers.forEach((likedUser) {
+      //     listutilisateurs.removeWhere(
+      //         (userDoc) => userDoc.idutilisateurs == likedUser['idReceiver']);
+      //   });
+      // }
       if (kDebugMode) {
         print("list utilisateurs apres retrait $listutilisateurs");
       }
@@ -180,9 +215,7 @@ class UtilisateurController{
           print("pret");
         }
           
-          String documentId ="";
-          
-          await users.add({
+          await users.doc(utilisateurs.idutilisateurs).set({
             "nom" : utilisateurs.nom,
             "age" : utilisateurs.age,
             "ville" : utilisateurs.ville,
@@ -200,23 +233,22 @@ class UtilisateurController{
             "booster": 0,
             "token": await notificationController.getToken()
           }).then((value) {
-            documentId = value.id;
-            return value.id;
+
           });
 
-          gains.doc(documentId).set({
+          gains.doc(utilisateurs.idutilisateurs).set({
             "superLike": 1,
             "booster": 1,
           });
 
-          codes.doc(documentId).set({
-            'code': documentId.hashCode
+          codes.doc(utilisateurs.idutilisateurs).set({
+            'code': utilisateurs.idutilisateurs.hashCode
           });
 
-          _prefs.setString("idusers", documentId);
-          _prefs.setInt("referralCode", documentId.hashCode);
+          _prefs.setString("idusers", utilisateurs.idutilisateurs);
+          _prefs.setInt("referralCode", utilisateurs.idutilisateurs.hashCode);
           
-          return documentId;
+          return utilisateurs.idutilisateurs;
       }catch(e){
         if (kDebugMode) {
           print(e);

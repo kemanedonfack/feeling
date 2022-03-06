@@ -11,6 +11,7 @@
     "entrer_numero": "Enter your phone number",
     "invalid_numero": "your number is invalid",
     "btn_continue": "To continue",
+    "inscription_avec": "Registration with",
 
     "saisir_code": "Enter the verification code we sent you",
     "btn_envoyer": "Sent",
@@ -105,9 +106,18 @@
     "nouveau_match": "You have a new ",
     "nouveau_super_like": "sent you a",
     "like": "like you",
+    "profil_booster": "Your profile has been boosted for 2 days you will receive more likes :)",
 
     "restant": "Remaining",
     "obtenir_plus": "get more",
 
-    "gallerie": "Gallery"
+    "gallerie": "Gallery",
+    "parametre": "Settings",
+    "change_langue": "change language",
+    "inviter_titre": "Invite a friend",
+    "inviter_description": "Invite a friend and win a booster",
+    "politique_confidentialite": "privacy policy",
+    "aide": "Help and support",
+    "signaler": "to report a problem",
+    "nous_contacter": "Contact us"
 }

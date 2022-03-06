@@ -58,17 +58,17 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
   if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
     if (diff.inHours > 0) {
-      time = diff.inHours.toString() + 'h ago';
+      time = date.hour.toString()+ ':'+ date.minute.toString();
     }else if (diff.inMinutes > 0) {
-      time = diff.inMinutes.toString() + 'm ago';
+      time = date.hour.toString()+ ':'+ date.minute.toString();
     }else if (diff.inSeconds > 0) {
-      time = 'now';
+      time = date.hour.toString()+ ':'+ date.minute.toString();
     }else if (diff.inMilliseconds > 0) {
-      time = 'now';
+      time = date.hour.toString()+ ':'+ date.minute.toString();
     }else if (diff.inMicroseconds > 0) {
-      time = 'now';
+      time = date.hour.toString()+ ':'+ date.minute.toString();
     }else {
-      time = 'now';
+      time = date.hour.toString() + date.minute.toString();
     }
   } else if (diff.inDays > 0 && diff.inDays < 7) {
       time = diff.inDays.toString() + 'd ago';

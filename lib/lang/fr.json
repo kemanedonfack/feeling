@@ -12,6 +12,7 @@
     "entrer_numero": "Entrer votre numéro de téléphone",
     "invalid_numero": "votre numéro est invalid",
     "btn_continue": "Continuer",
+    "inscription_avec": "Inscription avec",
 
     "saisir_code": "Saisissez le code de vérification que nous vous avons envoyé",
     "btn_envoyer": "Envoyé",
@@ -106,11 +107,20 @@
     "nouveau_match": "Vous avez un nouveau ",
     "nouveau_super_like": "vous a envoyer un ",
     "like": "t'aimes bien",
+    "profil_booster": "Ton profil à été booster pour 2 Jours tu vas recevoir plus de likes :) ",
 
     "restant": "Restant",
     "obtenir_plus": "Obtenir plus de",
 
-    "gallerie": "Gallerie"
+    "gallerie": "Gallerie",
+    "parametre": "Paramètres",
+    "change_langue": "Changer de langue",
+    "inviter_titre": "Inviter un(e) ami(e)",
+    "inviter_description": "Inviter un ami et gagnez un booster",
+    "politique_confidentialite": "Politique de confidentialité",
+    "aide": "Aide et assistance",
+    "signaler": "Signaler un problème",
+    "nous_contacter": "Nous contacter"
 
 
 

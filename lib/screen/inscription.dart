@@ -31,6 +31,14 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
   TextEditingController city=TextEditingController();
 
   @override
+  void initState() {
+    if(widget.utilisateurs.nom != ''){
+      nomcontroller.text = widget.utilisateurs.nom;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

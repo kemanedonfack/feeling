@@ -49,25 +49,25 @@ class _UpdateLanguageScreenState extends State<UpdateLanguageScreen> {
                           onTap: (){
                             changeLanguage(Language.languageList()[index]);
                           },
-                          child: Row(
-                            children: [
-                              Container(
-                                 padding: const EdgeInsets.only(left: 50),
-                                height: MediaQuery.of(context).size.height*0.03,
-                                child: Image.asset(Language.languageList()[index].flag, fit: BoxFit.cover)
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width*0.05,
-                              ),
-                              Text(Language.languageList()[index].name, style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.04)
-                              ),
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                            child: Row(
+                              children: [
+                                Container(
+                                   padding: const EdgeInsets.only(left: 50),
+                                  height: MediaQuery.of(context).size.height*0.03,
+                                  child: Image.asset(Language.languageList()[index].flag, fit: BoxFit.cover)
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width*0.05,
+                                ),
+                                Text(Language.languageList()[index].name, style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.04)
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                          child: Divider(color: Colors.grey),
-                        ),
+                        const Divider(color: Colors.grey),
                         
                       ],
                     );

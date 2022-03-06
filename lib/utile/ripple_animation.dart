@@ -79,7 +79,7 @@ class _RippleAnimationState extends State<RippleAnimation> with SingleTickerProv
               _buildContainer(700 * _controller.value),
               const Align(
                 child: CircleAvatar(
-                 backgroundImage: AssetImage('images/logo2.png'),
+                 backgroundImage: AssetImage('images/logo.png'),
                  maxRadius: 100,
                 )
               ),

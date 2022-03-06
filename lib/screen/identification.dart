@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
+import '../controllers/facebook._login_controller.dart';
 import '../localization/language_constants.dart';
+import 'package:feeling/controllers/google_login_controller.dart';
 
 
 class PhoneIdentificationScreen extends StatefulWidget {
@@ -14,15 +17,20 @@ class PhoneIdentificationScreen extends StatefulWidget {
 
 class _PhoneIdentificationScreenState extends State<PhoneIdentificationScreen> {
 
-  Utilisateurs  utilisateurs = Utilisateurs(nom: 'nom', idutilisateurs: 'idutilisateurs', interet: ['interet'], age: 20, 
+  Utilisateurs  utilisateurs = Utilisateurs(nom: '', idutilisateurs: 'idutilisateurs', interet: ['interet'], age: 20, 
   numero: '690', pays: 'pays', photo: ['photo'], profession: 'profession', sexe: 'sexe', ville: 'ville', propos: 'propos', 
   online: false, email: "", etablissement: "", token: '',);
   final _formKey = GlobalKey<FormState>();
 
   final phonecontroller = TextEditingController();
+  GoogleSignInController googleSignIn = GoogleSignInController();
+  FacebookSignInController facebookSignin = FacebookSignInController();
 
   @override
   Widget build(BuildContext context) {
+    
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -33,13 +41,13 @@ class _PhoneIdentificationScreenState extends State<PhoneIdentificationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height*0.08),
-                  Text(getTranslated(context, 'mon_numero'), textAlign: TextAlign.left, style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width*0.07)
+                  SizedBox(height: size.height*0.08),
+                  Text(getTranslated(context, 'mon_numero'), textAlign: TextAlign.left, style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width*0.07)
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.01),
+                  SizedBox(height: size.height*0.01),
                   Text(getTranslated(context,'entrer_numero_valid'), 
-                  textAlign: TextAlign.left, style: TextStyle( fontSize: MediaQuery.of(context).size.width*0.04)),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.04),
+                  textAlign: TextAlign.left, style: TextStyle( fontSize: size.width*0.04)),
+                  SizedBox(height: size.height*0.04),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     controller: phonecontroller,
@@ -67,30 +75,96 @@ class _PhoneIdentificationScreenState extends State<PhoneIdentificationScreen> {
                       }
                     },
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height*0.05),
+                  SizedBox(height: size.height*0.05),
                   // Text("NB: Nous sommes disponible uniquement au cameroun", 
-                  // textAlign: TextAlign.left, style: TextStyle( fontSize: MediaQuery.of(context).size.width*0.04, fontWeight: FontWeight.bold)),
-                  // SizedBox(height: MediaQuery.of(context).size.height*0.03),
+                  // textAlign: TextAlign.left, style: TextStyle( fontSize: size.width*0.04, fontWeight: FontWeight.bold)),
+                  // SizedBox(height: size.height*0.03),
                   Material(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Theme.of(context).primaryColor ,
                     child: MaterialButton(
-                      minWidth: MediaQuery.of(context).size.width,
+                      minWidth: size.width,
                       onPressed: () { identification(); },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(getTranslated(context,'btn_continue'),
-                          style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: size.width*0.05, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
-                  // SizedBox(height: MediaQuery.of(context).size.height*0.03),
+                  SizedBox(height: size.height*0.2),
+                  InkWell(
+                    onTap: (){
+                      signInWithGoogle();
+                    },
+                    child: Center(
+                      child: Container(
+                        width: size.width*0.9,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 5,
+                              spreadRadius: 2
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: size.width*0.1,
+                              child: Image.asset("images/g.png")
+                            ),
+                            SizedBox(width: 10),
+                            Text("${getTranslated(context,'inscription_avec')} Google")
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: size.height*0.03),
+                  InkWell(
+                     onTap:(){
+                        signInWithFacebook();
+                     },
+                    child: Container(
+                      width: size.width*0.9,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Color(0xff3A5898),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 5,
+                            spreadRadius: 2
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: size.width*0.1,
+                            child: Image.asset("images/f.png")
+                          ),
+                          SizedBox(width: 10),
+                          Text("${getTranslated(context,'inscription_avec')} Facebook ", textAlign: TextAlign.center, style: TextStyle(color: Colors.white), )
+                        ],
+                      ),
+                    ),
+                  ),
+                  
+                  // SizedBox(height: size.height*0.03),
                   // Center(
                   //   child: InkWell(
                   //     child: Text("Ajouter mon pays dans feeling", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),)
                   //   ),
                   // ),
+
                 ],
               ),
             ),
@@ -99,6 +173,34 @@ class _PhoneIdentificationScreenState extends State<PhoneIdentificationScreen> {
       ),
     );
   }
+
+  void signInWithGoogle() async{
+
+    User? user;
+
+    user = await googleSignIn.login();
+
+    if(user != null ){
+
+      utilisateurs.nom = user.displayName!;
+      utilisateurs.email = user.email!;
+      utilisateurs.idutilisateurs = user.uid;
+      Navigator.pushNamed(context, monSexRoute, arguments: utilisateurs);
+      
+    }
+  }
+
+  void signInWithFacebook() async {
+    // facebookSignin.userData =
+    User? user =  await facebookSignin.login();
+    
+    if(user != null){
+      utilisateurs.nom = user.displayName ?? "";
+      utilisateurs.email = user.email ?? "";
+      utilisateurs.idutilisateurs = user.uid;
+      Navigator.pushNamed(context, monSexRoute, arguments: utilisateurs);
+    }
+  } 
 
   identification(){
       

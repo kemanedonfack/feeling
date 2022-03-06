@@ -105,7 +105,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           if(idusers.isNotEmpty)
             BottomNavigationBarItem(
               icon: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection(C_RELATIONS).doc(idusers).collection(C_MATCHS).where('active', isEqualTo: false).snapshots(),
+                stream: FirebaseFirestore.instance.collection(C_CONVERSATIONS).where('lastMessage.idReceiver', isEqualTo: idusers).where('lastMessage.read', isEqualTo: false).snapshots(),
                 builder: (context, snapshot) {
                   if(snapshot.hasData){
                     if(snapshot.data!.docs.isNotEmpty){

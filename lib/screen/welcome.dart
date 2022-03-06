@@ -35,7 +35,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     SizedBox(
                       width: size.width*0.5,
                       height: size.height*0.15,
-                      child: Image.asset("images/logo2.png")
+                      child: Image.asset("images/logo.png")
                     ),
                     SizedBox(height: size.height*0.01),
                     Text(getTranslated(context, 'app_description'), textAlign: TextAlign.center, 

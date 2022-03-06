@@ -60,7 +60,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(getTranslated(context,'profil'),style: const TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+                    InkWell(
+                      onTap: (){
+                        Navigator.pushNamed(context, editprofilRoute, arguments: utilisateursOnline);
+                      },
+                      child: Text(getTranslated(context,'profil'),style: const TextStyle(fontSize: 30,fontWeight: FontWeight.bold),)
+                    ),
                     InkWell(
                       onTap: (){
                         Navigator.pushNamed(context, settingsRoute);
