@@ -7,8 +7,6 @@ import 'package:feeling/db/db.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:feeling/routes/route_name.dart';
 import 'package:feeling/utile/utile.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 
 class AProposScreen extends StatefulWidget {
   

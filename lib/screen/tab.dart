@@ -5,7 +5,7 @@ import 'package:feeling/controllers/notification_controller.dart';
 import 'package:feeling/models/utilisateurs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:feeling/screen/tab/tinder.dart';
+import 'package:feeling/screen/tab/home.dart';
 import 'tab/profile.dart';
 import 'tab/chat.dart';
 import 'tab/like.dart';

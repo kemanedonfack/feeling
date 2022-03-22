@@ -44,7 +44,8 @@ class AppRouter {
       case inscriptionRoute:
         return CustomPageRoute(child: InscriptionScreen(settings.arguments as Utilisateurs) );
       case verificationRoute:
-        return CustomPageRoute(child: VerificationScreen(settings.arguments as Utilisateurs) );
+        return CustomPageRoute(child: VerificationScreen(settings.arguments as Map<String, dynamic>) );
+        
       case tabRoute:
         return CustomPageRoute(child: const TabScreen() );
       case settingsRoute:
