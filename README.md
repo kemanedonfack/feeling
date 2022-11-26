@@ -19,6 +19,5 @@ Feeling overview
 
 ![Screenshot_20221124-154954](https://user-images.githubusercontent.com/70517765/204106147-3a95f6d4-d099-4551-8b10-acf13304bae3.png)
 ![Screenshot_20221124-154937](https://user-images.githubusercontent.com/70517765/204106152-92db926a-24e3-43a2-8011-657e268cf53a.png)
-![Screenshot_20221124-155027](https://user-images.githubusercontent.com/70517765/204106169-06eeb43c-f3ba-4281-89f7-b803113cb17c.png)
 ![Screenshot_20221124-155512](https://user-images.githubusercontent.com/70517765/204106171-6958fc0a-359d-4fe2-9930-edd365b882c5.png)
 ![Screenshot_20221124-155340](https://user-images.githubusercontent.com/70517765/204106178-2fd6fbd8-24d4-4c72-8d5d-e10a399f05ef.png)
