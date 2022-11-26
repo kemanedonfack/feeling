@@ -4,7 +4,7 @@ class AdHelper {
 
   static String homepageBanner(){
     if(Platform.isAndroid){
-      return "ca-app-pub-5780597516233270/7057324798";
+      return " ";
     }else{
       return "";
     }
@@ -12,7 +12,7 @@ class AdHelper {
 
   static String fullPageAd(){
     if(Platform.isAndroid){
-      return "ca-app-pub-5780597516233270/6554244996";
+      return " ";
     }else{
       return "";
     }
@@ -20,7 +20,7 @@ class AdHelper {
 
   static String get bannerAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5780597516233270/7057324798';
+      return ' ';
     } else if (Platform.isIOS) {
       return '';
     } else {
@@ -30,7 +30,7 @@ class AdHelper {
 
   static String get interstitialAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5780597516233270/6554244996';
+      return ' ';
     } else if (Platform.isIOS) {
       return '';
     } else {
@@ -40,7 +40,7 @@ class AdHelper {
 
   static String get rewardedAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5780597516233270/6864649451';
+      return ' ';
     } else if (Platform.isIOS) {
       return '';
     } else {

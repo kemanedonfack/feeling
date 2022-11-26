@@ -21,7 +21,7 @@ class _AddState extends State<Add> {
 
   void loadStaticBannerAd(){
     staticAd = BannerAd(
-      adUnitId: "ca-app-pub-5780597516233270/7057324798",
+      adUnitId: " ",
       size: AdSize.banner,
       request: request,
       listener: BannerAdListener(
@@ -44,7 +44,7 @@ class _AddState extends State<Add> {
 
   void loadInilineBannerAd(){
     inilineAd = BannerAd(
-      adUnitId: "ca-app-pub-5780597516233270/7057324798",
+      adUnitId: " ",
       size: AdSize.banner,
       request: request,
       listener: BannerAdListener(
